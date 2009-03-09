@@ -4,7 +4,7 @@
   to add additional lists or even a special directory.
   Default is /usr/lib/prtverify/*.wl
 - prtverify: whitelist update
-
+- prtverify: new test to detect non-ASCII characters
 
 0.9.0 -> 0.9.1
 - Bugfix: complete list of core ports for pkgfoster
