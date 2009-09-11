@@ -1,5 +1,7 @@
 
 WARN   core/autoconf ............ junk file found: usr/share/autoconf/INSTALL
+WARN   core/automake ............ junk file found: usr/share/automake-1.11/COPYING
+WARN   core/automake ............ junk file found: usr/share/automake-1.11/INSTALL
 WARN   core/automake ............ junk file found: usr/share/automake-1.10/COPYING
 WARN   core/automake ............ junk file found: usr/share/automake-1.10/INSTALL
 WARN   core/automake ............ junk file found: usr/share/automake-1.9/COPYING
@@ -30,6 +32,7 @@ INFO   core/shadow .............. suid file found: usr/bin/newgrp
 INFO   core/shadow .............. suid file found: usr/bin/passwd
 INFO   core/shadow .............. suid file found: usr/bin/su
 INFO   core/slocate ............. sgid file found: usr/bin/slocate
+INFO   core/sudo ................ suid file found: usr/bin/sudo
 INFO   core/traceroute .......... sgid file found: usr/bin/traceroute
 INFO   core/traceroute .......... suid file found: usr/bin/traceroute
 INFO   core/util-linux .......... sgid file found: usr/bin/write
