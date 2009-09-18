@@ -23,11 +23,11 @@
 #           execution would be useful.
 #
 
-VERSION="0.6"
+VERSION="0.7"
 CONFIGFILE="/etc/prt-get.conf"
 
 usage() {
-    echo "Usage: prtwash [-p] [-s] [-d] [-t] [-a] <path> ..."
+    echo "Usage: prtwash [-p] [-s] [-d] [-t] [-a] <path> [<path> ...]"
     exit 1
 }
 
@@ -157,6 +157,7 @@ wash() {
         # keep additional and dot files
             tosave=( "${tosave[@]}" ".md5sum" )
             tosave=( "${tosave[@]}" ".footprint" )
+            tosave=( "${tosave[@]}" ".nostrip" )
             tosave=( "${tosave[@]}" "README" )
             tosave=( "${tosave[@]}" "FAQ" )
             tosave=( "${tosave[@]}" "pre-install" )
