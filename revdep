@@ -18,7 +18,7 @@ check_linking() {
     # set -x
     err=0
 
-    files="`awk -v p="^$1\n" 'BEGIN {RS="";}; $0 ~ p {print}' /var/lib/pkg/db`"
+    files="`awk -v p="$1" -v RS="" '$1==p' /var/lib/pkg/db`"
     for f in $files; do
 	if [ -f "/$f" ]; then
 	    file -b "/$f" |grep -q 'shared'
