@@ -20,16 +20,16 @@ check_linking() {
 
     files="`awk -v p="$1" -v RS="" '$1==p' /var/lib/pkg/db`"
     for f in $files; do
-	if [ -f "/$f" ]; then
-	    file -b "/$f" |grep -q 'shared'
+        if [ -f "/$f" ]; then
+            file -b "/$f" |grep -q 'shared'
             if [ $? -eq 0 ]; then
-		ldd  "/$f" 2> /dev/null |grep "not found" &> /dev/null
-		if [ $? -eq 0 ]; then
-		    [ "$RD_VERBOSE" = "2" ] && echo "  Error in: /$f"
-		    err=1
-		fi
-	    fi
-	fi
+                ldd  "/$f" 2> /dev/null |grep "not found" &> /dev/null
+                if [ $? -eq 0 ]; then
+                    [ "$RD_VERBOSE" = "2" ] && echo "  Error in: /$f"
+                    err=1
+                fi
+            fi
+        fi
     done
 
     return $err
@@ -47,19 +47,19 @@ fi
 [ -n "$RD_VERBOSE" ] && echo "** check linking"
 for d in ${ports[*]}; do
     if [ -n "$RD_VERBOSE" ]; then
-	echo -n "$d: "
+        echo -n "$d: "
     fi
     check_linking $d
-    
+
     if [ $? -ne 0 ]; then
         if [ -n "$RD_VERBOSE" ]; then
             echo error
-	else
-	    echo $d
-	fi
+        else
+            echo $d
+        fi
     else
-	if [ -n "$RD_VERBOSE" ]; then
-	    echo ok
-	fi
+        if [ -n "$RD_VERBOSE" ]; then
+            echo ok
+        fi
     fi
 done
