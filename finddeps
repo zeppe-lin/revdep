@@ -6,24 +6,23 @@
 # awk stuff by Jürgen Daubert <jue at jue dot li>
 
 version=1.6
+pkgdb="/var/lib/pkg/db"
 
 export LD_LIBRARY_PATH=/usr/lib:/usr/X11/lib:$LD_LIBRARY_PATH
 
 function printDep() {
     deps=()
-    files=(`awk -v p="^$1\n" 'BEGIN {RS="";}; $0 ~ p {print}' /var/lib/pkg/db|\
-            awk '/(sbin|bin|lib|libexec)\// {print}'`)
+    files=(`awk -v p="$1" -v RS="" '$1==p' $pkgdb | awk '/(sbin|bin|lib|libexec)\//'`)
     for f in ${files[*]}; do
 	if [ -f "/$f" ]; then
-	    deps=(${deps[*]} `ldd /$f 2> /dev/null | awk '!/(linux-gate)|( dynamic)/ {print $3}'`)
+	    deps=(${deps[*]} `ldd /$f 2> /dev/null | awk '!/(linux-gate)|( dynamic)|(not found)/ {print $3}'`)
 	fi
     done
 
     deps=(`for t in  ${deps[*]}; do echo $t; done|sort|uniq`)
 
   for d in ${deps[*]}; do
-    in=`echo $d|sed -e 's|^/||'`
-    awk -v search="\n$in" 'BEGIN {RS=""};$0 ~ search {print $1}' /var/lib/pkg/db
+    awk -v s="$d" -v RS="" '$0 ~ substr(s,2) {print $1}' $pkgdb
   done
 }
 
