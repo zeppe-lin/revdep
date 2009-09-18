@@ -27,7 +27,7 @@ VERSION="0.6"
 CONFIGFILE="/etc/prt-get.conf"
 
 usage() {
-    echo "Usage: prtwash [-p] [-s] [-d] [-t] [-a] <path>"
+    echo "Usage: prtwash [-p] [-s] [-d] [-t] [-a] <path> ..."
     exit 1
 }
 
@@ -44,19 +44,31 @@ interrupted() {
 
 checkparams() {
 # Do some test on given parameters.
-    if [ -z "$prtdir" -a "$auto" = 0 ]; then
-        usage
-        exit -1
-    fi
+    if [ "$auto" = "0" ]; then
 
-    if [ ! -d "$prtdir" -a "$auto" = 0 ]; then
-        echo "'$prtdir': directory not found"
-        exit -1
-    fi
+        if [ -z "$prtdirs" ]; then
+            usage
+            exit -1
+        fi
 
-    if [ ! -f "$prtdir"/Pkgfile -a "$auto" = 0 ]; then
-        echo "no Pkgfile found in $prtdir. Skipping."
-        exit -1
+        for (( p=0 ; p<=${#prtdirs[@]} ; p++ )); do
+        
+            if [ -z "${prtdirs[$p]}" ]; then
+                unset prtdirs[$p]
+                continue
+            fi
+            
+            if [ ! -d "${prtdirs[$p]}" ]; then
+                echo "WARN: directory '${prtdirs[$p]}' not found. Skipping."
+                unset prtdirs[$p]
+                continue
+            fi
+
+            if [ ! -f "${prtdirs[$p]}"/Pkgfile ]; then
+                echo "WARN: no Pkgfile found in '${prtdirs[$p]}'. Skipping."
+                unset prtdirs[$p]
+            fi
+        done
     fi
 }
 
@@ -81,7 +93,7 @@ getoptions () {
         esac
     done
     shift $(($OPTIND - 1))
-    prtdir="$@"
+    prtdirs=("$@")
 }
 
 getdirs() {
@@ -123,7 +135,7 @@ wash() {
     if [ ! -f "$1"/Pkgfile ]; then
     # tested before, the test here is for
     # auto (-a) command
-        echo "no Pkgfile found in $1. Skipping."
+        echo "WARN: no Pkgfile found in $1. Skipping."
     else
         tosave=() # array of files not to be deleted
         . "$1"/Pkgfile
@@ -221,21 +233,29 @@ test=0
 auto=0
 basedirs=()
 singledirs=()
+prtdirs=()
 
 
 getoptions $@
 checkparams $@
-getdirs
+
 
 if [ "$auto" = 0 ]; then
-    wash $prtdir
+
+    for p in ${prtdirs[@]}; do
+        wash $p
+    done
+
 else
+
     if [ ! -f "$CONFIGFILE" ]; then
-        echo "prtwash: cannot find configuration file:" $CONFIGFILE
+        echo "ERROR: cannot find configuration file '$CONFIGFILE'"
         exit -1
     fi
     echo "Analyzing port tree..."
 
+    getdirs
+    
     # wash base dirs
     for d in ${basedirs[*]}; do
         if [ -d "$d" ]; then
@@ -245,7 +265,7 @@ else
                 fi  
             done
         else
-            echo "'$d': directory not found, check your configuration file!" 
+            echo "ERROR: directory '$d' not found, check your configuration file!" 
         fi 
     done 
 
@@ -254,7 +274,7 @@ else
          if [ -d "$p" ]; then
              wash $p
          else
-             echo "'$p': directory not found, check your configuration file!"
+             echo "ERROR: directory '$p' not found, check your configuration file!"
          fi      
     done
 fi
