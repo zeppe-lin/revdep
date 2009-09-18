@@ -5,7 +5,7 @@
 # Johannes Winkelmann <jw at tks6 dot net>
 # awk stuff by Jürgen Daubert <jue at jue dot li>
 
-version=1.6
+version=1.7
 pkgdb="/var/lib/pkg/db"
 
 export LD_LIBRARY_PATH=/usr/lib:/usr/X11/lib:$LD_LIBRARY_PATH
@@ -21,25 +21,26 @@ function printDep() {
 
     deps=(`for t in  ${deps[*]}; do echo $t; done|sort|uniq`)
 
-  for d in ${deps[*]}; do
-    awk -v s="$d" -v RS="" '$0 ~ substr(s,2) {print $1}' $pkgdb
-  done
+    for d in ${deps[*]}; do
+        awk -v s="$d" -v RS="" '$0 ~ substr(s,2) {print $1}' $pkgdb
+    done
 }
 
 
 if [ "$1" = "" ]; then
-    echo "Usage: `basename $0` <port>"
+    echo "Usage: ${0##*/} <port>"
     exit -1
 fi
 
-prt-get isinst `basename $1` &> /dev/null
+pkgName=${1##*/}
+
+prt-get isinst $pkgName &> /dev/null
 if [ $? -ne 0 ]; then
-    echo "$1 is not installed"
+    echo "$pkgName is not installed"
     exit -3
 fi
 
-pkgName=`basename $1`
-depPkg=`printDep $1|sort|uniq|grep -v $pkgName`
+depPkg=`printDep $pkgName |sort|uniq|grep -v $pkgName`
 
 for p in $depPkg; do
     echo -n $p
@@ -49,3 +50,4 @@ for p in $depPkg; do
     fi
     echo ""
 done|sort -k 2
+
