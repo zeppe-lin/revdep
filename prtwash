@@ -125,14 +125,14 @@ remove() {
 
 wash() {
 # Does the actual removal work.
-    if [ ! -f "$prtdir"/Pkgfile ]
+    if [ ! -f "$1"/Pkgfile ]
     # tested before, the test here is for
     # auto (-a) command
     then
-        echo "no Pkgfile found in $prtdir. Skipping."
+        echo "no Pkgfile found in $1. Skipping."
     else
         tosave=() # array of files not to be deleted
-        . "$prtdir"/Pkgfile
+        . "$1"/Pkgfile
         packagename="$name"#"$version"-"$release"".pkg.tar.gz"
 
         if [ ! "$removesources" = 1 ]
@@ -183,7 +183,7 @@ wash() {
             done
         fi
 
-        for f in "$prtdir"/{*,.footprint,.md5sum}
+        for f in "$1"/{*,.footprint,.md5sum}
         do
             if ! keep $f
             then
