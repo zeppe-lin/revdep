@@ -86,9 +86,6 @@ getoptions () {
 
 getdirs() {
 # scans /etc/prt-get.conf for port dirs to process
-    basedirs=()
-    singledirs=()
-
     current=""
     for s in `sed 's/^[ \t]*//;s/[ \t]*$//' \
              $CONFIGFILE|grep '^prtdir.*:'|sed 's/:/ /;s/,/ /;s/prtdir//;s/#.*//'`
@@ -216,15 +213,18 @@ if [ $# -lt 1 ]; then
     exit -1
 fi
 
+
 removepackage=0
 removesources=0
 removeaddonfiles=0
 test=0
 auto=0
+basedirs=()
+singledirs=()
+
 
 getoptions $@
 checkparams $@
-
 getdirs
 
 if [ "$auto" = 0 ]; then
@@ -237,24 +237,24 @@ else
     echo "Analyzing port tree..."
 
     # wash base dirs
-    for dir in ${basedirs[*]}; do
-        if [ -d "$dir" ]; then
-            for prtdir in "$dir"/*; do
-                if [ -d "$prtdir" ]; then
-                    wash $prtdir
+    for d in ${basedirs[*]}; do
+        if [ -d "$d" ]; then
+            for p in "$d"/*; do
+                if [ -d "$p" ]; then
+                    wash $p
                 fi  
             done
         else
-            echo "'$dir': directory not found, check your configuration file!" 
+            echo "'$d': directory not found, check your configuration file!" 
         fi 
     done 
 
     # wash custom dirs (see prt-get.conf)
-    for prtdir in ${singledirs[*]}; do
-         if [ -d "$prtdir" ]; then
-             wash $prtdir
+    for p in ${singledirs[*]}; do
+         if [ -d "$p" ]; then
+             wash $p
          else
-             echo "'$prtdir': directory not found, check your configuration file!"
+             echo "'$p': directory not found, check your configuration file!"
          fi      
     done
 fi
