@@ -14,9 +14,9 @@ function printDep() {
     deps=()
     files=(`awk -v p="$1" -v RS="" '$1==p' $pkgdb | awk '/(sbin|bin|lib|libexec)\//'`)
     for f in ${files[*]}; do
-	if [ -f "/$f" ]; then
-	    deps=(${deps[*]} `ldd /$f 2> /dev/null | awk '!/(linux-gate)|( dynamic)|(not found)/ {print $3}'`)
-	fi
+        if [ -f "/$f" ]; then
+            deps=(${deps[*]} `ldd /$f 2> /dev/null | awk '!/(linux-gate)|( dynamic)|(not found)/ {print $3}'`)
+        fi
     done
 
     deps=(`for t in  ${deps[*]}; do echo $t; done|sort|uniq`)
@@ -46,7 +46,7 @@ for p in $depPkg; do
     echo -n $p
     coll=`prt-get printf "%p" --filter=$p|sed -e 's|.*/||'`
     if [ "$coll" != "" ]; then
-	echo -n " ($coll)"
+        echo -n " ($coll)"
     fi
     echo ""
 done|sort -k 2
