@@ -52,10 +52,10 @@ for d in ${ports[*]}; do
     check_linking $d
 
     if [ $? -ne 0 ]; then
-        if [ -n "$RD_VERBOSE" ]; then
-            echo error
-        else
+        if [ -z "$RD_VERBOSE" ]; then
             echo $d
+        elif [ "$RD_VERBOSE" = "1" ]; then
+            echo error
         fi
     else
         if [ -n "$RD_VERBOSE" ]; then
