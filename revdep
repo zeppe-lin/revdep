@@ -25,7 +25,7 @@ check_linking() {
             if [ $? -eq 0 ]; then
                 ldd  "/$f" 2> /dev/null |grep "not found" &> /dev/null
                 if [ $? -eq 0 ]; then
-                    [ "$RD_VERBOSE" = "2" ] && echo "  Error in: /$f"
+                    [ "$RD_VERBOSE" = "2" ] && echo "$1: error in /$f"
                     err=1
                 fi
             fi
@@ -45,21 +45,18 @@ else
 fi
 
 [ -n "$RD_VERBOSE" ] && echo "** check linking"
-for d in ${ports[*]}; do
-    if [ -n "$RD_VERBOSE" ]; then
-        echo -n "$d: "
-    fi
-    check_linking $d
 
+for d in ${ports[*]}; do
+    check_linking $d
     if [ $? -ne 0 ]; then
         if [ -z "$RD_VERBOSE" ]; then
-            echo $d
+            echo "$d"
         elif [ "$RD_VERBOSE" = "1" ]; then
-            echo error
+            echo "$d: error"
         fi
     else
         if [ -n "$RD_VERBOSE" ]; then
-            echo ok
+            echo "$d: ok"
         fi
     fi
 done
