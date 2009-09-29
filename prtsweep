@@ -32,13 +32,10 @@ interrupted() {
 }
 
 getportdirs() {
-    for sup in /etc/ports/*.cvsup; do
-	prefix=`cat $sup | grep "*default prefix=" | awk -F= '{ print $2 }'`
-	dirs=`cat $sup | grep -v "^#" | grep -v "^\$" | grep -v "^*" | awk '{ print $1 }'`
-	for dir in $dirs; do
-	    echo $prefix/$dir
-	done
-    done	
+    local f
+    for f in /etc/ports/*.rsync /etc/ports/*.httpup; do
+        awk -F= '$1=="destination" || $1=="ROOT_DIR" {print $2}' $f
+    done
 }
 
 remove() {
