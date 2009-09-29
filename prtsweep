@@ -126,11 +126,7 @@ sweep() {
 }
 
 getoptions() {
-    while [ "$1" = "-a" -o "$1" = "-d" -o "$1" = "-n" -o "$1" = "-p" ]; do
-	if [ "$1" = "-p" ]; then
-	    all=1
-	    shift
-	fi
+    while [ "$1" = "-a" -o "$1" = "-d" -o "$1" = "-n" ]; do
 	if [ "$1" = "-n" ]; then
 	    dryrun=1
 	    shift
@@ -149,7 +145,7 @@ getoptions() {
 
 usage() {
     echo 
-    echo "Usage: prtsweep [-a] [-d] [-n] [-p] [PORTDIR ...]"
+    echo "Usage: prtsweep [-a] [-d] [-n] [PORTDIR ...]"
     echo
     exit 1
 }
