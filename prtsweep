@@ -38,6 +38,16 @@ getportdirs() {
     done
 }
 
+keepfiles() {
+    local f
+    for f in "${KEEP_FILES[@]}"; do
+        if [ "$1" = "$f" ]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
 remove() {
     item=$1
     if [ -f $item ]; then
@@ -107,10 +117,7 @@ sweep() {
 	pkgfiles=( `basename $f` ${pkgfiles[@]} )
     done
     for f in `ls -a`; do
-	if [ "$f" != ".footprint" -a "$f" != ".md5sum" -a \
-	    "$f" != "Pkgfile" -a "$f" != "README" -a "$f" != "." -a \
-            "$f" != ".nostrip" -a \
-	    "$f" != "post-install" -a "$f" != ".." ]; then
+	if ! keepfiles "$f"; then
 	    if ! echo $f | grep '.*#.*\.pkg\.tar\.gz' >/dev/null; then
 		if ! inlist $f ${pkgfiles[@]}; then
 		    if [ "$printedpwd" = "false" ]; then
@@ -153,6 +160,12 @@ usage() {
 trap "interrupted" SIGHUP SIGINT SIGQUIT SIGTERM
 
 getoptions $@
+
+KEEP_FILES=(
+    "Pkgfile" "README" "pre-install" "post-install"
+    ".footprint" ".md5sum" ".nostrip" "." ".."
+)  
+
 
 if [ -z "$ports" -a "$auto" = "1" ]; then
     for portdir in `getportdirs`; do
