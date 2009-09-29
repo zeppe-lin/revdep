@@ -51,28 +51,27 @@ keepfiles() {
 remove() {
     item=$1
     if [ -f $item ]; then
-	if [ "$dryrun" = "1" ]; then
-	    msg "removing file $item (dryrun)"
-	else
-	    msg "removing file $item"	    
-	    rm $item
-	fi
+        if [ "$dryrun" = "1" ]; then
+            msg "removing file $item (dryrun)"
+        else
+            msg "removing file $item"	    
+            rm $item
+        fi
     elif [ -d $item ]; then
-	if [ "$dryrun" = "1" ]; then
-	    msg "removing directory $item (dryrun)"
-	    #rm -r $item
-	else
-	    msg "removing directory $item"
-	    rm -r $item
-	fi
+        if [ "$dryrun" = "1" ]; then
+            msg "removing directory $item (dryrun)"
+        else
+            msg "removing directory $item"
+            rm -r $item
+        fi
     fi
 }
 
 removeemptydir() {
     if [ `find $1 | wc -l` -eq 1 ]; then
-	remove $1
+        remove $1
     else
-	info "cannot remove non-empty directory '$dir'"
+        info "cannot remove non-empty directory '$dir'"
     fi
 }
 
@@ -82,9 +81,9 @@ inlist() {
     list="$@"
 
     for i in $list; do
-	if [ "$i" = "$item" ]; then
-	    return 0
-	fi
+        if [ "$i" = "$item" ]; then
+            return 0
+        fi
     done
    
     return 1
@@ -96,56 +95,58 @@ sweep() {
     printedpwd="false"
 
     if [ ! -d $dir ]; then
-	error "'`pwd`/$dir' is not a directory!"
-	usage
+        error "'`pwd`/$dir' is not a directory!"
+        usage
     fi
 
     if [ ! -f $dir/Pkgfile ]; then
-	info `pwd`/$dir
-	msg "no Pkgfile found, empty port '$dir'."
-	if [ "$delete" = "1" ]; then
-	    removeemptydir $dir
-	else
-	    msg "use '-d' to remove empty directories."
-	fi
-	return
+        info `pwd`/$dir
+        msg "no Pkgfile found, empty port '$dir'."
+        if [ "$delete" = "1" ]; then
+            removeemptydir $dir
+        else
+            msg "use '-d' to remove empty directories."
+        fi
+        return
     fi
+    
     cd $dir
     unset name version source pkgfiles
     . Pkgfile
+    
     for f in ${source[@]}; do
-	pkgfiles=( `basename $f` ${pkgfiles[@]} )
+        pkgfiles=( `basename $f` ${pkgfiles[@]} )
     done
     for f in `ls -a`; do
-	if ! keepfiles "$f"; then
-	    if ! echo $f | grep '.*#.*\.pkg\.tar\.gz' >/dev/null; then
-		if ! inlist $f ${pkgfiles[@]}; then
-		    if [ "$printedpwd" = "false" ]; then
-			printedpwd="true"
-			info `pwd`
-		    fi
-		    remove $f
-		fi
-	    fi
-	fi
+        if ! keepfiles "$f"; then
+            if ! echo $f | grep '.*#.*\.pkg\.tar\.gz' >/dev/null; then
+                if ! inlist $f ${pkgfiles[@]}; then
+                    if [ "$printedpwd" = "false" ]; then
+                        printedpwd="true"
+                        info `pwd`
+                    fi
+                remove $f
+                fi
+            fi
+        fi
     done
     cd $savedir
 }
 
 getoptions() {
     while [ "$1" = "-a" -o "$1" = "-d" -o "$1" = "-n" ]; do
-	if [ "$1" = "-n" ]; then
-	    dryrun=1
-	    shift
-	fi
-	if [ "$1" = "-d" ]; then
-	    delete=1
-	    shift
-	fi
-	if [ "$1" = "-a" ]; then
-	    auto=1
-	    shift
-	fi
+        if [ "$1" = "-n" ]; then
+            dryrun=1
+            shift
+        fi
+        if [ "$1" = "-d" ]; then
+            delete=1
+            shift
+        fi
+        if [ "$1" = "-a" ]; then
+            auto=1
+            shift
+        fi
     done
     ports="$@"
 }
@@ -169,17 +170,17 @@ KEEP_FILES=(
 
 if [ -z "$ports" -a "$auto" = "1" ]; then
     for portdir in `getportdirs`; do
-	savedir=`pwd`
-	cd $portdir
-	for dir in *; do
-	    sweep $dir
-	done
-	cd $savedir
+        savedir=`pwd`
+        cd $portdir
+        for dir in *; do
+            sweep $dir
+        done
+        cd $savedir
     done
     exit 0
 elif [ ! -z "$ports" ]; then
     for dir in $ports; do
-	sweep $dir
+        sweep $dir
     done
     exit 0
 fi
