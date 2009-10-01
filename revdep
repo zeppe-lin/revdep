@@ -21,12 +21,16 @@ check_linking() {
     files="`awk -v p="$1" -v RS="" '$1==p' /var/lib/pkg/db`"
     for f in $files; do
         if [ -f "/$f" ]; then
-            file -b "/$f" |grep -q 'shared'
-            if [ $? -eq 0 ]; then
-                ldd  "/$f" 2> /dev/null |grep "not found" &> /dev/null
+            if [ ! -r "/$f" ]; then
+                [ "$RD_VERBOSE" = "2" ] && echo "$1: couldn't read $f"
+            else
+                file -b "/$f" |grep -q 'shared'
                 if [ $? -eq 0 ]; then
-                    [ "$RD_VERBOSE" = "2" ] && echo "$1: error in /$f"
-                    err=1
+                    ldd  "/$f" 2> /dev/null |grep "not found" &> /dev/null
+                    if [ $? -eq 0 ]; then
+                        [ "$RD_VERBOSE" = "2" ] && echo "$1: error in: /$f"
+                        err=1
+                    fi
                 fi
             fi
         fi
