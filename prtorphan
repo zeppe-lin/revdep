@@ -87,6 +87,11 @@ sub getvalidports {
   while ( my $dir = pop @dirlist ) {
     opendir(DIR, $dir)
       or exiterr("could not read dir $dir");  
+    if ( -f "$dir/Pkgfile" ) {
+      $dir =~ s/.+\///;
+      $validports{$dir} = 1;
+      next;
+    }
     my $entry = "";
     while ($entry = readdir(DIR)) {
       next if ( $entry =~ /^\./ or ! -d "$dir/$entry" );
@@ -112,7 +117,16 @@ sub getportdirs {
       $port =~ s/^prtdir\s+//;
       $port =~ s/#(.*)$//;
       $port =~ s/\s+$//;
-      push @ports, $port;
+      if ( $port =~ /:/ ) {
+        $port =~ s/\s+//g;
+        my @a = split(/:/, $port);
+        my @b = split(/,/, @a[1]);
+        while ( my $c = pop @b ) {
+          push @ports, $a[0] . "/" . $c;
+        }
+      } else { 
+        push @ports, $port;
+      }
     }
   }
   close(PORTS);
