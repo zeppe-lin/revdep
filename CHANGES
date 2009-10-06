@@ -1,3 +1,16 @@
+0.9.2 -> 0.9.3
+--------------
++ finddeps: optimize awk usage a bit, some minor adjustments
++ revdep: optimize awk usage a bit, make error output more consistent
++ revdep: allow unprivileged user to run revdep, patch by Lucas Hazel
++ prtwash: allow multiple port-directories as commandline parameters
+- prtwash: add .nostrip to tosave array, some smaller fixes
+- prtsweep: fix automatic mode to use rsync and httpup files
+- prtsweep: keep pre-install files
++ prtsweep: remove non-working -p option
+- prtorphan: fix parsing of /etc/prt-get.conf for port directories,
+  <path>:<port>,<port> definitions are handled correctly now
+
 0.9.1 -> 0.9.2
 --------------
 - Bugfix: fix regexp for finding rm/cd commands in prtverify
