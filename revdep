@@ -28,7 +28,7 @@ check_linking() {
                 if [ $? -eq 0 ]; then
                     ldd  "/$f" 2> /dev/null |grep "not found" &> /dev/null
                     if [ $? -eq 0 ]; then
-                        [ "$RD_VERBOSE" = "2" ] && echo "$1: error in: /$f"
+                        [ "$RD_VERBOSE" = "2" ] && echo "$1: error in /$f"
                         err=1
                     fi
                 fi
