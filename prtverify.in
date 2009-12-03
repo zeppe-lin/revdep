@@ -159,6 +159,7 @@ main() {
 
 ### Main
 
+export LC_ALL=C
 shopt -s nullglob
 trap "cleanup" HUP INT QUIT TERM
 
