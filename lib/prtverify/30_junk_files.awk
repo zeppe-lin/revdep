@@ -2,7 +2,7 @@
 # 30_junk_files.awk
 #
 # Version 0.1.2 - 2006-07-14
-# Jürgen Daubert <jue at jue dot li> 
+# Juergen Daubert <jue at jue dot li>
 
 
 BEGIN {

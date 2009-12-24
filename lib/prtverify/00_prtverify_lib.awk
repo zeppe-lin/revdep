@@ -2,7 +2,7 @@
 # 00_prtverify_lib.awk
 #
 # Version 0.1.6 - 2006-08-30
-# Jürgen Daubert <jue at jue dot li> 
+# Juergen Daubert <jue at jue dot li>
 #
 # Utility functions for prtverify
 

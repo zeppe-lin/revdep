@@ -2,7 +2,7 @@
 # 05_file_check.awk
 #
 # Version 0.2.0 - 2008-05-21
-# Jürgen Daubert <jue at jue dot li> 
+# Juergen Daubert <jue at jue dot li>
 #
 # Tests for the mandatory port files
 # 

@@ -2,7 +2,7 @@
 # 20_pkgfile_headers.awk
 #
 # Version 0.1.1 - 2006-08-24
-# Jürgen Daubert <jue at jue dot li> 
+# Juergen Daubert <jue at jue dot li>
 
 
 BEGIN {

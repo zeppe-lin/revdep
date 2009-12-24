@@ -2,7 +2,7 @@
 # 30_system_users.awk
 #
 # Version 0.1.2 - 2006-09-08
-# Jürgen Daubert <jue at jue dot li> 
+# Juergen Daubert <jue at jue dot li>
 
 
 loglevel_ok(ERROR+INFO) && FILENAME ~ FOOTPRINT {

@@ -2,7 +2,7 @@
 # 20_maintainer_email.awk
 #
 # Version 0.1.1 - 2006-09-11
-# Jürgen Daubert <jue at jue dot li>
+# Juergen Daubert <jue at jue dot li>
 #
 # Checks the Maintainer header for invalid characters
 # and for the correct 'name, email at provider dot sth'.

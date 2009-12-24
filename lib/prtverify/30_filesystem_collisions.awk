@@ -2,7 +2,7 @@
 # 30_filesystem_collisions.awk
 #
 # Version 0.1.0 - 2006-10-29
-# Jürgen Daubert <jue at jue dot li>
+# Juergen Daubert <jue at jue dot li>
 #
 # Suggested by Mark Rosenstand
 #

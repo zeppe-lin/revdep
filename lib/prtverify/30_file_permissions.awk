@@ -2,7 +2,7 @@
 # 30_file_permissions.awk
 #
 # Version 0.1.1 - 2006-07-14
-# Jürgen Daubert <jue at jue dot li> 
+# Juergen Daubert <jue at jue dot li>
 
 
 loglevel_ok(FATAL) && FILENAME ~ FOOTPRINT {

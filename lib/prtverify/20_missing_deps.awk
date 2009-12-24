@@ -2,7 +2,7 @@
 # 20_missing_deps.awk
 #
 # Version 0.1 - 2006-08-26
-# Jürgen Daubert <jue at jue dot li>
+# Juergen Daubert <jue at jue dot li>
 
 
 BEGIN {

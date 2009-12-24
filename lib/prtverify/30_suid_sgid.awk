@@ -2,7 +2,7 @@
 # 30_suid_sgid.awk
 #
 # Version 0.1.2 - 2006-09-23
-# Jürgen Daubert <jue at jue dot li> 
+# Juergen Daubert <jue at jue dot li>
 
 
 FILENAME ~ FOOTPRINT {

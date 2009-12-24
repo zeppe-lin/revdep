@@ -2,7 +2,7 @@
 # 90_mk_footprint_db.awk
 #
 # Version 0.1.0 - 2006-08-31
-# Jürgen Daubert <jue at jue dot li>
+# Juergen Daubert <jue at jue dot li>
 #
 # Creates a temporary file with all footprints and
 # the owners of those

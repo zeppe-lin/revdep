@@ -2,7 +2,7 @@
 # 20_evil_cmds.awk
 #
 # Version 0.1.3 - 2008-05-21
-# Jürgen Daubert <jue at jue dot li> 
+# Juergen Daubert <jue at jue dot li>
 #
 # Two test to find malicious rm and cd commands like 'rm -rf /usr'.
 #

@@ -2,7 +2,7 @@
 # 20_encoding.awk
 #
 # Version 0.1 - 2009-03-09
-# Jürgen Daubert <jue at jue dot li>
+# Juergen Daubert <jue at jue dot li>
 #
 # Detect non-ASCII characters
 #

@@ -2,7 +2,7 @@
 # 30_invalid_dirs.awk
 #
 # Version 0.1.3 - 2006-09-24
-# Jürgen Daubert <jue at jue dot li> 
+# Juergen Daubert <jue at jue dot li>
 
 
 BEGIN {
