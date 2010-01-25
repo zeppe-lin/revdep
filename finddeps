@@ -3,9 +3,9 @@
 #  the output of ldd
 #
 # Johannes Winkelmann <jw at tks6 dot net>
-# awk stuff by Jürgen Daubert <jue at jue dot li>
+# awk stuff by Juergen Daubert <jue at jue dot li>
 
-version=1.7
+version=1.8
 pkgdb="/var/lib/pkg/db"
 
 export LD_LIBRARY_PATH=/usr/lib:/usr/X11/lib:$LD_LIBRARY_PATH
@@ -40,7 +40,7 @@ if [ $? -ne 0 ]; then
     exit -3
 fi
 
-depPkg=`printDep $pkgName |sort|uniq|grep -v $pkgName`
+depPkg=`printDep $pkgName |sort|uniq|grep -v "\<$pkgName\>"`
 
 for p in $depPkg; do
     echo -n $p
