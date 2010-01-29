@@ -1,7 +1,7 @@
 #
 # 30_system_users.awk
 #
-# Version 0.1.2 - 2006-09-08
+# Version 0.1.3 - 2010-01-29
 # Juergen Daubert <jue at jue dot li>
 
 
@@ -17,7 +17,7 @@ loglevel_ok(ERROR+INFO) && FILENAME ~ FOOTPRINT {
             warned = 1
         }
 
-        if (au[2] ~ /[1-9][0-9]*|users/) {
+        if (au[2] ~ /[1-9][0-9]*/) {
             perror(ERROR, "invalid group: " $2 " -> " $3)
             warned = 1
         }
