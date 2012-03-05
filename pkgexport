@@ -12,7 +12,7 @@
 #
 # 
 COMMAND=$(basename $0)
-VERSION=0.7
+VERSION=0.8
 VERBOSE=0
 PKGNAME=""
 TARGET=$(pwd)
@@ -86,7 +86,18 @@ exportpkg() {
 pkgname=${INSTALLED[0]}
 pound="#"
 version=${INSTALLED[1]}
-suffix=".pkg.tar.gz"
+
+# get compression mode from /etc/pkgmk.conf
+compression="-z"
+compression_suffix="gz"
+[ -f /etc/pkgmk.conf ] && . /etc/pkgmk.conf
+[ -n $PKGMK_COMPRESSION_MODE ] && compression_suffix=$PKGMK_COMPRESSION_MODE
+suffix=".pkg.tar.$compression_suffix"
+case $compression_suffix in
+	gz) compression="-z" ;;
+	bz2) compression="-j" ;;
+	xz) compression="-J" ;;
+esac
 
 if [ -d $TARGET ]; then
 	FIRST=$(echo $TARGET | cut -c 1)
@@ -110,14 +121,10 @@ if [ -f "$BIGFILENAME" ]; then
 	exit 1
 fi
 
-if [ $VERBOSE = 1 ]; then
-	TARARGS="vvf"
-else
-	TARARGS="f"
-fi
+[ $VERBOSE = 1 ] && TARARGS="-v"
 
 cd /
-tar cz$TARARGS "$BIGFILENAME" --no-recursion --files-from $FILES
+bsdtar -c $compression $TARARGS -f "$BIGFILENAME" -n `cat $FILES`
 RET=$?
 
 if [ $RET -ne 0 ]
