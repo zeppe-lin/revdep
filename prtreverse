@@ -17,7 +17,7 @@
 #   **** USE AT YOUR OWN RISK ****
 #
 
-VERSION="0.1"
+VERSION="0.2"
 
 info() {
     echo "=======> $1"
@@ -183,7 +183,9 @@ fi
 # vars
 mkdir -p "$prtdir"/reverse
 . "$prtdir"/Pkgfile
-PKGTAR="$name"#"$version"-"$release".pkg.tar.gz
+PKGMK_COMPRESSION_MODE="gz"
+[ -f /etc/pkgmk.conf ] && . /etc/pkgmk.conf
+PKGTAR="$name"#"$version"-"$release".pkg.tar.$PKGMK_COMPRESSION_MODE
 
 cd $prtdir
 
