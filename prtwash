@@ -139,7 +139,9 @@ wash() {
     else
         tosave=() # array of files not to be deleted
         . "$1"/Pkgfile
-        packagename="$name"#"$version"-"$release"".pkg.tar.gz"
+        PKGMK_COMPRESSION_MODE="xz"
+        [ -f /etc/pkgmk.conf ] && . /etc/pkgmk.conf
+        packagename="$name"#"$version"-"$release"".pkg.tar.$PKGMK_COMPRESSION_MODE"
 
         if [ ! "$removesources" = 1 ]; then
         # keep sources
