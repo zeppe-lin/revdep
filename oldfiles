@@ -14,6 +14,7 @@ use strict;
 my %options = %{getoptions(@ARGV)};
 my $pkgdir = "";
 my $srcdir = "";
+my $compress = "gz";
 my %wanted;
 my %keepme;
 
@@ -34,6 +35,7 @@ open CONFIG, "/etc/pkgmk.conf" or die "Could not open /etc/pkgmk.conf";
 while (<CONFIG>) {
 	$srcdir = $1 if m/^PKGMK_SOURCE_DIR="(.*)"\n/;
 	$pkgdir = $1 if m/^PKGMK_PACKAGE_DIR="(.*)"\n/;
+	$compress = $1 if m/^PKGMK_COMPRESSION_MODE="(.*)"\n/;
 }
 close CONFIG;
 
@@ -65,7 +67,7 @@ if ( $options{"-s"} ) {
 foreach (split('\n', `prt-get printf "%p:%n:%v:%r\n"`)) {
 	my ($path, $name, $version, $release) = split(':', $_, 4);
 	if ( $options{"-p"} ) {
-		$wanted{$pkgdir}{"$name\#$version-$release.pkg.tar.gz"} = 1;
+		$wanted{$pkgdir}{"$name\#$version-$release.pkg.tar.$compress"} = 1;
 	}
 	if ( $options{"-s"} ) {
 		open MD5SUMS, "$path/$name/.md5sum" or next;
