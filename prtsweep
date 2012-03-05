@@ -119,7 +119,7 @@ sweep() {
     done
     for f in `ls -a`; do
         if ! keepfiles "$f"; then
-            if ! echo $f | grep '.*#.*\.pkg\.tar\.gz' >/dev/null; then
+            if ! echo $f | grep '.*#.*\.pkg\.tar\.[gbx]z*' >/dev/null; then
                 if ! inlist $f ${pkgfiles[@]}; then
                     if [ "$printedpwd" = "false" ]; then
                         printedpwd="true"
