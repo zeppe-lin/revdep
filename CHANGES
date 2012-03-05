@@ -1,3 +1,16 @@
+0.9.3 -> 
+--------------
++ prtverify: allow use of group users
++ prtverify: whitelist update
+- prtverify: set explicit LC_ALL to "C"
+- prtverify: error world-writable directories only if sticky bit is 
+  not set. Patch by Markus Schnalke
+- finddeps: make exclusion of caller name more explicit
+- oldfiles, pkgexport, prtreverse, prtwash: use the compression mode
+  defined in pkgmk.conf. Patches by Jose V Beneyto
+- prtsweep: packages might be either gz or xz compressed.  
+  Patch by Jose V Beneyto
+
 0.9.2 -> 0.9.3
 --------------
 + finddeps: optimize awk usage a bit, some minor adjustments
