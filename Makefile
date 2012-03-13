@@ -68,5 +68,5 @@ dist: clean
 	@mkdir .${NAME}-${VERSION}
 	@cp -r * .${NAME}-${VERSION}
 	@mv .${NAME}-${VERSION} ${NAME}-${VERSION}
-	@tar czf ${NAME}-${VERSION}.tar.gz ${NAME}-${VERSION}
+	@tar cJf ${NAME}-${VERSION}.tar.xz ${NAME}-${VERSION}
 	@rm -rf ${NAME}-${VERSION}
