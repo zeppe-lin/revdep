@@ -5,10 +5,10 @@
 # Johannes Winkelmann <jw at tks6 dot net>
 # awk stuff by Juergen Daubert <jue at jue dot li>
 
-version=1.8
+version=1.9
 pkgdb="/var/lib/pkg/db"
 
-export LD_LIBRARY_PATH=/usr/lib:/usr/X11/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/X11/lib:$LD_LIBRARY_PATH
 
 function printDep() {
     deps=()
