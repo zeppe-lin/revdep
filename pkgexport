@@ -59,7 +59,7 @@ clean_on_exit() {
 ##########
 pkginfo_l() {
 
-FILES="/tmp/.pkgexport.$$"
+FILES="$(mktemp --tmpdir ${COMMAND}.XXXXXXXXXX)"
 pkginfo $ROOT -l $1 > $FILES
 if [ $RET -ne 0 ]
 then
