@@ -48,6 +48,13 @@ exit 1
 }
 
 ##########
+# clean_on_exit removes temporary files etc.
+##########
+clean_on_exit() {
+    [ -f $FILES ] && rm $FILES
+}
+
+##########
 # pkginfo_l lists files inside a package (pkginfo -l $file)
 ##########
 pkginfo_l() {
@@ -134,9 +141,6 @@ then
 	exit 1
 fi
 
-# Get rid of our sucky temp-file.
-rm -f $FILES
-
 if [ $VERBOSE = 1 ]; then
 	echo ===============================================
 	echo
@@ -191,4 +195,7 @@ exportpkg
 
 }
 
+
+trap "clean_on_exit" EXIT
 main $*
+
