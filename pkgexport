@@ -91,7 +91,7 @@ version=${INSTALLED[1]}
 compression="-z"
 compression_suffix="gz"
 [ -f /etc/pkgmk.conf ] && . /etc/pkgmk.conf
-[ -n $PKGMK_COMPRESSION_MODE ] && compression_suffix=$PKGMK_COMPRESSION_MODE
+[ $PKGMK_COMPRESSION_MODE ] && compression_suffix=$PKGMK_COMPRESSION_MODE
 suffix=".pkg.tar.$compression_suffix"
 case $compression_suffix in
 	gz) compression="-z" ;;
