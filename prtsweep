@@ -164,7 +164,7 @@ getoptions $@
 
 KEEP_FILES=(
     "Pkgfile" "README" "pre-install" "post-install"
-    ".footprint" ".md5sum" ".nostrip" "." ".."
+    ".footprint" ".md5sum" ".32bit" ".nostrip" "." ".."
 )  
 
 
