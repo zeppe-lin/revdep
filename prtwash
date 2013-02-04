@@ -158,6 +158,7 @@ wash() {
         if [ ! "$removeaddonfiles" = 1 ]; then
         # keep additional and dot files
             tosave=( "${tosave[@]}" ".md5sum" )
+            tosave=( "${tosave[@]}" ".32bit" )
             tosave=( "${tosave[@]}" ".footprint" )
             tosave=( "${tosave[@]}" ".nostrip" )
             tosave=( "${tosave[@]}" "README" )
@@ -186,7 +187,7 @@ wash() {
             done
         fi
 
-        for f in "$1"/{*,.footprint,.md5sum}; do
+        for f in "$1"/{*,.footprint,.md5sum,.32bit}; do
             if ! keep $f; then
                 remove $f
             fi  
