@@ -5,7 +5,7 @@
 # Johannes Winkelmann <jw at tks6 dot net>
 # awk stuff by Juergen Daubert <jue at jue dot li>
 
-version=1.9
+version=1.9.1
 pkgdb="/var/lib/pkg/db"
 
 export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/X11/lib:$LD_LIBRARY_PATH
@@ -19,7 +19,7 @@ function printDep() {
         fi
     done
 
-    deps=(`for t in  ${deps[*]}; do echo $t; done|sort|uniq`)
+    deps=(`for t in  ${deps[*]}; do realpath $t; done|sort|uniq`)
 
     for d in ${deps[*]}; do
         awk -v s="$d" -v RS="" '$0 ~ substr(s,2) {print $1}' $pkgdb
