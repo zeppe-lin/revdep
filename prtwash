@@ -139,7 +139,7 @@ wash() {
     else
         tosave=() # array of files not to be deleted
         . "$1"/Pkgfile
-        PKGMK_COMPRESSION_MODE="xz"
+        PKGMK_COMPRESSION_MODE="gz"
         [ -f /etc/pkgmk.conf ] && . /etc/pkgmk.conf
         packagename="$name"#"$version"-"$release"".pkg.tar.$PKGMK_COMPRESSION_MODE"
 
