@@ -1,35 +1,66 @@
 #!/bin/bash
-# check linkage
-# Johannes Winkelmann, jw at tks6 dot net
 
+#
+# revdep - check library and executable linking for issues after
+#          package upgrades
+#
+# Johannes Winkelmann, jw at tks6 dot net
+# Matt Housh, jaeger at morpheus dot net
+#
 # Usage:
 #
 # Formatted listing:
-#   RD_VERBOSE=1 ./revdep
-# Include errorous files:
-#   RD_VERBOSE=2 ./revdep
+#   RD_VERBOSE=1 revdep
+# Include individual broken files in output:
+#   RD_VERBOSE=2 revdep
 #
-# Pure list to be used as input to prt-get update
-#   ./revdep
+# Pure list to be used as input to prt-get update:
+#   revdep
 #
-# With an optional argument, only that port is checked
+# With an optional argument, only that port is checked:
+#   revdep samba
+#
+
+#set -x
+
+get_lib_paths() {
+    missing_files=($(ldd "$1" 2>/dev/null | awk '/not found/ { print $1 }'))
+    (for file in ${missing_files[*]}; do \
+        if [ "$file" != "" ]; then \
+        dirname /$(pkginfo -o "$file" | awk 'NR==2 { print $2 }'); \
+        fi; \
+    done) | sort | uniq
+}
 
 check_linking() {
-    # set -x
+    #set -x
     err=0
 
-    files="`awk -v p="$1" -v RS="" '$1==p' /var/lib/pkg/db`"
+    files="$(awk -v p="$1" -v RS="" '$1==p' /var/lib/pkg/db)"
     for f in $files; do
         if [ -f "/$f" ]; then
             if [ ! -r "/$f" ]; then
                 [ "$RD_VERBOSE" = "2" ] && echo "$1: couldn't read $f"
             else
-                file -b "/$f" |grep -q 'shared'
+                file -b "/$f" | grep -q "shared"
                 if [ $? -eq 0 ]; then
-                    ldd  "/$f" 2> /dev/null |grep "not found" &> /dev/null
+                    ldd  "/$f" 2>/dev/null | grep "not found" &>/dev/null
                     if [ $? -eq 0 ]; then
-                        [ "$RD_VERBOSE" = "2" ] && echo "$1: error in /$f"
-                        err=1
+                        owner=$(pkginfo -o "/$f" | awk 'NR==2 { print $1 }')
+                        if [ "$owner" = "$1" ]; then
+                            lib_paths=($(get_lib_paths "/$f"))
+                            export IFS=$':'
+                            paths=$(echo "${lib_paths[*]}")
+                            unset IFS
+                            LD_LIBRARY_PATH=$paths:$LD_LIBRARY_PATH ldd "/$f" 2>/dev/null | grep "not found" &>/dev/null
+                            if [ $? -eq 0 ]; then
+                                [ "$RD_VERBOSE" = "2" ] && echo "$1: error in /$f"
+                                err=1
+                            fi
+                        else
+                            [ "$RD_VERBOSE" = "2" ] && echo "$1: error in /$f"
+                            err=1
+                        fi
                     fi
                 fi
             fi
@@ -42,7 +73,7 @@ check_linking() {
 [ -n "$RD_VERBOSE" ] && echo "** calculating deps"
 
 if [ -z "$1" ]; then
-    ports=(`pkginfo -i|awk '{print $1}'`)
+    ports=($(pkginfo -i| awk '{ print $1 }'))
     [ -n "$RD_VERBOSE" ] && echo "** Checking ${#ports[*]} ports"
 else
     ports=($@)
