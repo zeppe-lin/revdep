@@ -1,3 +1,10 @@
+0.9.6 -> 0.9.7
+--------------
+- revdep: fix false errors for libraries in non-standard locations.
+  Patch by Matt Housh
+- prtwash: default compression mode should be .gz not .xz.
+  Reported by Maximilian Dietrich
+
 0.9.5 -> 0.9.6
 --------------
 - finddeps: use realpath to sanitize filepaths like /usr/lib/../lib
