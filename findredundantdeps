@@ -6,7 +6,6 @@
 # $ findredundantdeps *
 # $ findredundantdeps bmp
 
-# $Id: findredundantdeps,v 1.2 2005/04/01 12:35:01 sip Exp $
 
 usage()
 {
@@ -25,6 +24,17 @@ find_deps()
 	    return 1
 	fi
     fi
+}
+
+get_directdeps()
+{
+    prt-get info $1 | gawk '
+    /^Dependencies:/ {  
+        split($2,a,",")
+        # remove duplicates
+        for (i in a) b[a[i]]=a[i] 
+        for (i in b) print b[i]
+    }'
 }
 
 sortvar()
@@ -100,8 +110,7 @@ for package in $*; do
 	subdeps=$(sortvar $subdeps)
 
 	res=$(sortvar_d $deps $subdeps)
-	# shudder
-	directdeps=$(prt-get info $package|awk '/^Dependencies:/ {print $2}'|tr ',' ' ')
+	directdeps=$(get_directdeps $package)
 
 	redundant=$(sortvar_d $res $directdeps)
 	# tranform \n in ' '
