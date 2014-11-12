@@ -32,8 +32,8 @@ get_directdeps()
     /^Dependencies:/ {  
         split($2,a,",")
         # remove duplicates
-        for (i in a) b[a[i]]=a[i] 
-        for (i in b) print b[i]
+        for (i in a) b[a[i]]
+        for (i in b) print i
     }'
 }
 
