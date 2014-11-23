@@ -1,3 +1,13 @@
+0.9.7 -> 0.9.8
+--------------
+- findredundantdeps: fix for dependencies that are listed more than 
+  once in the Pkgfile. Reported by Danny Rawlins.
++ prtverify: add /usr/share/info to invalid_dirs
++ prtverify: whitelist update
+- prtverify: prtverify is a bash script, so call it so
++ prtverify: new test to see if we have the same dependency more 
+  than once in the Pkgfile
+
 0.9.6 -> 0.9.7
 --------------
 - revdep: fix false errors for libraries in non-standard locations.
