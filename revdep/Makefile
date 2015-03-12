@@ -31,4 +31,4 @@ dist: man
 	tar --transform s:^:revdep-$(VERSION)/: -c *.c *.h *.man *.1 COPYING Makefile | xz > revdep-$(VERSION).tar.xz
 
 clean:
-	rm -f *.o revdep revdep.1
+	rm -f *.o revdep #revdep.1
