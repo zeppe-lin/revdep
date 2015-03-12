@@ -1,3 +1,10 @@
+0.9.8 -> 1.0
+--------------
++ new revdep written in C by James Buren, ryuo @ freenode
+  + much faster than the old bash version
+  + gained a new option -i to ignore ports
+  Many thanks for the contribution
+
 0.9.7 -> 0.9.8
 --------------
 - findredundantdeps: fix for dependencies that are listed more than 
