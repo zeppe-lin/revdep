@@ -3,7 +3,7 @@ BINDIR  := /usr/bin
 MANDIR  := /usr/man/man1
 CFLAGS  ?= -O2
 CFLAGS  += -Wall -Wextra -Wno-unused-parameter -DVERSION='"$(VERSION)"'
-LDFLAGS += -lz -lelf
+LDFLAGS += -static -lz -lelf
 CC      ?= cc
 
 %.o: %.c
