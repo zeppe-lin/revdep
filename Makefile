@@ -26,7 +26,7 @@ install-man:
 	  fi; \
 	done
 
-install-bin:
+install-bin: revdep/revdep
 	if [ ! -d $(DESTDIR)$(BINDIR) ]; then \
 	  install -d $(DESTDIR)$(BINDIR); \
 	fi
