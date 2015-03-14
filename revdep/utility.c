@@ -342,6 +342,11 @@ extern int get_ld_for_file(const char *pkg, const char *path, const char **ld)
 			break;
 #endif
 
+#if defined(__arm__)
+		case EM_ARM:
+			break;
+#endif
+
 		default:
 			goto bail;
 
@@ -381,6 +386,10 @@ extern int get_ld_for_file(const char *pkg, const char *path, const char **ld)
 			break;
 		case ELFCLASS64:
 			ld[0] = "/lib/ld-linux-x86-64.so.2";
+			break;
+#elif defined(__arm__)
+		case ELFCLASS32:
+			ld[0] = "/lib/ld-linux-armhf.so.3";
 			break;
 #else
 #error "Unsupported Architecture"
