@@ -1,3 +1,8 @@
+1.0 -> 1.0.1
+------------
++ revdep: add support for ARM
+  Patch by James Buren
+
 0.9.8 -> 1.0
 --------------
 + new revdep written in C by James Buren, ryuo @ freenode
