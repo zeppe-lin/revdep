@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # pkgsize - shows disk usage for CRUX packages/ports
 # Check man 1 pkgsize for more details 
