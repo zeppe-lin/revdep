@@ -7,13 +7,14 @@
 
 BEGIN {
 
-    invalid_dirs[1] = "^usr/share/man/$"
+    # invalid_dirs[1] = "^usr/share/man/$"
     invalid_dirs[2] = "^usr/local/$"
     invalid_dirs[3] = "^usr/share/locale/$"
     invalid_dirs[4] = "^usr/info/$"
     invalid_dirs[5] = "^usr/share/info/$"
     invalid_dirs[6] = "^usr/libexec/$"
     invalid_dirs[7] = "^usr/man/../$"
+    invalid_dirs[8] = "^usr/share/man/../$"
 }
 
 
