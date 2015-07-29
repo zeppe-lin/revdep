@@ -8,7 +8,7 @@ TOOLS 	= prtcreate prtrej prtsweep prtcheck prtwash pkgexport pkgsize \
 	  revdep/revdep
 
 PREFIX	= /usr
-MANDIR	= $(PREFIX)/man
+MANDIR	= $(PREFIX)/share/man
 BINDIR	= $(PREFIX)/bin
 LIBDIR  = $(PREFIX)/lib
 CONFDIR	= /etc
