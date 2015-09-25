@@ -16,8 +16,8 @@ function interrupted() {
 	echo "Interrupted."
 	clean
 	exit 1
-	}
-	
+}
+
 function clean() {
 	if [ -f $TMP_LOCAL ]; then
 		rm $TMP_LOCAL
@@ -25,10 +25,12 @@ function clean() {
 	if [ -f $TMP_WGET ]; then
 		rm $TMP_WGET
 	fi
-	}
+}
+
 function error () {
 	echo "ERROR! --> $1"
-	}
+}
+
 function usage() {
 	echo usage: pkgsize [options] [portname]
 	echo options:
@@ -36,19 +38,18 @@ function usage() {
 	echo "  -w,   --wget                show size to download (default if package not installed)"
 	echo "  -h,   --help                print help and exit"
 	exit
-	}
+}
 
 function sizetodownload() {
-
 	dirs="$(cat /etc/ports/*.rsync | sed -n '/destination=/s/.*=//p')"
 	dirs="$dirs $(cat /etc/ports/*.httpup | sed -n '/ROOT_DIR=/s/.*=//p')"
 	dir="$(find $dirs -iname $portname 2>/dev/null | head -1)"
-	
+
 	if [ -z $dir ]; then
-	 error "$portname not a port!"
-	 exit 2
+		error "$portname not a port!"
+		exit 2
 	fi
-	
+
 	. $dir/Pkgfile
 
 	nrbytes=0
@@ -69,24 +70,19 @@ function sizetodownload() {
 
 		if [ -z "$sizeofdl" ]; then
 			sizeofdl=0
-		#	echo "sizeofdl - $sizeofdl"
 		fi
-		((nrbytes=nrbytes+sizeofdl))
-	
-		if [ "$verbose" = "true" ]; then
 
+		((nrbytes=nrbytes+sizeofdl))
+
+		if [ "$verbose" = "true" ]; then
 			printf "%12s   %s\n" $sizeofdl $FILE
 		fi
 
 	done
 	echo "Total number of bytes to download for $portname is : $nrbytes"
-
-#	exit 0
-	
 }
 
-function main()
-{
+function main() {
 
 pkginfo -l $portname > $TMP_LOCAL 2>/dev/null
 
@@ -99,25 +95,21 @@ byteall=0
 
 while read line
 do
-  file="/"$line
+	file="/"$line
 
-  if [ -f $file ]; then
-    filesize=`/usr/bin/du -k $file`
+	if [ -f $file ]; then
+		filesize=`/usr/bin/du -k $file`
+		size=`echo $filesize | awk '{print $1}'`
 
-    size=`echo $filesize | awk '{print $1}'`
+		if [ "$verbose" = "true" ]; then
+			printf "%10s   %s\n" $size	$file
+		fi
 
-    #comment line below for more or less feedback
-    if [ "$verbose" = "true" ]; then
-      printf "%10s   %s\n" $size	$file
-    fi 
-
-    ((bytea=bytea+size))
-  fi
+		((bytea=bytea+size))
+	fi
 done <$TMP_LOCAL
 
-#echo 
 echo "Total kilobytes for $portname :" $bytea
-#echo
 }
 
 
@@ -129,46 +121,39 @@ verbose="false"
 
 while [ $1 ]
 do
-case $1 in
--v|-V) verbose="true"
-	shift   
-;;
--h|-H|--help) usage
-	shift   
-;;
--w|-W|--wget) online="true"
-	shift   
-;;
-*)    
-portnametemp=$1
-shift  
-;;
-esac
+	case $1 in
+		-v|-V) verbose="true"
+			shift
+		;;
+		-h|-H|--help) usage
+			shift
+		;;
+		-w|-W|--wget) online="true"
+			shift
+		;;
+		*)
+			portnametemp=$1
+			shift
+		;;
+	esac
 done
 
 portname=$portnametemp
 
-#if [ "$online" = "true" ]; then
-#	sizetodownload
-#fi
-#if from stdin -- hopefully this works?
 if [ -z $portname ]; then
-  while read -p "Enter port name: " x
-  do
-      portname=$x
-	  if [ "$online" = "true" ]; then
-		sizetodownload
-	  else main
-	  
-	  fi
-      #main
-  done
+	while read -p "Enter port name: " x
+	do
+		portname=$x
+		if [ "$online" = "true" ]; then
+			sizetodownload
+		else
+			main
+		fi
+	done
 else if [ "$online" = "true" ]; then
 		sizetodownload
-	  else main
-	  
-	  fi 
-	  #main
+	else
+		main
+	fi
 fi
-
 
