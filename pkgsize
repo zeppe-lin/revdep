@@ -57,17 +57,16 @@ function sizetodownload() {
 
 		sizeofdl=""
 		if [ "$testhttp" = "http" ]; then
-		   wget $FILE -S --spider 2> $TMP_WGET
-		   	if [ $? -ne 0 ] && [ $nrbytes -eq 0 ]
-			 then
-			error "Not online, or no wget installed. "
-			clean
-			exit 1
-			fi
-			sizeofdl=`cat $TMP_WGET | awk '/Content-Length/{print $3}'`
-		   rm $TMP_WGET
-			
-		fi	
+			wget $FILE -S --spider 2> $TMP_WGET
+				if [ $? -ne 0 ] && [ $nrbytes -eq 0 ]; then
+					error "Not online, or no wget installed. "
+					clean
+					exit 1
+				fi
+			sizeofdl=`cat $TMP_WGET | awk '/Content-Length/{print $2}'`
+			rm $TMP_WGET
+		fi
+
 		if [ -z "$sizeofdl" ]; then
 			sizeofdl=0
 		#	echo "sizeofdl - $sizeofdl"
