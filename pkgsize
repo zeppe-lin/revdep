@@ -39,9 +39,10 @@ function usage() {
 	}
 
 function sizetodownload() {
-	
-	dirs=`cat /etc/ports/*sup* | grep prefix | sed s/.*=//g`
-	dir=`find $dirs -iname $portname 2>/dev/null | head -1 `
+
+	dirs="$(cat /etc/ports/*.rsync | sed -n '/destination=/s/.*=//p')"
+	dirs="$dirs $(cat /etc/ports/*.httpup | sed -n '/ROOT_DIR=/s/.*=//p')"
+	dir="$(find $dirs -iname $portname 2>/dev/null | head -1)"
 	
 	if [ -z $dir ]; then
 	 error "$portname not a port!"
