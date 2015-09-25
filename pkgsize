@@ -122,19 +122,22 @@ verbose="false"
 while [ $1 ]
 do
 	case $1 in
-		-v|-V) verbose="true"
+		-v|-V)
+			verbose="true"
 			shift
-		;;
-		-h|-H|--help) usage
+			;;
+		-h|-H|--help)
+			usage
 			shift
-		;;
-		-w|-W|--wget) online="true"
+			;;
+		-w|-W|--wget)
+			online="true"
 			shift
-		;;
+			;;
 		*)
 			portnametemp=$1
 			shift
-		;;
+			;;
 	esac
 done
 
