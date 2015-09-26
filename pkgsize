@@ -95,7 +95,7 @@ byteall=0
 
 while read line
 do
-	file="/${line/ /\\ }"
+	file="/${line// /\\ }"
 
 	if [ -f "$file" ]; then
 		filesize=$(/usr/bin/du -k $file)
