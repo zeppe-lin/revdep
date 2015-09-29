@@ -1,3 +1,14 @@
+1.0.1 -> 1.0.2
+--------------
+- pkgsize: is a bash and not a sh script
+  Reported via IRC by onodera
+- pkgsize: select port dirs from httpup and rsync files in /etc/ports
+  Reported via IRC by rmull
+- pkgsize: style cleanup, allow spaces in filenames
+- Makefile: install man-pages into /usr/share/man
+- prtverify: as of CRUX 3.2 we changed the location of man-pages
+  from /usr/man to /usr/share/man. Allow both directories for now
+
 1.0 -> 1.0.1
 ------------
 + revdep: add support for ARM
