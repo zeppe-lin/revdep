@@ -26,7 +26,6 @@
 
 extern PackageList *packages_load_from_database(const char *path)
 {
-	int fd;
 	char *text;
 	unsigned int length;
 	char name[1024];
@@ -98,7 +97,7 @@ extern PackageList *packages_load_from_database(const char *path)
 		}
 	}
 
-	if(open_file_in_memory(path, &fd, &text, &length) == -1)
+	if(open_file_in_memory(path, &text, &length) == -1)
 	{
 		return NULL;
 	}
@@ -111,18 +110,18 @@ extern PackageList *packages_load_from_database(const char *path)
 	if(parse_file_in_memory(text, parse_callback) == -1)
 	{
 		packages_free(pkgs);
-		close_file_in_memory(fd, text, length);
+		close_file_in_memory(text, length);
 		return NULL;
 	}
 
 	if(pkgs->length == 0)
 	{
 		packages_free(pkgs);
-		close_file_in_memory(fd, text, length);
+		close_file_in_memory(text, length);
 		return NULL;
 	}
 
-	close_file_in_memory(fd, text, length);
+	close_file_in_memory(text, length);
 
 	return pkgs;
 }

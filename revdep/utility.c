@@ -143,46 +143,48 @@ extern unsigned int string_crc32(const char *s)
 	return hash;
 }
 
-extern int open_file_in_memory(const char *path, int *fd, char **text, unsigned int *length)
+extern int open_file_in_memory(const char *path, char **text, unsigned int *length)
 {
 	struct stat st;
+	int fd;
 
-	if(path == NULL || path[0] == '\0' || fd == NULL || text == NULL || length == NULL)
+	if(path == NULL || path[0] == '\0' || text == NULL || length == NULL)
 	{
 		errno = EINVAL;
 		return -1;
 	}
 
-	if((fd[0] = open(path, O_RDONLY)) == -1)
+	if((fd = open(path, O_RDONLY)) == -1)
 	{
 		return -1;
 	}
 
-	if(fstat(fd[0], &st) == -1)
+	if(fstat(fd, &st) == -1)
 	{
-		close(fd[0]);
+		close(fd);
 		return -1;
 	}
 
-	if((text[0] = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd[0], 0)) == NULL)
+	if((text[0] = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == NULL)
 	{
-		close(fd[0]);
+		close(fd);
 		return -1;
 	}
+
+	// We don't need to keep the fd around.
+	close(fd);
 
 	length[0] = st.st_size;
 	
 	return 0;
 }
 
-extern void close_file_in_memory(int fd, char *text, unsigned int length)
+extern void close_file_in_memory(char *text, unsigned int length)
 {
-	if(fd == -1 || text == NULL || length == 0)
+	if(text == NULL || length == 0)
 		return;
 
 	munmap(text, length);
-
-	close(fd);
 }
 
 extern int parse_file_in_memory(char *text, parse_cb_t cb)
