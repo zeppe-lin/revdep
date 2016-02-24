@@ -1,3 +1,14 @@
+1.0.2 -> 1.1
+------------
+- revdep: new version 2.0 by James Buren
+  - Rewrite in C++
+  - much improved speed
+  - new config directory /etc/revdep.d to add non-standard library 
+    locations, see man-page for details
+  Again many thanks for the contribution
+- prtrej, prtcheck, pkgexport: fix shebang line, we are a bash script
+  Patch by Tilman Sauerbeck
+
 1.0.1 -> 1.0.2
 --------------
 - pkgsize: is a bash and not a sh script
