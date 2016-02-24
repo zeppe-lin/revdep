@@ -1,4 +1,4 @@
-// Copyright (C) 2015 James Buren
+// Copyright (C) 2016 James Buren
 //
 // This file is part of revdep.
 //
@@ -17,4 +17,4 @@
 
 #pragma once
 
-extern int main(int argc, char **argv);
+int main(int argc, char **argv);

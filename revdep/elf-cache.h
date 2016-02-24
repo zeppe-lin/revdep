@@ -1,4 +1,4 @@
-// Copyright (C) 2015 James Buren
+// Copyright (C) 2016 James Buren
 //
 // This file is part of revdep.
 //
@@ -17,17 +17,20 @@
 
 #pragma once
 
-#include "package.h"
+#include "elf.h"
+#include "pkg.h"
+#include <unordered_map>
 
-typedef struct
-{
-	int verbose;
-} Global_Data;
+typedef std::unordered_map <std::string, Elf *> ElfMap;
 
-#ifdef _IN_GLOBAL_
-extern Global_Data rd;
-#else
-extern const Global_Data rd;
-#endif
+class ElfCache {
+private:
+	ElfMap _data;
+	bool findLibraryByDirs(const Elf *elf, const std::string &lib, const StringVector &dirs);
+	bool findLibraryByPath(const Elf *elf, const std::string &lib);
 
-extern int global_setup(int argc, char **argv, int *arg_start, PackageList *pkgs);
+public:
+	~ElfCache();
+	const Elf *LookUp(const std::string &path);
+	bool FindLibrary(const Elf *elf, const Package &pkg, const std::string &lib, const StringVector &dirs);
+};

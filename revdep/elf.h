@@ -17,12 +17,26 @@
 
 #pragma once
 
-#include <vector>
-#include <string>
+#include "utility.h"
 
-typedef std::vector <std::string> StringVector;
+class Elf {
+private:
+	int _machine;
+	StringVector _needed;
+	StringVector _rpath;
+	StringVector _runpath;
+	std::string _path;
+	bool _initialized;
 
-void split(const std::string &in, StringVector &out, char delimiter);
-void ReadRdConf(const std::string &path, StringVector &dirs);
-bool ReadLdConf(const std::string &path, StringVector &dirs, int maxDepth);
-bool IsFile(const std::string &path);
+public:
+	Elf(const std::string &path);
+
+	      int           Machine() const { return _machine;     }
+	const StringVector& Needed()  const { return _needed;      }
+	const StringVector& RPath()   const { return _rpath;       }
+	const StringVector& RunPath() const { return _runpath;     }
+	const std::string&  Path()    const { return _path;        }
+	      bool          Valid()   const { return _initialized; }
+
+	bool Compatible(const Elf &elf) const { return _machine == elf._machine; }
+};
