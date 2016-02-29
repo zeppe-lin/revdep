@@ -1,10 +1,10 @@
 VERSION  := 2.0
 BINDIR   := /usr/bin
-MANDIR   := /usr/man/man1
+MANDIR   := /usr/share/man/man1
 ETCDIR   := /etc/revdep.d
 CXXFLAGS ?= -O2
 CXXFLAGS += -std=gnu++0x -Wall -Wextra -g -DVERSION='"$(VERSION)"'
-LDFLAGS  += -static -lelf
+LDFLAGS  += -static $(shell pkg-config --libs --static libelf)
 SOURCES  := elf.cpp utility.cpp main.cpp pkg.cpp elf-cache.cpp
 OBJECTS  := $(patsubst %.cpp,%.o,$(SOURCES))
 
