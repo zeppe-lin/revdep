@@ -1,7 +1,8 @@
 #!/bin/sh
 #
-# $Id: prtcreate,v 1.1.1.1 2003/08/27 11:43:05 opel Exp $
+# $Id: prtcreate,v 1.1.1.2 2017/04/17 02:23:32 opel Exp $
 # (c) 2003 by Martin Opel <martin@obbl-net.de>
+# (c) 2017 by The CRUX Project
 #
 # May be redistributed and modified under the terms of the GPL
 # only usable with CRUX Linux, version 1.0 or higher.
@@ -21,7 +22,6 @@ cat <<EOF > Pkgfile
 # Description:
 # URL:
 # Maintainer:
-# Packager:
 # Depends on:
 
 name=`basename $PWD`
