@@ -1,9 +1,9 @@
 WARN   core/autoconf ............ junk file found: usr/share/autoconf/INSTALL
 WARN   core/automake ............ junk file found: usr/share/aclocal/README
-WARN   core/automake ............ junk file found: usr/share/automake-1.14/COPYING
-WARN   core/automake ............ junk file found: usr/share/automake-1.14/INSTALL
+WARN   core/automake ............ junk file found: usr/share/automake-1.15/COPYING
+WARN   core/automake ............ junk file found: usr/share/automake-1.15/INSTALL
 INFO   core/dcron ............... suid file found: usr/bin/crontab
-INFO   core/exim ................ suid file found: usr/sbin/exim-4.84-1
+INFO   core/exim ................ suid file found: usr/sbin/exim
 INFO   core/glibc ............... suid file found: usr/lib/pt_chown
 INFO   core/inetutils ........... suid file found: usr/bin/traceroute
 INFO   core/iputils ............. suid file found: bin/ping
