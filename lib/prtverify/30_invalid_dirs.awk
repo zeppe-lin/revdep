@@ -1,13 +1,13 @@
 #
 # 30_invalid_dirs.awk
 #
-# Version 0.1.3 - 2006-09-24
+# Version 0.1.4 - 2017-05-05
 # Juergen Daubert <jue at jue dot li>
 
 
 BEGIN {
 
-    # invalid_dirs[1] = "^usr/share/man/$"
+    invalid_dirs[1] = "^usr/man/$"
     invalid_dirs[2] = "^usr/local/$"
     invalid_dirs[3] = "^usr/share/locale/$"
     invalid_dirs[4] = "^usr/info/$"
