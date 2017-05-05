@@ -7,7 +7,7 @@
 
 MODDIR=@@LIBDIR@@/prtverify
 WHITELIST=$(ls -1 --color=none $MODDIR/*.wl)
-PORTFILES='Pkgfile .footprint .md5sum'
+PORTFILES='Pkgfile .footprint .signature'
 LOGLEVEL=15
 TESTS=$MODDIR/[023]*.awk
 
