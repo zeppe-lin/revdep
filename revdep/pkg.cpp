@@ -83,22 +83,22 @@ void ReadPackageDirs(const std::string &path, PackageVector &pkgs) {
 		return;
 	}
 
-	struct dirent de, *res;
+	struct dirent *de;
 
-	while(readdir_r(dir, &de, &res) == 0 && res != NULL) {
-		if(de.d_type != DT_REG) {
+	while((de = readdir(dir)) != NULL) {
+		if(de->d_type != DT_REG) {
 			continue;
 		}
 
 		StringVector dirs;
 
-		ReadRdConf(path + "/" + de.d_name, dirs);
+		ReadRdConf(path + "/" + de->d_name, dirs);
 
 		if(dirs.size() == 0) {
 			continue;
 		}
 
-		PackageVector::iterator pkg = std::find(pkgs.begin(), pkgs.end(), de.d_name);
+		PackageVector::iterator pkg = std::find(pkgs.begin(), pkgs.end(), de->d_name);
 
 		if(pkg == pkgs.end()) {
 			continue;
