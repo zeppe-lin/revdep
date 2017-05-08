@@ -1,3 +1,13 @@
+1.1 -> 1.1.1
+------------
+- prtverify: only allow /usr/share/man for man-page location
+- prtverify: check for .signature instead of .md5sum files
+- prtverify: whitelist update
+- revdep: use pkg-config to find required libraries
+  Patch by Danny Rawlins
+- revdep: replace deprecated readdir_r with readdir
+  Patch by James Buren
+
 1.0.2 -> 1.1
 ------------
 - revdep: new version 2.0 by James Buren
