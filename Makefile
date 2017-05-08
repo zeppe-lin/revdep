@@ -1,5 +1,5 @@
 NAME = prt-utils
-VERSION = 1.1
+VERSION = 1.1.1
 
 TOOLS 	= prtcreate prtrej prtsweep prtcheck prtwash pkgexport pkgsize \
 	  prtorphan prtcheckmissing oldfiles finddeps dllist \
@@ -13,8 +13,7 @@ BINDIR	= $(PREFIX)/bin
 LIBDIR  = $(PREFIX)/lib
 CONFDIR	= /etc
 
-all:
-	@echo "Use 'make install' to install prt-utils"
+all: prtverify revdep/revdep
 
 install-man:
 	if [ ! -d $(DESTDIR)$(MANDIR)/man1 ]; then \
@@ -58,7 +57,7 @@ prtverify:
 revdep/revdep:
 	@make -C revdep
 
-install: prtverify revdep/revdep install-man install-bin install-lib # install-conf
+install: install-man install-bin install-lib # install-conf
 
 clean:
 	@rm -f prtverify
