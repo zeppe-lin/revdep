@@ -8,11 +8,11 @@
 version=1.9.1
 pkgdb="/var/lib/pkg/db"
 
-export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/X11/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/lib:/usr/lib:/lib32:/usr/lib32:$LD_LIBRARY_PATH
 
 function printDep() {
     deps=()
-    files=(`awk -v p="$1" -v RS="" '$1==p' $pkgdb | awk '/(sbin|bin|lib|libexec)\//'`)
+    files=(`awk -v p="$1" -v RS="" '$1==p' $pkgdb | awk '/(sbin|bin|lib|lib32|libexec)\//'`)
     for f in ${files[*]}; do
         if [ -f "/$f" ]; then
             deps=(${deps[*]} `ldd /$f 2> /dev/null | awk '!/(linux-gate)|( dynamic)|(not found)/ {print $3}'`)
