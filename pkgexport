@@ -131,7 +131,7 @@ fi
 [ $VERBOSE = 1 ] && TARARGS="-v"
 
 cd /
-bsdtar -c $compression $TARARGS -f "$BIGFILENAME" -n `cat $FILES`
+bsdtar -c $compression $TARARGS -f "$BIGFILENAME" -n -T $FILES
 RET=$?
 
 if [ $RET -ne 0 ]
