@@ -58,6 +58,8 @@ static bool isValidElf(Elf *elf, int &machine) {
 		case EM_X86_64: break;
 #elif defined(__arm__)
 		case EM_ARM:    break;
+#elif defined(__aarch64__)
+		case EM_AARCH64:	break;
 #else
 #error "unsupported architecture"
 #endif
