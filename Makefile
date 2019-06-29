@@ -1,5 +1,5 @@
 NAME = prt-utils
-VERSION = 1.1.1
+VERSION = 1.1.2
 
 TOOLS 	= prtcreate prtrej prtsweep prtcheck prtwash pkgexport pkgsize \
 	  prtorphan prtcheckmissing oldfiles finddeps dllist \
