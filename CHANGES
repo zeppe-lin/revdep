@@ -1,3 +1,13 @@
+1.1.1 -> 1.1.2
+--------------
+- prtverify: whitelist update
+- revdep: add ARM AArch64 support
+  Patch by Matt Housh
+- pkgexport: use -T to support file paths with spaces
+  Patch by Thomas Penteker
+- finddeps: add lib32 to the library path
+  Patch by Danny Rawlins
+
 1.1 -> 1.1.1
 ------------
 - prtverify: only allow /usr/share/man for man-page location
