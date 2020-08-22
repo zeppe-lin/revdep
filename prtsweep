@@ -174,7 +174,7 @@ if [ -z "$ports" -a "$auto" = "1" ]; then
         savedir=`pwd`
         cd $portdir
         for dir in *; do
-            sweep $dir
+            test -d $dir && sweep $dir
         done
         cd $savedir
     done
