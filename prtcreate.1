@@ -19,7 +19,20 @@ status of 1.
 .SH OPTIONS
 No options yet.
 
+.SH CONFIG
+You can create \fI/etc/prtcreate.conf\fP to configure a fixed maintainer line for your
+new Pkgfiles.
+
+.PP
+.nf
+	root@hostname:/root # cat /etc/prtcreate.conf
+	maintainer_line="Your Name, your_mail at provider dot tld"
+	root@hostname:/root #
+
+
 .SH EXAMPLES
+.fi
+.PP
 
 Call \fIprtcreate\fP in a new created directory:
 .PP

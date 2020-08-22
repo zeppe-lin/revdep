@@ -18,10 +18,14 @@ if [ -f Pkgfile ]; then
 	exit 1
 fi
 
+if [ -f /etc/prtcreate.conf ]; then
+	. /etc/prtcreate.conf
+fi
+
 cat <<EOF > Pkgfile
 # Description:
 # URL:
-# Maintainer:
+# Maintainer:$(echo " $maintainer_line")
 # Depends on:
 
 name=`basename $PWD`
