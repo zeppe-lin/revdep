@@ -70,12 +70,14 @@ foreach (split('\n', `prt-get printf "%p:%n:%v:%r\n"`)) {
 		$wanted{$pkgdir}{"$name\#$version-$release.pkg.tar.$compress"} = 1;
 	}
 	if ( $options{"-s"} ) {
-		open MD5SUMS, "$path/$name/.md5sum" or next;
-		while (<MD5SUMS>) {
-			m/^[a-f0-9]{32}\s\s(\S+)\n/;
-			$wanted{$srcdir}{$1} = 1;
+		open SIGNATURES, "$path/$name/.signature" or next;
+		while (<SIGNATURES>) {
+			m/^SHA256\s\((.+)\)\s.+\n/;
+			if ($1 && !($1 =~ "Pkgfile") && !($1 =~ ".footprint")) {
+				$wanted{$srcdir}{$1} = 1;
+			}
 		}
-		close MD5SUMS;
+		close SIGNATURES;
 	}
 }
 
