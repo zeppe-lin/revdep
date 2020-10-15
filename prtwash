@@ -23,7 +23,7 @@
 #           execution would be useful.
 #
 
-VERSION="0.7"
+VERSION="0.8"
 CONFIGFILE="/etc/prt-get.conf"
 
 usage() {
@@ -157,7 +157,7 @@ wash() {
 
         if [ ! "$removeaddonfiles" = 1 ]; then
         # keep additional and dot files
-            tosave=( "${tosave[@]}" ".md5sum" )
+            tosave=( "${tosave[@]}" ".signature" )
             tosave=( "${tosave[@]}" ".32bit" )
             tosave=( "${tosave[@]}" ".footprint" )
             tosave=( "${tosave[@]}" ".nostrip" )
@@ -187,7 +187,7 @@ wash() {
             done
         fi
 
-        for f in "$1"/{*,.footprint,.md5sum,.32bit}; do
+        for f in "$1"/{*,.footprint,.signature,.32bit}; do
             if ! keep $f; then
                 remove $f
             fi  
