@@ -1,3 +1,8 @@
+1.1.3 -> 1.1.4
+--------------
+- oldfiles: use .signature instead of .mdsum to find the required sources
+- prtwash: replace .md5sum with .signature
+
 1.1.2 -> 1.1.3
 --------------
 - prtsweep: add .signature to KEEP_FILES
