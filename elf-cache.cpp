@@ -30,7 +30,11 @@ static void deleteElement(ElfPair pair) {
 
 static std::string resolveDirVars(const Elf *elf, const std::string &path) {
 	static const char *lib = "lib";
-	static const char *platform = (((char *) getauxval(AT_PLATFORM)) ? : "");
+
+	static const char *platform =
+		(  ((char *) getauxval(AT_PLATFORM))
+		 ? ((char *) getauxval(AT_PLATFORM)) : "");
+
 	char dir[PATH_MAX];
 
 	snprintf(dir, sizeof(dir), "%s", elf->Path().c_str());
