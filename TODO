@@ -1,3 +1,3 @@
-- pkgfoster: avoid using hardcoded core ports
-- ditch prtsweep or merge it with prtwash
-- reimplement prtwash in perl?
+Add support for NODEFLIB?
+Add support for LD_LIBRARY_PATH?
+Add support for hardware capabilility directories?

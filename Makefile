@@ -1,72 +1,33 @@
-NAME = prt-utils
-VERSION = 1.1.4
+.SUFFIXES: .cpp .o
+include config.mk
 
-TOOLS 	= prtcreate prtrej prtsweep prtcheck prtwash pkgexport pkgsize \
-	  prtorphan prtcheckmissing oldfiles finddeps dllist \
-	  findredundantdeps pkg_installed portspage pkgfoster \
-	  prtverify \
-	  revdep/revdep
+SRC = $(wildcard *.cpp)
+OBJ = $(SRC:.cpp=.o)
+BIN = revdep
+MAN = revdep.1
 
-PREFIX	= /usr
-MANDIR	= $(PREFIX)/share/man
-BINDIR	= $(PREFIX)/bin
-LIBDIR  = $(PREFIX)/lib
-CONFDIR	= /etc
+all: $(BIN) $(MAN)
 
-all: prtverify revdep/revdep
+%: %.in
+	sed -e "s/#VERSION#/$(VERSION)/" $< > $@
 
-install-man:
-	if [ ! -d $(DESTDIR)$(MANDIR)/man1 ]; then \
-	  install -d $(DESTDIR)$(MANDIR)/man1; \
-	fi
-	for manpage in $(TOOLS) prt-utils; do \
-	  if [ -f $$manpage.1 ]; then \
-	    install -m 644 $$manpage.1 $(DESTDIR)$(MANDIR)/man1/; \
-	  fi; \
-	done
+.cpp.o:
+	$(CXX) -c -o $@ $< $(CXXFLAGS) $(CPPFLAGS)
 
-install-bin: revdep/revdep
-	if [ ! -d $(DESTDIR)$(BINDIR) ]; then \
-	  install -d $(DESTDIR)$(BINDIR); \
-	fi
-	for binary in $(TOOLS); do \
-	  install -m 755 $$binary $(DESTDIR)$(BINDIR)/; \
-	done
+$(BIN): $(OBJ)
+	$(LD) -o $@ $^ $(LDFLAGS)
 
-install-conf:
-	if [ ! -d $(DESTDIR)$(CONFDIR) ]; then \
-	  install -d $(DESTDIR)$(CONFDIR); \
-	fi
-	for tool in $(TOOLS); do \
-	  if [ -f $$tool.conf ]; then \
-	    install -m 644 $$tool.conf $(DESTDIR)$(CONFDIR)/; \
-	  fi; \
-	done
+install: all
+	install -d $(DESTDIR)$(ETCDIR)/revdep.d
+	install -Dm0755 $(BIN) $(DESTDIR)$(BINDIR)
+	install -Dm0644 $(MAN) $(DESTDIR)$(MANDIR)
 
-install-lib:
-	for tool in $(TOOLS); do \
-	  if [ -d lib/$$tool ]; then \
-	    install -d $(DESTDIR)$(LIBDIR)/$$tool; \
-	    install -m 644 lib/$$tool/* $(DESTDIR)$(LIBDIR)/$$tool; \
-	  fi; \
-	done
-
-prtverify:
-	sed "s|@@LIBDIR@@|$(LIBDIR)|" prtverify.in $< > prtverify
-
-revdep/revdep:
-	@make -C revdep
-
-install: install-man install-bin install-lib # install-conf
+uninstall:
+	rm -rf $(DESTDIR)$(ETCDIR)/revdep.d
+	rm -f  $(DESTDIR)$(BINDIR)/$(BIN)
+	rm -f  $(DESTDIR)$(MANDIR)/$(MAN)
 
 clean:
-	@rm -f prtverify
-	@make -C revdep clean
+	rm $(OBJ) $(BIN) $(MAN)
 
-dist: clean
-	@rm -rf ${NAME}-${VERSION}
-	@mkdir .${NAME}-${VERSION}
-	@cp -r * .${NAME}-${VERSION}
-	@mv .${NAME}-${VERSION} ${NAME}-${VERSION}
-	@tar cJf ${NAME}-${VERSION}.tar.xz ${NAME}-${VERSION}
-	@rm -rf ${NAME}-${VERSION}
+.PHONY: all install uninstall clean
