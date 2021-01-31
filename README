@@ -1,0 +1,18 @@
+revdep
+======
+
+revdep is a tool that checks for missing libraries of installed
+packages.
+
+It's a fork of CRUX' revdep.
+
+The original sources can be downloaded from:
+git://crux.nu/tools/prt-utils.git
+
+License and Copyright
+---------------------
+
+Copyright (C) 2016 James Buren
+
+revdep is licensed through the GNU General Public License v3+.
+Read the COPYING file for the complete license.
