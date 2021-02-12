@@ -1,22 +1,26 @@
 .TH revdep 8 "" "revdep #VERSION#" ""
+
 .SH NAME
-\fBrevdep \fP- checks for missing libraries of installed packages
+\fBrevdep\fR - checks for missing libraries of installed packages
+
 .SH SYNOPSIS
 .nf
 .fam C
-\fBrevdep\fP [\fB-h\fP] [\fB-v\fP|\fB-vv\fP|\fB-vvv\fP|\fB-vvvv\fP] [package\.\.\.]
+\fBrevdep\fP [\fB-h\fP] [\fB-v\fP|\fB-vv\fP|\fB-vvv\fP|\fB-vvvv\fP] [PKG\.\.\.]
 .fam T
 .fi
 .fam T
 .fi
+
 .SH DESCRIPTION
 \fBrevdep\fP checks for missing libraries of installed packages using elfutils'
 libelf and the same algorithm that \fBld.so\fP(8) uses.
+
 .SH OPTIONS
 .TP
 .B
 \fB-h\fP
-The option \fB-h\fP displays help
+Display this help and exit
 .TP
 .B
 \fB-d\fP
@@ -32,7 +36,7 @@ Specify an alternate directory for \fBrevdep\fP package config
 .TP
 .B
 \fB-i\fP
-Comma-separated list of ports to ignore
+Comma-separated list of packages to ignore
 .TP
 .B
 \fB-v\fP
@@ -40,12 +44,16 @@ Formatted listing
 .TP
 .B
 \fB-vv\fP
-Include errorous files
+Include erroneous files
 .TP
 .B
 \fB-vvv\fP
 Include precise file errors
-\fB-vvvv\fP Show debug/trace
+.TP
+.B
+\fB-vvvv\fP
+Show debug/trace
+
 .SH EXAMPLE
 Try this command to list broken packages:
 .PP
@@ -53,28 +61,35 @@ $ \fBrevdep\fP
 .PP
 Use this command to rebuild packages on your system:
 .PP
-# prt-get update \fB-fr\fP $(\fBrevdep\fP)
+# pkgman update \fB-fr\fP $(\fBrevdep\fP)
+
 .SH ADDITIONAL LIBRARY DIRECTORIES
 Upon startup, \fBrevdep\fP searches the /etc/revdep.d directory for files named
-after ports. If any are found, any directories (assumed to be absolute
-pathes and delimited by newlines) within the file are added to a list of
-port specific directories to search if a library dependency is not found
+after packages. If any are found, any directories (assumed to be absolute
+paths and delimited by newlines) within the file are added to a list of
+package specific directories to search if a library dependency is not found
 in one of the many standard locations (as specified by \fBld.so\fP(8)).
 .PP
-If a port is discovered to have library dependencies that are in a
+If a package is discovered to have library dependencies that are in a
 non-standard location, then a file, as specified above, should be created.
 .PP
-For example, if the port "firefox" has a "libxul.so" dependency in a
+For example, if the package "firefox" has a "libxul.so" dependency in a
 the non-standard directory "/usr/lib/firefox" then a file named "firefox"
 should be created under "/etc/revdep.d" with a single line containing
 "/usr/lib/firefox". This will tell \fBrevdep\fP where to find firefox's "libxul.so"
 when looking for its library dependencies, reducing one source of false
-positives. Ideally, this file would be included with the port's own packaging
+positives. Ideally, this file would be included with the package's own packaging
 as well.
+
 .SH NOTES
 C++ rewrite inspired by Johannes Winkelmann's <jw@tks6.net> shell \fBrevdep\fP.
+.PP
 Contributed to design Danny Rawlins <contact@romster.me>.
+.PP
+Adjusted for zeppelin by Ferdinand von Zeppelin.
+
 .SH SEE ALSO
-\fBld.so\fP(8), \fBprt-get\fP(8), \fBpkginfo\fP(1)
+\fBld.so\fP(8), \fBkgman\fP(8), \fBpkginfo\fP(1)
+
 .SH AUTHOR
 James Buren, ryuo @ freenode 
