@@ -69,7 +69,7 @@ static bool parseArgs(int argc, char **argv) {
 				logger(BRIEF, "\t-d    Specify an alternate location for the package database\n");
 				logger(BRIEF, "\t-c    Specify an alternate location for ld.so.conf\n");
 				logger(BRIEF, "\t-r    Specify an alternate directory for revdep package config\n");
-				logger(BRIEF, "\t-i    Comma-separated list of ports to ignore\n");
+				logger(BRIEF, "\t-i    Comma-separated list of packages to ignore\n");
 				logger(BRIEF, "\t-v    Formatted listing\n");
 				logger(BRIEF, "\t-vv   Include erroneous files\n");
 				logger(BRIEF, "\t-vvv  Include precise file errors\n");
@@ -170,7 +170,7 @@ static bool workPackage(const Package &pkg) {
 }
 
 static void workAllPackages(const PackageVector &pkgs) {
-	logger(INFO1, "** checking %zu ports\n", pkgs.size());
+	logger(INFO1, "** checking %zu packages\n", pkgs.size());
 	logger(INFO1, "** checking linking\n");
 
 	for( size_t i = 0 ; i < pkgs.size() ; ++i ) {
@@ -196,7 +196,7 @@ static void workAllPackages(const PackageVector &pkgs) {
 }
 
 static void workSpecificPackages(const PackageVector &pkgs, int i, int argc, char **argv) {
-	logger(INFO1, "** checking %d ports\n", argc - i);
+	logger(INFO1, "** checking %d packages\n", argc - i);
 	logger(INFO1, "** checking linking\n");
 
 	for( ; i < argc ; ++i ) {
