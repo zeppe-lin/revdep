@@ -81,15 +81,28 @@ when looking for its library dependencies, reducing one source of false
 positives. Ideally, this file would be included with the package's own packaging
 as well.
 
+.SH EXIT STATUS
+The following exit values shall be returned:
+.IP 0 6
+There are no missing libraries found. All is ok.
+.IP 1 6
+Failed to parse command-line arguments.
+.IP 2 6
+Failed to read package database.
+.IP 3 6
+Failed to read ld conf.
+.IP 4 6
+Found at least one missing library.
+
 .SH NOTES
 C++ rewrite inspired by Johannes Winkelmann's <jw@tks6.net> shell \fBrevdep\fP.
 .PP
 Contributed to design Danny Rawlins <contact@romster.me>.
 .PP
-Adjusted for zeppelin by Ferdinand von Zeppelin.
+Adjusted for zeppelin by Alexandr Savca <alexandr.savca89@gmail.com>.
 
 .SH SEE ALSO
-\fBld.so\fP(8), \fBkgman\fP(8), \fBpkginfo\fP(1)
+\fBld.so\fP(8), \fBpkgman\fP(8), \fBpkginfo\fP(1)
 
 .SH AUTHOR
 James Buren, ryuo @ freenode 

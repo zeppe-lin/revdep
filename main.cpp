@@ -169,7 +169,9 @@ static bool workPackage(const Package &pkg) {
 	return rv;
 }
 
-static void workAllPackages(const PackageVector &pkgs) {
+static int workAllPackages(const PackageVector &pkgs) {
+	int rc = 0;
+
 	logger(INFO1, "** checking %zu packages\n", pkgs.size());
 	logger(INFO1, "** checking linking\n");
 
@@ -179,6 +181,7 @@ static void workAllPackages(const PackageVector &pkgs) {
 		if(!workPackage(pkg)) {
 			int lvl;
 			const char *fmt;
+			rc = 4;
 
 			if(level > BRIEF) {
 				lvl = INFO1;
@@ -193,9 +196,13 @@ static void workAllPackages(const PackageVector &pkgs) {
 			logger(INFO1, "%s: ok\n", pkg.Name().c_str());
 		}
 	}
+
+	return rc;
 }
 
-static void workSpecificPackages(const PackageVector &pkgs, int i, int argc, char **argv) {
+static int workSpecificPackages(const PackageVector &pkgs, int i, int argc, char **argv) {
+	int rc = 0;
+
 	logger(INFO1, "** checking %d packages\n", argc - i);
 	logger(INFO1, "** checking linking\n");
 
@@ -211,6 +218,7 @@ static void workSpecificPackages(const PackageVector &pkgs, int i, int argc, cha
 		if(!workPackage(pkg[0])) {
 			int lvl;
 			const char *fmt;
+			rc = 4;
 
 			if(level > BRIEF) {
 				lvl = INFO1;
@@ -225,6 +233,8 @@ static void workSpecificPackages(const PackageVector &pkgs, int i, int argc, cha
 			logger(INFO1, "%s: ok\n", pkg->Name().c_str());
 		}
 	}
+
+	return rc;
 }
 
 int main(int argc, char **argv) {
@@ -234,12 +244,12 @@ int main(int argc, char **argv) {
 
 	if(!ReadPackages(PKG_DB_PATH, pkgs)) {
 		logger(BRIEF, "%s:%s: failed to read package database\n", argv[0], PKG_DB_PATH.c_str());
-		return 1;
+		return 2;
 	}
 
 	if(!ReadLdConf(LD_CONF_PATH, dirs, 10)) {
 		logger(BRIEF, "%s:%s: failed to read ld conf\n", argv[0], LD_CONF_PATH.c_str());
-		return 1;
+		return 3;
 	}
 
 	dirs.push_back("/lib");
@@ -251,10 +261,8 @@ int main(int argc, char **argv) {
 	logger(INFO1, "** calculating deps\n");
 
 	if(optind == argc) {
-		workAllPackages(pkgs);
+		return workAllPackages(pkgs);
 	} else {
-		workSpecificPackages(pkgs, optind, argc, argv);
+		return workSpecificPackages(pkgs, optind, argc, argv);
 	}
-
-	return 0;
 }
