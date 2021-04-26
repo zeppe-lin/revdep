@@ -19,8 +19,8 @@ $(BIN): $(OBJ)
 
 install: all
 	install -d $(DESTDIR)$(ETCDIR)/revdep.d
-	install -Dm0755 $(BIN) $(DESTDIR)$(BINDIR)/$(BIN)
-	install -Dm0644 $(MAN) $(DESTDIR)$(MANDIR)/$(MAN)
+	install -m 0755 -D $(BIN) $(DESTDIR)$(BINDIR)/$(BIN)
+	install -m 0644 -D $(MAN) $(DESTDIR)$(MANDIR)/$(MAN)
 
 uninstall:
 	rm -rf $(DESTDIR)$(ETCDIR)/revdep.d
