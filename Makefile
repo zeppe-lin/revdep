@@ -28,6 +28,6 @@ uninstall:
 	rm -f  $(DESTDIR)$(MANDIR)/$(MAN)
 
 clean:
-	rm $(OBJ) $(BIN) $(MAN)
+	rm -f $(OBJ) $(BIN) $(MAN)
 
 .PHONY: all install uninstall clean
