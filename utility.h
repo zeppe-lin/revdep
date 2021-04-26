@@ -22,7 +22,18 @@
 
 typedef std::vector <std::string> StringVector;
 
-void split(const std::string &in, StringVector &out, char delimiter);
-void ReadRdConf(const std::string &path, StringVector &dirs);
-bool ReadLdConf(const std::string &path, StringVector &dirs, int maxDepth);
+void split(const std::string  &in,
+           StringVector       &out,
+           char               delimiter);
+
+void ReadRdConf(const std::string  &path,
+                StringVector       &dirs);
+
+bool ReadLdConf(const std::string &path,
+                StringVector      &dirs,
+                int               maxDepth);
+
 bool IsFile(const std::string &path);
+
+// vim:sw=2:ts=2:sts=2:et:cc=72
+// End of file.

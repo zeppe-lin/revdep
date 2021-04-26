@@ -20,89 +20,104 @@
 #include <glob.h>
 #include <sys/stat.h>
 
-void split(const std::string &in, StringVector &out, char delimiter) {
-	size_t i = 0;
-	size_t j = in.find(delimiter);
+void split(const std::string  &in,
+           StringVector       &out,
+           char               delimiter)
+{
+  size_t i = 0;
+  size_t j = in.find(delimiter);
 
-	while(j != std::string::npos) {
-		out.push_back(in.substr(i, j - i));
-		i = ++j;
-		j = in.find(delimiter, j);
-	}
+  while (j != std::string::npos)
+  {
+    out.push_back(in.substr(i, j - i));
+    i = ++j;
+    j = in.find(delimiter, j);
+  }
 
-	out.push_back(in.substr(i));
+  out.push_back(in.substr(i));
 }
 
-void ReadRdConf(const std::string &path, StringVector &dirs) {
-	std::ifstream fin;
+void ReadRdConf(const std::string  &path,
+                StringVector       &dirs)
+{
+  std::ifstream fin;
 
-	fin.open(path.c_str());
+  fin.open(path.c_str());
 
-	if(!fin.is_open()) {
-		return;
-	}
+  if (!fin.is_open())
+    return;
 
-	std::string line;
+  std::string line;
 
-	while(getline(fin, line)) {
-		if(line[0] != '#' && line.length() > 0) {
-			dirs.push_back(line);
-		}
-	}
+  while (getline(fin, line))
+  {
+    if (line[0] != '#' && line.length() > 0)
+      dirs.push_back(line);
+  }
 
-	fin.close();
+  fin.close();
 }
 
-bool ReadLdConf(const std::string &path, StringVector &dirs, int maxDepth) {
-	if(maxDepth <= 0) {
-		return false;
-	}
+bool ReadLdConf(const std::string  &path,
+                StringVector       &dirs,
+                int                maxDepth)
+{
+  if (maxDepth <= 0)
+    return false;
 
-	std::ifstream fin;
+  std::ifstream fin;
 
-	fin.open(path.c_str());
+  fin.open(path.c_str());
 
-	if(!fin.is_open()) {
-		return false;
-	}
+  if (!fin.is_open())
+    return false;
 
-	std::string line;
+  std::string line;
 
-	while(getline(fin, line)) {
-		if(line[0] == '#') {
-			continue;
-		}
+  while (getline(fin, line))
+  {
+    if (line[0] == '#')
+      continue;
 
-		if(line.compare(0, 8, "include ") == 0) {
-			glob_t g;
+    if (line.compare(0, 8, "include ") == 0)
+    {
+      glob_t g;
 
-			if(glob(line.substr(8).c_str(), 0, NULL, &g) == 0) {
-				for( size_t i = 0 ; i < g.gl_pathc ; ++i ) {
-					if(!ReadLdConf(g.gl_pathv[i], dirs, maxDepth - 1)) {
-						globfree(&g);
-						fin.close();
-						return false;
-					}
-				}
-			}
+      if (glob(line.substr(8).c_str(), 0, NULL, &g) == 0)
+      {
+        for (size_t i = 0 ; i < g.gl_pathc ; ++i)
+        {
+          if (!ReadLdConf(g.gl_pathv[i], dirs, maxDepth - 1))
+          {
+            globfree(&g);
+            fin.close();
+            return false;
+          }
+        }
+      }
 
-			globfree(&g);
-		} else if(line.length() > 0) {
-			dirs.push_back(line);
-		}
-	}
+      globfree(&g);
+    }
+    else if (line.length() > 0)
+    {
+      dirs.push_back(line);
+    }
+  }
 
-	fin.close();
+  fin.close();
 
-	return true;
+  return true;
 }
 
-bool IsFile(const std::string &path) {
-	struct stat st;
+bool IsFile(const std::string &path)
+{
+  struct stat st;
 
-	if(lstat(path.c_str(), &st) == -1) {
-		return false;
-	}
+  if (lstat(path.c_str(), &st) == -1)
+    return false;
 
-	return S_ISREG(st.st_mode);
+  return S_ISREG(st.st_mode);
 }
+
+// vim:sw=2:ts=2:sts=2:et:cc=72
+// End of file.

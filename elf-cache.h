@@ -25,12 +25,24 @@ typedef std::unordered_map <std::string, Elf *> ElfMap;
 
 class ElfCache {
 private:
-	ElfMap _data;
-	bool findLibraryByDirs(const Elf *elf, const std::string &lib, const StringVector &dirs);
-	bool findLibraryByPath(const Elf *elf, const std::string &lib);
+  ElfMap _data;
+  bool findLibraryByDirs(const Elf          *elf,
+                         const std::string  &lib,
+                         const StringVector &dirs);
+
+  bool findLibraryByPath(const Elf          *elf,
+                         const std::string  &lib);
 
 public:
-	~ElfCache();
-	const Elf *LookUp(const std::string &path);
-	bool FindLibrary(const Elf *elf, const Package &pkg, const std::string &lib, const StringVector &dirs);
+  ~ElfCache();
+
+  const Elf *LookUp(const std::string &path);
+
+  bool FindLibrary(const Elf          *elf,
+                   const Package      &pkg,
+                   const std::string  &lib,
+                   const StringVector &dirs);
 };
+
+// vim:sw=2:ts=2:sts=2:et:cc=72
+// End of file.

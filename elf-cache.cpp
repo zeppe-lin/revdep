@@ -24,168 +24,189 @@
 typedef std::pair <const std::string &, Elf *> ElfPair;
 typedef std::unordered_map <std::string, Elf *>::iterator ElfIter;
 
-static void deleteElement(ElfPair pair) {
-	delete pair.second;
+static void deleteElement(ElfPair pair)
+{
+  delete pair.second;
 }
 
-static std::string resolveDirVars(const Elf *elf, const std::string &path) {
-	static const char *lib = "lib";
+static std::string resolveDirVars(const Elf         *elf,
+                                  const std::string &path)
+{
+  static const char *lib = "lib";
 
-	static const char *platform =
-		(  ((char *) getauxval(AT_PLATFORM))
-		 ? ((char *) getauxval(AT_PLATFORM)) : "");
+  static const char *platform =
+    (  ((char *) getauxval(AT_PLATFORM))
+     ? ((char *) getauxval(AT_PLATFORM)) : "");
 
-	char dir[PATH_MAX];
+  char dir[PATH_MAX];
 
-	snprintf(dir, sizeof(dir), "%s", elf->Path().c_str());
-	dirname(dir);
+  snprintf(dir, sizeof(dir), "%s", elf->Path().c_str());
+  dirname(dir);
 
-	struct {
-		const char *name;
-		size_t length;
-		const char *s;
-	} vars[] = {
-		{        "$LIB",  4,      lib },
-		{      "${LIB}",  6,      lib },
-		{   "$PLATFORM",  9, platform },
-		{ "${PLATFORM}", 11, platform },
-		{     "$ORIGIN",  7,      dir },
-		{   "${ORIGIN}",  9,      dir },
-		{          NULL,  0,     NULL }
-	};
-	size_t replaces;
-	std::string out = path;
+  struct {
+    const char *name;
+    size_t      length;
+    const char *s;
+  } vars[] = {
+    {        "$LIB",  4,      lib },
+    {      "${LIB}",  6,      lib },
+    {   "$PLATFORM",  9, platform },
+    { "${PLATFORM}", 11, platform },
+    {     "$ORIGIN",  7,      dir },
+    {   "${ORIGIN}",  9,      dir },
+    {          NULL,  0,     NULL }
+  };
 
-	do {
-		replaces = 0;
+  size_t       replaces;
+  std::string  out = path;
 
-		for( size_t i = 0 ; vars[i].name != NULL ; ++i ) {
-			size_t j = out.find(vars[i].name);
+  do
+  {
+    replaces = 0;
 
-			if(j != std::string::npos) {
-				out.replace(j, vars[i].length, vars[i].s);
-				++replaces;
-			}
-		}
-	} while(replaces > 0);
+    for (size_t i = 0; vars[i].name != NULL; ++i)
+    {
+      size_t j = out.find(vars[i].name);
 
-	return out;
+      if (j != std::string::npos)
+      {
+        out.replace(j, vars[i].length, vars[i].s);
+        ++replaces;
+      }
+    }
+  } while(replaces > 0);
+
+  return out;
 }
 
-static StringVector resolveRunPaths(const Elf *elf, const StringVector &paths) {
-	StringVector out;
+static StringVector resolveRunPaths(const Elf          *elf,
+                                    const StringVector &paths)
+{
+  StringVector out;
 
-	for( size_t i = 0 ; i < paths.size() ; ++i ) {
-		out.push_back(resolveDirVars(elf, paths[i]));
-	}
+  for (size_t i = 0; i < paths.size(); ++i)
+    out.push_back(resolveDirVars(elf, paths[i]));
 
-	return out;
+  return out;
 }
 
-bool ElfCache::findLibraryByDirs(const Elf *elf, const std::string &lib, const StringVector &dirs) {
-	for( size_t i = 0 ; i < dirs.size() ; ++i ) {
-		std::string path = dirs[i] + "/" + lib;
-		char realPath[PATH_MAX];
+bool ElfCache::findLibraryByDirs(const Elf          *elf,
+                                 const std::string  &lib,
+                                 const StringVector &dirs)
+{
+  for (size_t i = 0; i < dirs.size(); ++i)
+  {
+    std::string path = dirs[i] + "/" + lib;
+    char realPath[PATH_MAX];
 
-		if(realpath(path.c_str(), realPath) == NULL) {
-			continue;
-		}
+    if (realpath(path.c_str(), realPath) == NULL)
+      continue;
 
-		const Elf *elf2 = LookUp(realPath);
+    const Elf *elf2 = LookUp(realPath);
 
-		if(elf2 == NULL) {
-			continue;
-		}
+    if (elf2 == NULL)
+      continue;
 
-		if(!elf->Compatible(elf2[0])) {
-			continue;
-		}
+    if (!elf->Compatible(elf2[0]))
+      continue;
 
-		return true;
-	}
+    return true;
+  }
 
-	return false;
+  return false;
 }
 
-bool ElfCache::findLibraryByPath(const Elf *elf, const std::string &lib) {
-	std::string path;
+bool ElfCache::findLibraryByPath(const Elf         *elf,
+                                 const std::string &lib)
+{
+  std::string path;
 
-	if(lib[0] == '/') {
-		path = lib;
-	} else {
-		char dir[PATH_MAX];
+  if (lib[0] == '/')
+  {
+    path = lib;
+  }
+  else
+  {
+    char dir[PATH_MAX];
 
-		snprintf(dir, sizeof(dir), "%s", elf->Path().c_str());
-		dirname(dir);
+    snprintf(dir, sizeof(dir), "%s", elf->Path().c_str());
+    dirname(dir);
 
-		path = dir + ("/" + lib);
-	}
+    path = dir + ("/" + lib);
+  }
 
-	char realPath[PATH_MAX];
+  char realPath[PATH_MAX];
 
-	if(realpath(path.c_str(), realPath) == NULL) {
-		return false;
-	}
+  if (realpath(path.c_str(), realPath) == NULL)
+    return false;
 
-	const Elf *elf2 = LookUp(realPath);
+  const Elf *elf2 = LookUp(realPath);
 
-	if(elf2 == NULL) {
-		return false;
-	}
+  if (elf2 == NULL)
+    return false;
 
-	return elf->Compatible(elf2[0]);
+  return elf->Compatible(elf2[0]);
 }
 
-ElfCache::~ElfCache() {
-	std::for_each(_data.begin(), _data.end(), deleteElement);
+ElfCache::~ElfCache()
+{
+  std::for_each(_data.begin(), _data.end(), deleteElement);
 }
 
-const Elf *ElfCache::LookUp(const std::string &path) {
-	ElfIter value = _data.find(path);
+const Elf *ElfCache::LookUp(const std::string &path)
+{
+  ElfIter value = _data.find(path);
 
-	if(value != _data.end()) {
-		return value->second;
-	}
+  if (value != _data.end())
+    return value->second;
 
-	Elf *elf = new Elf(path);
+  Elf *elf = new Elf(path);
 
-	if(!elf->Valid()) {
-		delete elf;
-		return NULL;
-	}
+  if (!elf->Valid())
+  {
+    delete elf;
+    return NULL;
+  }
 
-	ElfPair pair = std::make_pair <const std::string &, Elf *&> (path, elf);
-	_data.insert(pair);
+  ElfPair pair =
+    std::make_pair <const std::string &, Elf *&> (path, elf);
 
-	return elf;
+  _data.insert(pair);
+
+  return elf;
 }
 
-bool ElfCache::FindLibrary(const Elf *elf, const Package &pkg, const std::string &lib, const StringVector &dirs) {
-	if(lib.find('/') != std::string::npos) {
-		return findLibraryByPath(elf, lib);
-	}
+bool ElfCache::FindLibrary(const Elf          *elf,
+                           const Package      &pkg,
+                           const std::string  &lib,
+                           const StringVector &dirs)
+{
+  if (lib.find('/') != std::string::npos)
+    return findLibraryByPath(elf, lib);
 
-	StringVector paths;
+  StringVector paths;
 
-	if(elf->RunPath().size() > 0) {
-		paths = resolveRunPaths(elf, elf->RunPath());
-		if(findLibraryByDirs(elf, lib, paths)) {
-			return true;
-		}
-	} else if(elf->RPath().size() > 0) {
-		paths = resolveRunPaths(elf, elf->RPath());
-		if(findLibraryByDirs(elf, lib, paths)) {
-			return true;
-		}
-	}
+  if (elf->RunPath().size() > 0)
+  {
+    paths = resolveRunPaths(elf, elf->RunPath());
+    if (findLibraryByDirs(elf, lib, paths))
+      return true;
+  }
+  else if (elf->RPath().size() > 0)
+  {
+    paths = resolveRunPaths(elf, elf->RPath());
+    if (findLibraryByDirs(elf, lib, paths))
+      return true;
+  }
 
-	if(findLibraryByDirs(elf, lib, dirs)) {
-		return true;
-	}
+  if (findLibraryByDirs(elf, lib, dirs))
+    return true;
 
-	if(pkg.Dirs().size() > 0 && findLibraryByDirs(elf, lib, pkg.Dirs())) {
-		return true;
-	}
+  if (pkg.Dirs().size() > 0 && findLibraryByDirs(elf, lib, pkg.Dirs()))
+    return true;
 
-	return false;
+  return false;
 }
+
+// vim:sw=2:ts=2:sts=2:et:cc=72
+// End of file.

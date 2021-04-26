@@ -21,27 +21,65 @@
 
 class Package {
 private:
-	std::string _name;
-	std::string _version;
-	StringVector _files;
-	StringVector _dirs;
-	bool _ignore;
+  std::string   _name;
+  std::string   _version;
+  StringVector  _files;
+  StringVector  _dirs;
+  bool          _ignore;
 
 public:
-	Package(const std::string &name, const std::string &version, const StringVector &files);
+  Package(const std::string   &name,
+          const std::string   &version,
+          const StringVector  &files);
 
-	const std::string&  Name()                         const { return _name;    }
-	const std::string&  Version()                      const { return _version; }
-	const StringVector& Files()                        const { return _files;   }
-	const StringVector& Dirs()                         const { return _dirs;    }
-	      void          Dirs(const StringVector &dirs)       { _dirs = dirs;    }
-	      bool          Ignore()                       const { return _ignore;  }
-	      void          Ignore()                             { _ignore = true;  }
+  const std::string& Name() const
+  {
+    return _name;
+  }
 
-	bool operator == (const std::string &name) const { return _name == name; }
+  const std::string& Version() const
+  {
+    return _version;
+  }
+
+  const StringVector& Files() const
+  {
+    return _files;
+  }
+
+  const StringVector& Dirs() const
+  {
+    return _dirs;
+  }
+
+  void Dirs(const StringVector &dirs)
+  {
+    _dirs = dirs;
+  }
+
+  bool Ignore() const
+  {
+    return _ignore;
+  }
+
+  void Ignore()
+  {
+    _ignore = true;
+  }
+
+  bool operator == (const std::string &name) const
+  {
+    return _name == name;
+  }
 };
 
 typedef std::vector <Package> PackageVector;
 
-bool ReadPackages(const std::string &path, PackageVector &pkgs);
-void ReadPackageDirs(const std::string &path, PackageVector &pkgs);
+bool ReadPackages(const std::string  &path,
+                  PackageVector      &pkgs);
+
+void ReadPackageDirs(const std::string  &path,
+                     PackageVector      &pkgs);
+
+// vim:sw=2:ts=2:sts=2:et:cc=72
+// End of file.
