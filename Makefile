@@ -1,15 +1,15 @@
 .SUFFIXES: .cpp .o
 include config.mk
 
-SRC = $(wildcard *.cpp)
+SRC = $(wildcard src/*.cpp)
 OBJ = $(SRC:.cpp=.o)
 BIN = revdep
 MAN = revdep.1
 
 all: $(BIN) $(MAN)
 
-%: %.in
-	sed -e "s/#VERSION#/$(VERSION)/" $< > $@
+%: %.scd
+	sed -e "s/#VERSION#/$(VERSION)/" $< | scdoc > $@
 
 .cpp.o:
 	$(CXX) -c -o $@ $< $(CXXFLAGS) $(CPPFLAGS)

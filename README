@@ -9,10 +9,19 @@ It's a fork of CRUX' revdep.
 The original sources can be downloaded from:
 git://crux.nu/tools/prt-utils.git
 
+
+Dependencies
+------------
+
+- g++
+- make
+- scdoc
+
+
 License and Copyright
 ---------------------
 
 Copyright (C) 2016 James Buren
 
-revdep is licensed through the GNU General Public License v3+.
-Read the COPYING file for the complete license.
+revdep is licensed through the GNU General Public License v3+, read the
+COPYING file for the complete license.
