@@ -6,9 +6,7 @@ revdep - checks for missing libraries of installed packages
 
 # SYNOPSIS
 
-*revdep* [*-d*] [*-c*] [*-r*] [*-i*] [*-v* | *-vv* | *-vvv* | *-vvvv*] [_PKGNAME_]
-
-*revdep* [*-h*]
+*revdep* [*-c* _path_] [*-d* _path_] [*-i* _pkgname_,...] [*-r* _path_] [*-v*|*-vv*|*-vvv*|*-vvvv*] [_pkgname_ ...]
 
 # DESCRIPTION
 
@@ -17,19 +15,22 @@ libelf and the same algorithm that *ld.so*(8) uses.
 
 # OPTIONS
 
-*-h*
-	Display this help and exit.
-
-*-d*
-	Specify an alternate location for the package database.
-
-*-c*
+*-c* _path_
 	Specify an alternate location for _ld.so.conf_.
 
-*-r*
+	Default: _/etc/ld.so.conf_.
+
+*-d* _path_
+	Specify an alternate location for the package database.
+
+	Default: _/var/lib/pkg/db_.
+
+*-r* _path_
 	Specify an alternate directory for *revdep* package config.
 
-*-i*
+	Default: _/etc/revdep.d_
+
+*-i* _pkgname_,...
 	Comma-separated list of packages to ignore.
 
 *-v*
@@ -106,4 +107,5 @@ Adjusted for zeppelin by Alexandr Savca <alexandr.savca89@gmail.com>.
 
 James Buren, ryuo @ freenode
 
+; vim:ft=scdoc:cc=80
 ; End of file.

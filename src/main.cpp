@@ -30,6 +30,9 @@ enum {
   DEBUG
 };
 
+#define USAGE \
+  "usage: %s [-c path] [-d path] [-i pkgname,...] [-r path] [-v|-vv|-vvv|-vvvv] [pkgname...]\n"
+
 static std::string PKG_DB_PATH  = "/var/lib/pkg/db";
 static std::string LD_CONF_PATH = "/etc/ld.so.conf";
 static std::string RD_CONF_PATH = "/etc/revdep.d";
@@ -66,27 +69,12 @@ static bool parseArgs(int argc, char **argv)
   {
     switch (opt)
     {
-      case 'h':
-        logger(BRIEF, "%s version %s\n", argv[0], VERSION);
-        logger(BRIEF, "Usage: %s [-h] [-v|-vv|-vvv|-vvvv] [package...]\n", argv[0]);
-        logger(BRIEF, "Where commands are:\n");
-        logger(BRIEF, "\t-h    The option -h displays help\n");
-        logger(BRIEF, "\t-d    Specify an alternate location for the package database\n");
-        logger(BRIEF, "\t-c    Specify an alternate location for ld.so.conf\n");
-        logger(BRIEF, "\t-r    Specify an alternate directory for revdep package config\n");
-        logger(BRIEF, "\t-i    Comma-separated list of packages to ignore\n");
-        logger(BRIEF, "\t-v    Formatted listing\n");
-        logger(BRIEF, "\t-vv   Include erroneous files\n");
-        logger(BRIEF, "\t-vvv  Include precise file errors\n");
-        logger(BRIEF, "\t-vvvv Show debug/trace\n");
-        return false;
+      case 'c':
+        LD_CONF_PATH = optarg;
+        break;
 
       case 'd':
         PKG_DB_PATH = optarg;
-        break;
-
-      case 'c':
-        LD_CONF_PATH = optarg;
         break;
 
       case 'i':
@@ -103,10 +91,12 @@ static bool parseArgs(int argc, char **argv)
 
       case ':':
         logger(BRIEF, "%c: missing argument\n", optopt);
+        logger(BRIEF, USAGE, argv[0]);
         return false;
 
       case '?':
         logger(BRIEF, "%c: invalid option\n", optopt);
+        logger(BRIEF, USAGE, argv[0]);
         return false;
     }
   }
