@@ -1,0 +1,149 @@
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+revdep - check for missing libraries of installed packages
+
+=head1 SYNOPSIS
+
+B<revdep> [I<OPTION>]... [I<PKGNAME>]
+
+=head1 DESCRIPTION
+
+B<revdep> checks for missing libraries of installed packages using elfutils'
+libelf and the same algorithm that
+L<ld.so(8)|https://www.mankier.com/8/ld.so>
+uses.
+
+=head1 OPTIONS
+
+Mandatory arguments to long options are mandatory for short options too.
+
+=over 8
+
+=item B<-c>, B<--ldsoconf> I<PATH>
+
+Specify an alternate location for F<ld.so.conf>.
+
+Default location is F</etc/ld.so.conf>.
+
+=item B<-d>, B<--pkgdb> I<PATH>
+
+Specify an alternate location for the package database.
+
+Default location is F</var/lib/pkg/db>.
+
+=item B<-r>, B<--confd> I<PATH>
+
+Specify an alternate location for B<revdep> package configuration.
+
+Default location is F</etc/revdep.d>.
+
+=item B<-i>, B<--ignore> I<PKGNAME>
+
+Comma-separated list of packages to ignore.
+
+=item B<-V>, B<--verbose>
+
+Formatted listing.
+
+=item B<-e>, B<--erroneous>
+
+Include erroneous files in the output.
+
+=item B<-p>, B<--precise>
+
+Include precise file errors in the output.
+
+=item B<-t>, B<--trace>
+
+Show debug/trace.
+
+=item B<-v>, B<--version>
+
+Print version and exit.
+
+=item B<-h>, B<--help>
+
+Print help and exit.
+
+=back
+
+=head1 EXAMPLE
+
+Try this command to list broken packages:
+
+  revdep
+
+Use this command to rebuild packages on your system:
+
+  pkgman update -fr `revdep`
+
+=head1 ADDITIONAL LIBRARY DIRECTORIES
+
+Upon startup, B<revdep> searches the F</etc/revdep.d> directory for files
+named after packages. If any are found, any directories (assumed to be
+absolute paths and delimited by newlines) within the file are added to a list
+of package specific directories to search if a library dependency is not
+found in one of the many standard locations (as specified by
+L<ld.so(8)|https://www.mankier.com/8/ld.so>
+).
+
+If a package is discovered to have a library dependencies that are in a
+non-standard directory F</usr/lib/firefox> then a file named F<firefox>
+should be created under F</etc/revdep.d> with a single line containing
+F</usr/lib/firefox>. This will tell B<revdep> where to find firefox's
+F<libxul.so> when looking for its library dependencies, reducing one source
+of false positives. Ideally, this file would be included with the package's
+own packaging as well.
+
+=head1 EXIT STATUS
+
+=over 8
+
+=item C<0>
+
+There are no missing libraries found. All is ok.
+
+=item C<1>
+
+Failed to parse command-line arguments.
+
+=item C<2>
+
+Failed to read package database.
+
+=item C<3>
+
+Failed to read ld conf.
+
+=item C<4>
+
+Found at least one missing library.
+
+=back
+
+=head1 NOTES
+
+C++ rewrite inspired by Johannes Winkelmann's L<mailto:jw@tks6.net> shell
+B<revdep>.
+
+Contributed to design Danny Rawlins L<mailto:contact@romster.me>.
+
+=head1 AUTHOR
+
+James Buren, L<ryuo@freenode>
+
+=head1 COPYRIGHT
+
+Copyright (c) 2015-2019 James Buren L<mailto:ryuo@frugalware.org>.
+
+Copyright (c) 2016-2019 Tilman Sauerbeck L<mailto:tilman@code-monkey.de>
+
+Copyright (c) 2019 Matt Housh L<mailto:jaeger@crux.ninja>.
+
+License GPLv3+: GNU GPL version 3 or later L<https://gnu.org/licenses/gpl.html>.
+
+=cut
