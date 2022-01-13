@@ -1,0 +1,54 @@
+# Bash programmable completion for revdep.
+
+_revdep()
+{
+	local cur prev
+	COMPREPLY=()
+	cur=${COMP_WORDS[COMP_CWORD]}
+	prev=${COMP_WORDS[COMP_CWORD-1]}
+
+	case "$prev" in
+	-h|--help)
+		return 0
+		;;
+	-v|--version)
+		return 0
+		;;
+	-c|--ldsoconf|-d|--pkgdb|-r|--confd)
+		if [ -z $BASH_COMPLETION ]; then
+			_filedir
+		else
+			COMPREPLY=( $( compgen -f $cur ) )
+		fi
+		return 0
+		;;
+	-i|--ignore)
+		if [[ "$cur" == *,* ]]; then
+				local realcur prefix
+				realcur=${cur##*,}
+				prefix=${cur%,*}
+				COMPREPLY=( $( compgen -W \
+					" $( pkginfo -i | awk ' { printf "%s ", $1 } ' ) " \
+					-P "${prefix}," -- $realcur ) )
+		else
+			COMPREPLY=( $( compgen -W \
+			" $( pkginfo -i | awk '{ printf "%s ", $1 }' ) " \
+			-- $cur ) )
+		fi
+		return 0
+		;;
+	esac
+
+	if [[ $cur == -* ]]; then
+		COMPREPLY=( $( compgen -W \
+			" $( revdep --help | awk '/--/ { printf "%2s ", $2 }' ) " \
+			-- $cur ) )
+	else
+		COMPREPLY=( $( compgen -W \
+			" $( pkginfo -i | awk ' { printf "%s ", $1 } ' ) " \
+			-- $cur ) )
+	fi
+}
+complete -F _revdep -o filenames revdep
+
+# End of file.
