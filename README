@@ -1,27 +1,24 @@
-revdep
-======
+ABOUT
 
-revdep is a tool that checks for missing libraries of installed
-packages.
+    This directory contains revdep, the tool that checks for missing
+    libraries of installed packages.
 
-It's a fork of CRUX' revdep.
+    This is a fork of CRUX' revdep (which is a part of prt-utils).
+    The original sources can be downloaded from:
 
-The original sources can be downloaded from:
-git://crux.nu/tools/prt-utils.git
+    1. https://crux.nu/gitweb/?p=tools/prt-utils.git;a=summary
+    2. git://crux.nu/tools/prt-utils.git
 
+DEPENDENCIES
 
-Dependencies
-------------
+    * g++
+    * make(1p)
+    * pod2man(1pm)
+    * elfutils
 
-- g++
-- make
-- scdoc
+LICENSE
 
+    Copyright (c) 2016 James Buren
 
-License and Copyright
----------------------
-
-Copyright (C) 2016 James Buren
-
-revdep is licensed through the GNU General Public License v3+, read the
-COPYING file for the complete license.
+    revdep is licensed through the GNU General Public License v3
+    or later. Read the LICENSE file for the complete license.
