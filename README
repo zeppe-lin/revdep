@@ -18,7 +18,8 @@ DEPENDENCIES
 
 LICENSE
 
-    Copyright (c) 2016 James Buren
+    revdep is licensed through the GNU General Public License v3 or
+    later <https://gnu.org/licenses/gpl.html>.
 
-    revdep is licensed through the GNU General Public License v3
-    or later. Read the LICENSE file for the complete license.
+    Read the COPYING file for the complete license.
+    Read the COPYRIGHT file for the copyright notes.
