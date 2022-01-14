@@ -15,19 +15,23 @@
 // You should have received a copy of the GNU General Public License
 // along with revdep.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "utility.h"
 #include <fstream>
+
 #include <glob.h>
 #include <sys/stat.h>
 
-void split(const std::string  &in,
-           StringVector       &out,
-           char               delimiter)
+#include "utility.h"
+
+using namespace std;
+
+void split(const string &in,
+           StringVector &out,
+           char         delimiter)
 {
   size_t i = 0;
   size_t j = in.find(delimiter);
 
-  while (j != std::string::npos)
+  while (j != string::npos)
   {
     out.push_back(in.substr(i, j - i));
     i = ++j;
@@ -37,17 +41,17 @@ void split(const std::string  &in,
   out.push_back(in.substr(i));
 }
 
-void ReadRdConf(const std::string  &path,
-                StringVector       &dirs)
+void ReadRdConf(const string &path,
+                StringVector &dirs)
 {
-  std::ifstream fin;
+  ifstream fin;
 
   fin.open(path.c_str());
 
   if (!fin.is_open())
     return;
 
-  std::string line;
+  string line;
 
   while (getline(fin, line))
   {
@@ -58,21 +62,21 @@ void ReadRdConf(const std::string  &path,
   fin.close();
 }
 
-bool ReadLdConf(const std::string  &path,
-                StringVector       &dirs,
-                int                maxDepth)
+bool ReadLdConf(const string &path,
+                StringVector &dirs,
+                int          maxDepth)
 {
   if (maxDepth <= 0)
     return false;
 
-  std::ifstream fin;
+  ifstream fin;
 
   fin.open(path.c_str());
 
   if (!fin.is_open())
     return false;
 
-  std::string line;
+  string line;
 
   while (getline(fin, line))
   {
@@ -85,7 +89,7 @@ bool ReadLdConf(const std::string  &path,
 
       if (glob(line.substr(8).c_str(), 0, NULL, &g) == 0)
       {
-        for (size_t i = 0 ; i < g.gl_pathc ; ++i)
+        for (size_t i = 0; i < g.gl_pathc; ++i)
         {
           if (!ReadLdConf(g.gl_pathv[i], dirs, maxDepth - 1))
           {
@@ -109,7 +113,7 @@ bool ReadLdConf(const std::string  &path,
   return true;
 }
 
-bool IsFile(const std::string &path)
+bool IsFile(const string &path)
 {
   struct stat st;
 

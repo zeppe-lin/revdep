@@ -15,27 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with revdep.  If not, see <http://www.gnu.org/licenses/>.
 
-#pragma once
-
-#include <string>
-#include <vector>
-
-using namespace std;
-
-typedef vector <string> StringVector;
-
-void split(const string &in,
-           StringVector &out,
-           char         delimiter);
-
-void ReadRdConf(const string &path,
-                StringVector &dirs);
-
-bool ReadLdConf(const string &path,
-                StringVector &dirs,
-                int          maxDepth);
-
-bool IsFile(const string &path);
-
-// vim:sw=2:ts=2:sts=2:et:cc=72
-// End of file.
+#define _PATH_CONF      "/etc/revdep.d"
+#define _PATH_PKGDB     "/var/lib/pkg/db"
+#define _PATH_LDSOCONF  "/etc/ld.so.conf"

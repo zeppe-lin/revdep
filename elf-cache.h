@@ -17,30 +17,35 @@
 
 #pragma once
 
-#include "elf.h"
-#include "pkg.h"
 #include <unordered_map>
 
-typedef std::unordered_map <std::string, Elf *> ElfMap;
+#include "elf.h"
+#include "pkg.h"
+
+using namespace std;
+
+typedef unordered_map <string, Elf *> ElfMap;
 
 class ElfCache {
 private:
+
   ElfMap _data;
   bool findLibraryByDirs(const Elf          *elf,
-                         const std::string  &lib,
+                         const string       &lib,
                          const StringVector &dirs);
 
-  bool findLibraryByPath(const Elf          *elf,
-                         const std::string  &lib);
+  bool findLibraryByPath(const Elf    *elf,
+                         const string &lib);
 
 public:
+
   ~ElfCache();
 
-  const Elf *LookUp(const std::string &path);
+  const Elf *LookUp(const string &path);
 
   bool FindLibrary(const Elf          *elf,
                    const Package      &pkg,
-                   const std::string  &lib,
+                   const string       &lib,
                    const StringVector &dirs);
 };
 

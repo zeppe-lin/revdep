@@ -15,28 +15,31 @@
 // You should have received a copy of the GNU General Public License
 // along with revdep.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "elf-cache.h"
 #include <algorithm>
+
+#include <libgen.h>
 #include <limits.h>
 #include <sys/auxv.h>
-#include <libgen.h>
 
-typedef std::pair <const std::string &, Elf *> ElfPair;
-typedef std::unordered_map <std::string, Elf *>::iterator ElfIter;
+#include "elf-cache.h"
+
+using namespace std;
+
+typedef pair <const string &, Elf *> ElfPair;
+typedef unordered_map <string, Elf *>::iterator ElfIter;
 
 static void deleteElement(ElfPair pair)
 {
   delete pair.second;
 }
 
-static std::string resolveDirVars(const Elf         *elf,
-                                  const std::string &path)
+static string resolveDirVars(const Elf *elf, const string &path)
 {
   static const char *lib = "lib";
 
   static const char *platform =
-    (  ((char *) getauxval(AT_PLATFORM))
-     ? ((char *) getauxval(AT_PLATFORM)) : "");
+    (((char *)getauxval(AT_PLATFORM)) ?
+     ((char *)getauxval(AT_PLATFORM)) : "");
 
   char dir[PATH_MAX];
 
@@ -57,8 +60,8 @@ static std::string resolveDirVars(const Elf         *elf,
     {          NULL,  0,     NULL }
   };
 
-  size_t       replaces;
-  std::string  out = path;
+  size_t replaces;
+  string out = path;
 
   do
   {
@@ -68,13 +71,13 @@ static std::string resolveDirVars(const Elf         *elf,
     {
       size_t j = out.find(vars[i].name);
 
-      if (j != std::string::npos)
+      if (j != string::npos)
       {
         out.replace(j, vars[i].length, vars[i].s);
         ++replaces;
       }
     }
-  } while(replaces > 0);
+  } while (replaces > 0);
 
   return out;
 }
@@ -91,12 +94,12 @@ static StringVector resolveRunPaths(const Elf          *elf,
 }
 
 bool ElfCache::findLibraryByDirs(const Elf          *elf,
-                                 const std::string  &lib,
+                                 const string       &lib,
                                  const StringVector &dirs)
 {
   for (size_t i = 0; i < dirs.size(); ++i)
   {
-    std::string path = dirs[i] + "/" + lib;
+    string path = dirs[i] + "/" + lib;
     char realPath[PATH_MAX];
 
     if (realpath(path.c_str(), realPath) == NULL)
@@ -116,10 +119,10 @@ bool ElfCache::findLibraryByDirs(const Elf          *elf,
   return false;
 }
 
-bool ElfCache::findLibraryByPath(const Elf         *elf,
-                                 const std::string &lib)
+bool ElfCache::findLibraryByPath(const Elf    *elf,
+                                 const string &lib)
 {
-  std::string path;
+  string path;
 
   if (lib[0] == '/')
   {
@@ -150,10 +153,10 @@ bool ElfCache::findLibraryByPath(const Elf         *elf,
 
 ElfCache::~ElfCache()
 {
-  std::for_each(_data.begin(), _data.end(), deleteElement);
+  for_each(_data.begin(), _data.end(), deleteElement);
 }
 
-const Elf *ElfCache::LookUp(const std::string &path)
+const Elf *ElfCache::LookUp(const string &path)
 {
   ElfIter value = _data.find(path);
 
@@ -169,7 +172,7 @@ const Elf *ElfCache::LookUp(const std::string &path)
   }
 
   ElfPair pair =
-    std::make_pair <const std::string &, Elf *&> (path, elf);
+    make_pair <const string &, Elf *&> (path, elf);
 
   _data.insert(pair);
 
@@ -178,10 +181,10 @@ const Elf *ElfCache::LookUp(const std::string &path)
 
 bool ElfCache::FindLibrary(const Elf          *elf,
                            const Package      &pkg,
-                           const std::string  &lib,
+                           const string       &lib,
                            const StringVector &dirs)
 {
-  if (lib.find('/') != std::string::npos)
+  if (lib.find('/') != string::npos)
     return findLibraryByPath(elf, lib);
 
   StringVector paths;

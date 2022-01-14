@@ -15,16 +15,20 @@
 // You should have received a copy of the GNU General Public License
 // along with revdep.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "elf.h"
 #include <stdexcept>
-#include <gelf.h>
+
 #include <fcntl.h>
+#include <gelf.h>
 #include <unistd.h>
+
+#include "elf.h"
+
+using namespace std;
 
 __attribute__((constructor)) static void initialize()
 {
   if (elf_version(EV_CURRENT) == EV_NONE)
-    throw std::runtime_error("libelf initialization failure");
+    throw runtime_error("libelf initialization failure");
 }
 
 static bool isValidElf(Elf *elf, int &machine)
@@ -40,14 +44,18 @@ static bool isValidElf(Elf *elf, int &machine)
   switch (ehdr.e_type)
   {
     case ET_EXEC: break;
+
     case ET_DYN:  break;
+
     default:      return false;
   }
 
   switch (ehdr.e_ident[EI_OSABI])
   {
     case ELFOSABI_NONE:  break;
+
     case ELFOSABI_LINUX: break;
+
     default:             return false;
   }
 
@@ -57,6 +65,7 @@ static bool isValidElf(Elf *elf, int &machine)
     case EM_386:      break;
 #elif defined(__x86_64__)
     case EM_386:      break;
+
     case EM_X86_64:   break;
 #elif defined(__arm__)
     case EM_ARM:      break;
@@ -73,13 +82,11 @@ static bool isValidElf(Elf *elf, int &machine)
   return true;
 }
 
-static bool getDynamicSection(Elf        *elf,
-                              GElf_Shdr  &shdr,
-                              Elf_Scn    *&scn)
+static bool getDynamicSection(Elf *elf, GElf_Shdr &shdr, Elf_Scn *&scn)
 {
-  size_t     phdrnum;
-  size_t     i;
-  GElf_Phdr  phdr;
+  size_t    phdrnum;
+  size_t    i;
+  GElf_Phdr phdr;
 
   if (elf_getphdrnum(elf, &phdrnum) == -1)
     return false;
@@ -104,19 +111,19 @@ static bool getDynamicSection(Elf        *elf,
       break;
   }
 
-  return (i != phdrnum);
+  return(i != phdrnum);
 }
 
-static bool readDynamicSection(Elf           *elf,
-                               StringVector  &needed,
-                               StringVector  &rpath,
-                               StringVector  &runpath)
+static bool readDynamicSection(Elf          *elf,
+                               StringVector &needed,
+                               StringVector &rpath,
+                               StringVector &runpath)
 {
-  GElf_Shdr   shdr;
-  Elf_Scn    *scn = NULL;
-  Elf_Data   *data;
-  size_t      size;
-  GElf_Dyn    dyn;
+  GElf_Shdr shdr;
+  Elf_Scn  *scn = NULL;
+  Elf_Data *data;
+  size_t    size;
+  GElf_Dyn  dyn;
 
   if (!getDynamicSection(elf, shdr, scn))
     return false;
@@ -152,11 +159,12 @@ static bool readDynamicSection(Elf           *elf,
   return true;
 }
 
-Elf::Elf(const std::string &path)
+Elf::Elf(const string &path)
 {
   _initialized = false;
 
   int fd = open(path.c_str(), O_RDONLY);
+
   if (fd == -1)
     return;
 
@@ -169,7 +177,7 @@ Elf::Elf(const std::string &path)
   }
 
   if (!isValidElf(elf, _machine)
-   || !readDynamicSection(elf, _needed, _rpath, _runpath))
+      || !readDynamicSection(elf, _needed, _rpath, _runpath))
   {
     elf_end(elf);
     close(fd);

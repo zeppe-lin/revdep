@@ -19,25 +19,27 @@
 
 #include "utility.h"
 
+using namespace std;
+
 class Package {
 private:
-  std::string   _name;
-  std::string   _version;
-  StringVector  _files;
-  StringVector  _dirs;
-  bool          _ignore;
+  string       _name;
+  string       _version;
+  StringVector _files;
+  StringVector _dirs;
+  bool         _ignore;
 
 public:
-  Package(const std::string   &name,
-          const std::string   &version,
-          const StringVector  &files);
+  Package(const string       &name,
+          const string       &version,
+          const StringVector &files);
 
-  const std::string& Name() const
+  const string& Name() const
   {
     return _name;
   }
 
-  const std::string& Version() const
+  const string& Version() const
   {
     return _version;
   }
@@ -67,19 +69,19 @@ public:
     _ignore = true;
   }
 
-  bool operator == (const std::string &name) const
+  bool operator ==(const string &name) const
   {
     return _name == name;
   }
-};
+}; // class Package
 
-typedef std::vector <Package> PackageVector;
+typedef vector <Package> PackageVector;
 
-bool ReadPackages(const std::string  &path,
-                  PackageVector      &pkgs);
+bool ReadPackages(const string  &path,
+                  PackageVector &pkgs);
 
-void ReadPackageDirs(const std::string  &path,
-                     PackageVector      &pkgs);
+void ReadPackageDirs(const string  &path,
+                     PackageVector &pkgs);
 
 // vim:sw=2:ts=2:sts=2:et:cc=72
 // End of file.

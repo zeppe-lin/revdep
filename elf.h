@@ -21,12 +21,13 @@
 
 class Elf {
 private:
-  int           _machine;
-  StringVector  _needed;
-  StringVector  _rpath;
-  StringVector  _runpath;
-  std::string   _path;
-  bool          _initialized;
+
+  int          _machine;
+  StringVector _needed;
+  StringVector _rpath;
+  StringVector _runpath;
+  std::string  _path;
+  bool         _initialized;
 
 public:
   Elf(const std::string &path);

@@ -15,102 +15,36 @@
 // You should have received a copy of the GNU General Public License
 // along with revdep.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "main.h"
-#include "pkg.h"
-#include "elf-cache.h"
 #include <algorithm>
-#include <unistd.h>
+#include <iostream>
+
+#include <getopt.h>
 #include <stdarg.h>
+#include <unistd.h>
 
-enum {
-  BRIEF,
-  INFO1,
-  INFO2,
-  ERROR,
-  DEBUG
-};
+#include "elf-cache.h"
+#include "main.h"
+#include "pathnames.h"
+#include "pkg.h"
 
-#define USAGE \
-  "usage: %s [-c path] [-d path] [-i pkgname,...] [-r path] [-v|-vv|-vvv|-vvvv] [pkgname...]\n"
+using namespace std;
 
-static std::string PKG_DB_PATH  = "/var/lib/pkg/db";
-static std::string LD_CONF_PATH = "/etc/ld.so.conf";
-static std::string RD_CONF_PATH = "/etc/revdep.d";
+static int do_help, do_version;
+static int show_verbose, show_erroneous, show_precise, show_trace;
+static string confd_path = _PATH_CONF;
+static string pkgdb_path = _PATH_PKGDB;
+static string ldsoconf_path = _PATH_LDSOCONF;
 
-static StringVector  ignores;
-static int           level = BRIEF;
+static StringVector ignores;
 static PackageVector pkgs;
-static StringVector  dirs;
-static ElfCache      ec;
+static StringVector dirs;
+static ElfCache ec;
 
-static void logger(int lvl, const char *fmt, ...)
-  __attribute__((format(printf,2,3)));
-
-static void logger(int lvl, const char *fmt, ...)
-{
-  if (lvl > level)
-    return;
-
-  va_list args;
-
-  va_start(args, fmt);
-
-  vfprintf(stdout, fmt, args);
-
-  va_end(args);
-}
-
-static bool parseArgs(int argc, char **argv)
-{
-  static const char OPTIONS[] = ":hd:c:r:i:v";
-  int opt;
-
-  while ((opt = getopt(argc, argv, OPTIONS)) != -1)
-  {
-    switch (opt)
-    {
-      case 'c':
-        LD_CONF_PATH = optarg;
-        break;
-
-      case 'd':
-        PKG_DB_PATH = optarg;
-        break;
-
-      case 'i':
-        split(optarg, ignores, ',');
-        break;
-
-      case 'r':
-        RD_CONF_PATH = optarg;
-        break;
-
-      case 'v':
-        ++level;
-        break;
-
-      case ':':
-        logger(BRIEF, "%c: missing argument\n", optopt);
-        logger(BRIEF, USAGE, argv[0]);
-        return false;
-
-      case '?':
-        logger(BRIEF, "%c: invalid option\n", optopt);
-        logger(BRIEF, USAGE, argv[0]);
-        return false;
-    }
-  }
-
-  return true;
-}
-
-static void ignorePackages(PackageVector       &pkgs,
-                           const StringVector  &ignores)
+static void ignorePackages(PackageVector &pkgs, const StringVector &ignores)
 {
   for (size_t i = 0; i < ignores.size(); ++i)
   {
-    PackageVector::iterator pkg =
-      std::find(pkgs.begin(), pkgs.end(), ignores[i]);
+    PackageVector::iterator pkg = find(pkgs.begin(), pkgs.end(), ignores[i]);
 
     if (pkg == pkgs.end())
       continue;
@@ -119,13 +53,12 @@ static void ignorePackages(PackageVector       &pkgs,
   }
 }
 
-static bool workFile(const Package      &pkg,
-                     const std::string  &file)
+static bool workFile(const Package &pkg, const string &file)
 {
   bool rv = true;
 
-  logger(DEBUG, "%s:%s: checking file\n",
-      pkg.Name().c_str(), file.c_str());
+  if (show_trace)
+    cout << pkg.Name() << ":" << file << ": checking file" << endl;
 
   if (!IsFile(file))
     return rv;
@@ -135,17 +68,18 @@ static bool workFile(const Package      &pkg,
   if (elf == NULL)
     return rv;
 
-  logger(DEBUG, "%s:%s: is ELF\n",
-                pkg.Name().c_str(), file.c_str());
+  if (show_trace)
+    cout << pkg.Name() << ":" << file << ": is ELF" << endl;
 
   for (size_t i = 0; i < elf->Needed().size(); ++i)
   {
-    const std::string &lib = elf->Needed()[i];
+    const string &lib = elf->Needed()[i];
 
     if (!ec.FindLibrary(elf, pkg, lib, dirs))
     {
-      logger(ERROR, "%s:%s:%s: missing library\n",
-                    pkg.Name().c_str(), file.c_str(), lib.c_str());
+      if (show_precise)
+        cout << pkg.Name() << ":" << file << ":" << lib << ": missing library" << endl;
+
       rv = false;
     }
   }
@@ -162,12 +96,13 @@ static bool workPackage(const Package &pkg)
 
   for (size_t i = 0; i < pkg.Files().size(); ++i)
   {
-    const std::string &file = pkg.Files()[i];
+    const string &file = pkg.Files()[i];
 
     if (!workFile(pkg, file))
     {
-      logger(INFO2, "%s:%s: error\n",
-                    pkg.Name().c_str(), file.c_str());
+      if (show_erroneous)
+        cout << pkg.Name() << ":" << file << ": error" << endl;
+
       rv = false;
     }
   }
@@ -179,8 +114,11 @@ static int workAllPackages(const PackageVector &pkgs)
 {
   int rc = 0;
 
-  logger(INFO1, "** checking %zu packages\n", pkgs.size());
-  logger(INFO1, "** checking linking\n");
+  if (show_verbose)
+  {
+    printf("** checking %zu packages\n", pkgs.size());
+    printf("** checking linking\n");
+  }
 
   for (size_t i = 0; i < pkgs.size(); ++i)
   {
@@ -188,77 +126,59 @@ static int workAllPackages(const PackageVector &pkgs)
 
     if (!workPackage(pkg))
     {
-      int lvl;
-      const char *fmt;
       rc = 4;
 
-      if (level > BRIEF)
-      {
-        lvl = INFO1;
-        fmt = "%s: error\n";
-      }
+      if (show_verbose)
+        cout << pkg.Name() << ": error" << endl;
       else
-      {
-        lvl = BRIEF;
-        fmt = "%s\n";
-      }
-
-      logger(lvl, fmt, pkg.Name().c_str());
+        cout << pkg.Name() << endl;
     }
     else
     {
-      logger(INFO1, "%s: ok\n", pkg.Name().c_str());
+      if (show_verbose)
+        cout << pkg.Name() << ": ok" << endl;
     }
   }
 
   return rc;
 }
 
-static int workSpecificPackages(const PackageVector &pkgs,
-                                int i,
-                                int argc,
-                                char **argv)
+static int workSpecificPackages(const PackageVector &pkgs, int i, int argc, char **argv)
 {
   int rc = 0;
 
-  logger(INFO1, "** checking %d packages\n", argc - i);
-  logger(INFO1, "** checking linking\n");
+  if (show_verbose)
+  {
+    printf("** checking %d packages\n", argc - i);
+    printf("** checking linking\n");
+  }
 
   for ( ; i < argc; ++i)
   {
-    const std::string name = argv[i];
-    PackageVector::const_iterator pkg =
-      std::find(pkgs.begin(), pkgs.end(), name);
+    const string name = argv[i];
+    PackageVector::const_iterator pkg = find(pkgs.begin(), pkgs.end(), name);
 
     if (pkg == pkgs.end())
     {
-      logger(INFO1, "%s: cannot find package information\n",
-                    name.c_str());
+      if (show_verbose)
+        cout << name << ": cannot find package information" << endl;
+
       continue;
     }
 
     if (!workPackage(pkg[0]))
     {
-      int lvl;
-      const char *fmt;
       rc = 4;
 
-      if (level > BRIEF)
-      {
-        lvl = INFO1;
-        fmt = "%s: error\n";
-      }
+      if (show_verbose)
+        cout << pkg->Name() << ": error" << endl;
       else
-      {
-        lvl = BRIEF;
-        fmt = "%s\n";
-      }
-
-      logger(lvl, fmt, pkg->Name().c_str());
+        cout << pkg->Name() << endl;
     }
     else
     {
-      logger(INFO1, "%s: ok\n", pkg->Name().c_str());
+      if (show_verbose)
+        cout << pkg->Name() << ": ok" << endl;
     }
   }
 
@@ -267,39 +187,126 @@ static int workSpecificPackages(const PackageVector &pkgs,
 
 int main(int argc, char **argv)
 {
-  if (!parseArgs(argc, argv))
-    return 1;
+  static struct option longopts[] = {
+    { "ldsoconf",   required_argument,  NULL,             'c' },
+    { "pkgdb",      required_argument,  NULL,             'd' },
+    { "confd",      required_argument,  NULL,             'r' },
+    { "ignore",     required_argument,  NULL,             'i' },
+    { "verbose",    no_argument,        &show_verbose,    1   },
+    { "erroneous",  no_argument,        &show_erroneous,  1   },
+    { "precise",    no_argument,        &show_precise,    1   },
+    { "trace",      no_argument,        &show_trace,      1   },
+    { "version",    no_argument,        &do_version,      1   },
+    { "help",       no_argument,        &do_help,         1   },
+    { 0,            0,                  0,                0   },
+  };
 
-  if (!ReadPackages(PKG_DB_PATH, pkgs))
+  int opt;
+
+  while ((opt = getopt_long(argc, argv, ":hd:c:r:i:vVept", longopts, 0)) != -1)
   {
-    logger(BRIEF, "%s:%s: failed to read package database\n",
-                  argv[0], PKG_DB_PATH.c_str());
+    switch (opt)
+    {
+      case 'c':
+        ldsoconf_path = optarg;
+        break;
+
+      case 'd':
+        pkgdb_path = optarg;
+        break;
+
+      case 'r':
+        confd_path = optarg;
+        break;
+
+      case 'i':
+        split(optarg, ignores, ',');
+        break;
+
+      case 'V':
+        show_verbose = 1;
+        break;
+
+      case 'e':
+        show_erroneous = 1;
+        break;
+
+      case 'p':
+        show_precise = 1;
+        break;
+
+      case 't':
+        show_trace = 1;
+        break;
+
+      case 'v':
+        do_version = 1;
+        break;
+
+      case 'h':
+        do_help = 1;
+        break;
+
+      case ':':
+        fprintf(stderr, "%c: missing argument\n", optopt);
+        return 1;
+
+      case '?':
+        fprintf(stderr, "%c: invalid option\n", optopt);
+        return 1;
+    }
+  }
+
+  if (do_help)
+  {
+    cout << R"END(Usage: revdep [OPTION]... [PKGNAME]...
+Check for missing libraries of installed packages.
+
+Mandatory arguments to long options are mandatory for short options too.
+  -c, --ldsoconf PATH       specify an alternate location for ld.so.conf
+  -d, --pkgdb PATH          specify an alternate location for the packages database
+  -r, --confd PATH          specify an alternate location for revdep package config
+  -i, --ignore PKGNAME,...  comma-separated list of packages to ignore
+  -V, --verbose             formatted listing
+  -e, --erroneous           include erroneous files in the output
+  -p, --precise             include precise file errors in the output
+  -t, --trace               show debug/trace
+  -v, --version             print version and exit
+  -h, --help                print help and exit
+)END";
+    return 0;
+  }
+  else if (do_version)
+  {
+    cout << "revdep " << VERSION << endl;
+    return 0;
+  }
+
+  if (!ReadPackages(pkgdb_path, pkgs))
+  {
+    cerr << "revdep:" << pkgdb_path << ": failed to read package database" << endl;
     return 2;
   }
 
-  if (!ReadLdConf(LD_CONF_PATH, dirs, 10))
+  if (!ReadLdConf(ldsoconf_path, dirs, 10))
   {
-    logger(BRIEF, "%s:%s: failed to read ld conf\n",
-                  argv[0], LD_CONF_PATH.c_str());
+    cerr << "revdep:" << ldsoconf_path << ": failed to read ld conf" << endl;
     return 3;
   }
 
   dirs.push_back("/lib");
   dirs.push_back("/usr/lib");
 
-  ReadPackageDirs(RD_CONF_PATH, pkgs);
+  ReadPackageDirs(confd_path, pkgs);
   ignorePackages(pkgs, ignores);
 
-  logger(INFO1, "** calculating deps\n");
+  if (show_verbose)
+    cout << "** calculating deps" << endl;
 
   if (optind == argc)
-  {
     return workAllPackages(pkgs);
-  }
   else
-  {
     return workSpecificPackages(pkgs, optind, argc, argv);
-  }
 }
 
 // vim:sw=2:ts=2:sts=2:et:cc=72

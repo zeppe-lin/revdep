@@ -15,14 +15,18 @@
 // You should have received a copy of the GNU General Public License
 // along with revdep.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "pkg.h"
-#include <fstream>
 #include <algorithm>
+#include <fstream>
+
 #include <dirent.h>
 
-Package::Package(const std::string   &name,
-                 const std::string   &version,
-                 const StringVector  &files)
+#include "pkg.h"
+
+using namespace std;
+
+Package::Package(const string       &name,
+                 const string       &version,
+                 const StringVector &files)
 {
   _name    = name;
   _version = version;
@@ -31,21 +35,23 @@ Package::Package(const std::string   &name,
   _ignore  = false;
 }
 
-static Package readPackage(std::istream &in)
+static Package readPackage(istream &in)
 {
-  std::string  line;
-  size_t       fields = 0;
-  std::string  name;
-  std::string  version;
+  string line;
+  size_t fields = 0;
+  string name;
+  string version;
   StringVector files;
 
   while (getline(in, line) && line != "")
   {
     switch (++fields)
     {
-      case 1:                  name = line ; break;
-      case 2:               version = line ; break;
-      default:  files.push_back("/" + line); break;
+      case 1:                 name = line; break;
+
+      case 2:              version = line; break;
+
+      default: files.push_back("/" + line); break;
     }
   }
 
@@ -55,10 +61,10 @@ static Package readPackage(std::istream &in)
   return Package(name, version, files);
 }
 
-bool ReadPackages(const std::string  &path,
-                  PackageVector      &pkgs)
+bool ReadPackages(const string  &path,
+                  PackageVector &pkgs)
 {
-  std::ifstream fin;
+  ifstream fin;
 
   fin.open(path.c_str());
 
@@ -77,11 +83,11 @@ bool ReadPackages(const std::string  &path,
 
   fin.close();
 
-  return (pkgs.size() > 0);
+  return(pkgs.size() > 0);
 }
 
-void ReadPackageDirs(const std::string  &path,
-                     PackageVector      &pkgs)
+void ReadPackageDirs(const string  &path,
+                     PackageVector &pkgs)
 {
   DIR *dir;
 
@@ -105,7 +111,7 @@ void ReadPackageDirs(const std::string  &path,
       continue;
 
     PackageVector::iterator pkg =
-      std::find(pkgs.begin(), pkgs.end(), de->d_name);
+      find(pkgs.begin(), pkgs.end(), de->d_name);
 
     if (pkg == pkgs.end())
       continue;
