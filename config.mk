@@ -3,8 +3,8 @@ VERSION = 2.0
 
 # paths
 PREFIX = /usr/local
-BINDIR = ${PREFIX}/bin
-MANDIR = ${PREFIX}/share/man
+BINDIR = $(PREFIX)/bin
+MANDIR = $(PREFIX)/share/man
 ETCDIR = /etc
 
 # flags

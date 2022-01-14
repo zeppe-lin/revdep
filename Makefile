@@ -1,33 +1,31 @@
-.SUFFIXES: .cpp .o
 include config.mk
 
-SRC = $(wildcard src/*.cpp)
-OBJ = $(SRC:.cpp=.o)
-BIN = revdep
-MAN = revdep.1
+.POSIX:
 
-all: $(BIN) $(MAN)
+SRCS = $(wildcard *.cpp)
+OBJS = $(SRCS:.cpp=.o)
 
-%: %.scd
-	sed -e "s/#VERSION#/$(VERSION)/" $< | scdoc > $@
+all: revdep revdep.1
+
+revdep.1: revdep.1.pod
+	pod2man --nourls -r $(VERSION) -c ' ' -n revdep -s 1 $^ > $@
 
 .cpp.o:
-	$(CXX) -c -o $@ $< $(CXXFLAGS) $(CPPFLAGS)
+	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) $< -o $@
 
-$(BIN): $(OBJ)
-	$(LD) -o $@ $^ $(LDFLAGS)
+revdep: $(OBJS)
+	$(LD) $^ $(LDFLAGS) -o $@
 
 install: all
 	install -d $(DESTDIR)$(ETCDIR)/revdep.d
-	install -m 0755 -D $(BIN) $(DESTDIR)$(BINDIR)/$(BIN)
-	install -m 0644 -D $(MAN) $(DESTDIR)$(MANDIR)/$(MAN)
+	install -m 755 -D -t $(DESTDIR)$(BINDIR)/      revdep
+	install -m 644 -D -t $(DESTDIR)$(MANDIR)/man1/ revdep.1
 
 uninstall:
-	rm -rf $(DESTDIR)$(ETCDIR)/revdep.d
-	rm -f  $(DESTDIR)$(BINDIR)/$(BIN)
-	rm -f  $(DESTDIR)$(MANDIR)/$(MAN)
+	rm -f $(DESTDIR)$(BINDIR)/revdep
+	rm -f $(DESTDIR)$(MANDIR)/man1/revdep.1
 
 clean:
-	rm -f $(OBJ) $(BIN) $(MAN)
+	rm -f $(OBJS) revdep revdep.1
 
 .PHONY: all install uninstall clean
