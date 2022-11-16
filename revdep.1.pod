@@ -1,3 +1,6 @@
+# This file is a part of revdep.
+# See COPYING and COPYRIGHT files for corresponding information.
+
 =pod
 
 =encoding UTF-8
@@ -12,14 +15,13 @@ B<revdep> [I<OPTION>]... [I<PKGNAME>]
 
 =head1 DESCRIPTION
 
-B<revdep> checks for missing libraries of installed packages using elfutils'
-libelf and the same algorithm that
-L<ld.so(8)|https://www.mankier.com/8/ld.so>
-uses.
+B<revdep> checks for missing libraries of installed packages using
+elfutils' libelf and the same algorithm that L<ld.so(8)> uses.
 
 =head1 OPTIONS
 
-Mandatory arguments to long options are mandatory for short options too.
+Mandatory arguments to long options are mandatory for short options
+too.
 
 =over 8
 
@@ -83,21 +85,20 @@ Use this command to rebuild packages on your system:
 
 =head1 ADDITIONAL LIBRARY DIRECTORIES
 
-Upon startup, B<revdep> searches the F</etc/revdep.d> directory for files
-named after packages. If any are found, any directories (assumed to be
-absolute paths and delimited by newlines) within the file are added to a list
-of package specific directories to search if a library dependency is not
-found in one of the many standard locations (as specified by
-L<ld.so(8)|https://www.mankier.com/8/ld.so>
-).
+Upon startup, B<revdep> searches the F</etc/revdep.d> directory for
+files named after packages.  If any are found, any directories
+(assumed to be absolute paths and delimited by newlines) within the
+file are added to a list of package specific directories to search if
+a library dependency is not found in one of the many standard
+locations (as specified by L<ld.so(8)>).
 
-If a package is discovered to have a library dependencies that are in a
-non-standard directory F</usr/lib/firefox> then a file named F<firefox>
-should be created under F</etc/revdep.d> with a single line containing
-F</usr/lib/firefox>. This will tell B<revdep> where to find firefox's
-F<libxul.so> when looking for its library dependencies, reducing one source
-of false positives. Ideally, this file would be included with the package's
-own packaging as well.
+If a package is discovered to have a library dependencies that are in
+a non-standard directory F</usr/lib/firefox> then a file named
+F<firefox> should be created under F</etc/revdep.d> with a single
+line containing F</usr/lib/firefox>.  This will tell B<revdep> where
+to find firefox's F<libxul.so> when looking for its library
+dependencies, reducing one source of false positives.  Ideally, this
+file would be included with the package's own packaging as well.
 
 =head1 EXIT STATUS
 
@@ -105,7 +106,7 @@ own packaging as well.
 
 =item C<0>
 
-There are no missing libraries found. All is ok.
+There are no missing libraries found.  All is ok.
 
 =item C<1>
 
@@ -127,8 +128,8 @@ Found at least one missing library.
 
 =head1 NOTES
 
-C++ rewrite inspired by Johannes Winkelmann's L<mailto:jw@tks6.net> shell
-B<revdep>.
+C++ rewrite inspired by Johannes Winkelmann's L<mailto:jw@tks6.net>
+shell B<revdep>.
 
 Contributed to design Danny Rawlins L<mailto:contact@romster.me>.
 
@@ -137,3 +138,6 @@ Contributed to design Danny Rawlins L<mailto:contact@romster.me>.
 James Buren, L<ryuo@freenode>
 
 =cut
+
+# vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
+# End of file.
