@@ -1,19 +1,5 @@
-// Copyright (C) 2016 James Buren
-//
-// This file is part of revdep.
-//
-// revdep is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// revdep is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with revdep.  If not, see <http://www.gnu.org/licenses/>.
+// This file is a part of revdep.
+// See COPYING and COPYRIGHT files for corresponding information.
 
 #pragma once
 
@@ -83,5 +69,5 @@ bool ReadPackages(const string  &path,
 void ReadPackageDirs(const string  &path,
                      PackageVector &pkgs);
 
-// vim:sw=2:ts=2:sts=2:et:cc=72
+// vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
 // End of file.
