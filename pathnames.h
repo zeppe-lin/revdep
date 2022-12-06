@@ -1,4 +1,3 @@
-// This file is a part of revdep.
 // See COPYING and COPYRIGHT files for corresponding information.
 
 #define _PATH_CONF      "/etc/revdep.d"

@@ -1,4 +1,3 @@
-// This file is a part of revdep.
 // See COPYING and COPYRIGHT files for corresponding information.
 
 #include <fstream>
