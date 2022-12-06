@@ -15,7 +15,7 @@ CXXFLAGS = -std=c++11 -Wall -Wextra -pedantic
 LDFLAGS  = --static $(shell pkg-config --libs --static libelf)
 
 # compiler and linker
-CXX = g++
+CXX = c++
 LD  = ${CXX}
 
 # vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
