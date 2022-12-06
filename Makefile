@@ -16,7 +16,7 @@ revdep.1: revdep.1.pod
 	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} $<
 
 revdep: ${OBJS}
-	${LD} -o $@ ${LDFLAGS} $^
+	${LD} $^ ${LDFLAGS} -o $@
 
 install: all
 	mkdir -p ${DESTDIR}${BINDIR}
