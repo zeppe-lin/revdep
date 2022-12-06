@@ -1,9 +1,8 @@
-# This file is a part of revdep.
 # See COPYING and COPYRIGHT files for corresponding information.
 
-include config.mk
-
 .POSIX:
+
+include config.mk
 
 SRCS = $(wildcard *.cpp)
 OBJS = $(SRCS:.cpp=.o)
@@ -14,15 +13,17 @@ revdep.1: revdep.1.pod
 	pod2man --nourls -r ${VERSION} -c ' ' -n revdep -s 1 $^ > $@
 
 .cpp.o:
-	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} $< -o $@
+	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} $<
 
 revdep: ${OBJS}
-	${LD} $^ ${LDFLAGS} -o $@
+	${LD} -o $@ ${LDFLAGS} $^
 
 install: all
-	install -d ${DESTDIR}${ETCDIR}/revdep.d
-	install -m 0755 -Dt ${DESTDIR}${BINDIR}/      revdep
-	install -m 0644 -Dt ${DESTDIR}${MANDIR}/man1/ revdep.1
+	mkdir -p ${DESTDIR}${BINDIR}
+	mkdir -p ${DESTDIR}${MANDIR}/man1
+	mkdir -p ${DESTDIR}${ETCDIR}/revdep.d
+	cp -f revdep   ${DESTDIR}${BINDIR}/
+	cp -f revdep.1 ${DESTDIR}${MANDIR}/man1/
 
 uninstall:
 	rm -f ${DESTDIR}${BINDIR}/revdep
