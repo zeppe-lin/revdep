@@ -1,9 +1,7 @@
 # Bash programmable completion for revdep(1).
-# This file is a part of revdep.
 # See COPYING and COPYRIGHT files for corresponding information.
 
-_revdep()
-{
+_revdep() {
   local cur prev
   COMPREPLY=()
   cur=${COMP_WORDS[COMP_CWORD]}
