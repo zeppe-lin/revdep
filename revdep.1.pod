@@ -1,4 +1,3 @@
-# This file is a part of revdep.
 # See COPYING and COPYRIGHT files for corresponding information.
 
 =pod
@@ -16,7 +15,8 @@ B<revdep> [I<OPTION>]... [I<PKGNAME>]
 =head1 DESCRIPTION
 
 B<revdep> checks for missing libraries of installed packages using
-elfutils' libelf and the same algorithm that L<ld.so(8)> uses.
+elfutils' libelf and the same algorithm that
+L<ld.so(8)|https://www.mankier.com/8/ld.so> uses.
 
 =head1 OPTIONS
 
@@ -90,7 +90,7 @@ files named after packages.  If any are found, any directories
 (assumed to be absolute paths and delimited by newlines) within the
 file are added to a list of package specific directories to search if
 a library dependency is not found in one of the many standard
-locations (as specified by L<ld.so(8)>).
+locations (as specified by L<ld.so(8)|https://www.mankier.com/8/ld.so>).
 
 If a package is discovered to have a library dependencies that are in
 a non-standard directory F</usr/lib/firefox> then a file named
@@ -128,10 +128,10 @@ Found at least one missing library.
 
 =head1 NOTES
 
-C++ rewrite inspired by Johannes Winkelmann's L<mailto:jw@tks6.net>
+C++ rewrite inspired by Johannes Winkelmann's L<jw@tks6.net>
 shell B<revdep>.
 
-Contributed to design Danny Rawlins L<mailto:contact@romster.me>.
+Contributed to design Danny Rawlins L<contact@romster.me>.
 
 =head1 AUTHOR
 
