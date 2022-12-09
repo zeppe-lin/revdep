@@ -18,6 +18,10 @@ revdep.1: revdep.1.pod
 revdep: ${OBJS}
 	${LD} $^ ${LDFLAGS} -o $@
 
+check:
+	@podchecker *.pod
+	@grep -Eiho "https?://[^\"\\'> ]+" *.* | httpx -silent -fc 200 -sc
+
 install: all
 	mkdir -p ${DESTDIR}${BINDIR}
 	mkdir -p ${DESTDIR}${MANDIR}/man1
