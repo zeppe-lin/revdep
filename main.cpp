@@ -45,7 +45,7 @@ static bool workFile(const Package &pkg, const string &file)
   if (show_trace)
     cout << pkg.Name() << ":" << file << ": checking file" << endl;
 
-  if (!IsFile(file))
+  if (!IsRegularFile(file))
     return rv;
 
   const Elf *elf = ec.LookUp(file);

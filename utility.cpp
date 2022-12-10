@@ -98,7 +98,7 @@ bool ReadLdConf(const string &path,
   return true;
 }
 
-bool IsFile(const string &path)
+bool IsRegularFile(const string &path)
 {
   struct stat st;
 
