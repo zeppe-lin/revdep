@@ -1,13 +1,10 @@
-# See COPYING and COPYRIGHT files for corresponding information.
-
-# revdep version if undefined
+# revdep version
 VERSION = 2.0
 
 # paths
-PREFIX = /usr/local
-BINDIR = ${PREFIX}/bin
-MANDIR = ${PREFIX}/share/man
-ETCDIR = /etc
+PREFIX     = /usr/local
+MANPREFIX  = ${PREFIX}/share/man
+SYSCONFDIR = ${PREFIX}/etc
 
 # flags
 CPPFLAGS = -DVERSION=\"${VERSION}\"
@@ -17,6 +14,3 @@ LDFLAGS  = --static $(shell pkg-config --libs --static libelf)
 # compiler and linker
 CXX = c++
 LD  = ${CXX}
-
-# vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
-# End of file.
