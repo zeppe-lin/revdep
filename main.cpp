@@ -172,10 +172,10 @@ static int workSpecificPackages(const PackageVector &pkgs, int i, int argc, char
 int main(int argc, char **argv)
 {
   static struct option longopts[] = {
-    { "ld.so.conf", required_argument,  NULL,             'c' },
-    { "pkgdb",      required_argument,  NULL,             'd' },
-    { "revdep.d",   required_argument,  NULL,             'r' },
-    { "ignore",     required_argument,  NULL,             'i' },
+    { "ld.so.conf", required_argument,  NULL,             'L' },
+    { "pkgdb",      required_argument,  NULL,             'D' },
+    { "revdep.d",   required_argument,  NULL,             'R' },
+    { "ignore",     required_argument,  NULL,             'I' },
     { "verbose",    no_argument,        &show_verbose,    1   },
     { "erroneous",  no_argument,        &show_erroneous,  1   },
     { "precise",    no_argument,        &show_precise,    1   },
@@ -187,23 +187,23 @@ int main(int argc, char **argv)
 
   int opt;
 
-  while ((opt = getopt_long(argc, argv, ":hd:c:r:i:vVept", longopts, 0)) != -1)
+  while ((opt = getopt_long(argc, argv, ":hvL:D:R:I:VEPT", longopts, 0)) != -1)
   {
     switch (opt)
     {
-      case 'c':
+      case 'L':
         path_ld_so_conf = optarg;
         break;
 
-      case 'd':
+      case 'D':
         path_pkg_db = optarg;
         break;
 
-      case 'r':
+      case 'R':
         path_revdep_d = optarg;
         break;
 
-      case 'i':
+      case 'I':
         split(optarg, ignores, ',');
         break;
 
@@ -211,15 +211,15 @@ int main(int argc, char **argv)
         show_verbose = 1;
         break;
 
-      case 'e':
+      case 'E':
         show_erroneous = 1;
         break;
 
-      case 'p':
+      case 'P':
         show_precise = 1;
         break;
 
-      case 't':
+      case 'T':
         show_trace = 1;
         break;
 
@@ -247,14 +247,14 @@ int main(int argc, char **argv)
 Check for missing libraries of installed packages.
 
 Mandatory arguments to long options are mandatory for short options too.
-  -c, --ld.so.conf=PATH     specify an alternate location for ld.so.conf
-  -d, --pkgdb=PATH          specify an alternate location for the packages database
-  -r, --revdep.d=PATH       specify an alternate location for revdep package config
-  -i, --ignore=PKGNAME,...  comma-separated list of packages to ignore
+  -L, --ld.so.conf=PATH     specify an alternate location for ld.so.conf
+  -D, --pkgdb=PATH          specify an alternate location for the packages database
+  -R, --revdep.d=PATH       specify an alternate location for revdep package config
+  -I, --ignore=PKGNAME,...  comma-separated list of packages to ignore
   -V, --verbose             formatted listing
-  -e, --erroneous           include erroneous files in the output
-  -p, --precise             include precise file errors in the output
-  -t, --trace               show debug/trace
+  -E, --erroneous           include erroneous files in the output
+  -P, --precise             include precise file errors in the output
+  -T, --trace               show debug/trace
   -v, --version             print version and exit
   -h, --help                print help and exit
 )END";

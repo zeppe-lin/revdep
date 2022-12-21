@@ -23,25 +23,25 @@ too.
 
 =over 8
 
-=item B<-c>, B<--ldsoconf> I<PATH>
+=item B<-L>, B<--ld.so.conf>=I<PATH>
 
 Specify an alternate location for F<ld.so.conf>.
 
 Default location is F</etc/ld.so.conf>.
 
-=item B<-d>, B<--pkgdb> I<PATH>
+=item B<-D>, B<--pkgdb>=I<PATH>
 
 Specify an alternate location for the package database.
 
 Default location is F</var/lib/pkg/db>.
 
-=item B<-r>, B<--confd> I<PATH>
+=item B<-R>, B<--revdep.d>=I<PATH>
 
 Specify an alternate location for B<revdep> package configuration.
 
 Default location is F</etc/revdep.d>.
 
-=item B<-i>, B<--ignore> I<PKGNAME>
+=item B<-I>, B<--ignore>=I<PKGNAME>,...
 
 Comma-separated list of packages to ignore.
 
@@ -49,15 +49,15 @@ Comma-separated list of packages to ignore.
 
 Formatted listing.
 
-=item B<-e>, B<--erroneous>
+=item B<-E>, B<--erroneous>
 
 Include erroneous files in the output.
 
-=item B<-p>, B<--precise>
+=item B<-P>, B<--precise>
 
 Include precise file errors in the output.
 
-=item B<-t>, B<--trace>
+=item B<-T>, B<--trace>
 
 Show debug/trace.
 
