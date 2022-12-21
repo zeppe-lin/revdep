@@ -39,7 +39,7 @@ Default location is F</var/lib/pkg/db>.
 
 Specify an alternate location for B<revdep> package configuration.
 
-Default location is F</etc/revdep.d>.
+Default location is F<@SYSCONFDIR@/revdep.d>.
 
 =item B<-I>, B<--ignore>=I<PKGNAME>,...
 
@@ -83,18 +83,18 @@ Use this command to rebuild packages on your system:
 
 =head1 ADDITIONAL LIBRARY DIRECTORIES
 
-Upon startup, B<revdep> searches the F</etc/revdep.d> directory for
-files named after packages.  If any are found, any directories
-(assumed to be absolute paths and delimited by newlines) within the
-file are added to a list of package specific directories to search if
-a library dependency is not found in one of the many standard
+Upon startup, B<revdep> searches the F<@SYSCONFDIR@/revdep.d>
+directory for files named after packages.  If any are found, any
+directories (assumed to be absolute paths and delimited by newlines)
+within the file are added to a list of package specific directories to
+search if a library dependency is not found in one of the many standard
 locations (as specified by L<ld.so(8)|https://www.mankier.com/8/ld.so>).
 
 If a package is discovered to have a library dependencies that are in
 a non-standard directory F</usr/lib/firefox> then a file named
-F<firefox> should be created under F</etc/revdep.d> with a single
-line containing F</usr/lib/firefox>.  This will tell B<revdep> where
-to find firefox's F<libxul.so> when looking for its library
+F<firefox> should be created under F<@SYSCONFDIR@/revdep.d> with a
+single line containing F</usr/lib/firefox>.  This will tell B<revdep>
+where to find firefox's F<libxul.so> when looking for its library
 dependencies, reducing one source of false positives.  Ideally, this
 file would be included with the package's own packaging as well.
 
