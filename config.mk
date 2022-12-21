@@ -7,7 +7,7 @@ MANPREFIX  = ${PREFIX}/share/man
 SYSCONFDIR = ${PREFIX}/etc
 
 # flags
-CPPFLAGS = -DVERSION=\"${VERSION}\"
+CPPFLAGS = -DVERSION=\"${VERSION}\" -DSYSCONFDIR=\"${SYSCONFDIR}\"
 CXXFLAGS = -std=c++11 -Wall -Wextra -pedantic
 LDFLAGS  = --static $(shell pkg-config --libs --static libelf)
 

@@ -9,16 +9,15 @@
 
 #include "elf-cache.h"
 #include "main.h"
-#include "pathnames.h"
 #include "pkg.h"
 
 using namespace std;
 
 static int do_help, do_version;
 static int show_verbose, show_erroneous, show_precise, show_trace;
-static string confd_path = _PATH_CONF;
-static string pkgdb_path = _PATH_PKGDB;
-static string ldsoconf_path = _PATH_LDSOCONF;
+static string path_revdep_d   = SYSCONFDIR"/revdep.d";
+static string path_pkg_db     = "/var/lib/pkg/db";
+static string path_ld_so_conf = "/etc/ld.so.conf";
 
 static StringVector ignores;
 static PackageVector pkgs;
@@ -173,9 +172,9 @@ static int workSpecificPackages(const PackageVector &pkgs, int i, int argc, char
 int main(int argc, char **argv)
 {
   static struct option longopts[] = {
-    { "ldsoconf",   required_argument,  NULL,             'c' },
+    { "ld.so.conf", required_argument,  NULL,             'c' },
     { "pkgdb",      required_argument,  NULL,             'd' },
-    { "confd",      required_argument,  NULL,             'r' },
+    { "revdep.d",   required_argument,  NULL,             'r' },
     { "ignore",     required_argument,  NULL,             'i' },
     { "verbose",    no_argument,        &show_verbose,    1   },
     { "erroneous",  no_argument,        &show_erroneous,  1   },
@@ -193,15 +192,15 @@ int main(int argc, char **argv)
     switch (opt)
     {
       case 'c':
-        ldsoconf_path = optarg;
+        path_ld_so_conf = optarg;
         break;
 
       case 'd':
-        pkgdb_path = optarg;
+        path_pkg_db = optarg;
         break;
 
       case 'r':
-        confd_path = optarg;
+        path_revdep_d = optarg;
         break;
 
       case 'i':
@@ -248,10 +247,10 @@ int main(int argc, char **argv)
 Check for missing libraries of installed packages.
 
 Mandatory arguments to long options are mandatory for short options too.
-  -c, --ldsoconf PATH       specify an alternate location for ld.so.conf
-  -d, --pkgdb PATH          specify an alternate location for the packages database
-  -r, --confd PATH          specify an alternate location for revdep package config
-  -i, --ignore PKGNAME,...  comma-separated list of packages to ignore
+  -c, --ld.so.conf=PATH     specify an alternate location for ld.so.conf
+  -d, --pkgdb=PATH          specify an alternate location for the packages database
+  -r, --revdep.d=PATH       specify an alternate location for revdep package config
+  -i, --ignore=PKGNAME,...  comma-separated list of packages to ignore
   -V, --verbose             formatted listing
   -e, --erroneous           include erroneous files in the output
   -p, --precise             include precise file errors in the output
@@ -267,22 +266,24 @@ Mandatory arguments to long options are mandatory for short options too.
     return 0;
   }
 
-  if (!ReadPackages(pkgdb_path, pkgs))
+  if (!ReadPackages(path_pkg_db, pkgs))
   {
-    cerr << "revdep:" << pkgdb_path << ": failed to read package database" << endl;
+    cerr << "revdep:" << path_pkg_db
+         << ": failed to read package database" << endl;
     return 2;
   }
 
-  if (!ReadLdConf(ldsoconf_path, dirs, 10))
+  if (!ReadLdConf(path_ld_so_conf, dirs, 10))
   {
-    cerr << "revdep:" << ldsoconf_path << ": failed to read ld conf" << endl;
+    cerr << "revdep:" << path_ld_so_conf
+         << ": failed to read ld configuration" << endl;
     return 3;
   }
 
   dirs.push_back("/lib");
   dirs.push_back("/usr/lib");
 
-  ReadPackageDirs(confd_path, pkgs);
+  ReadPackageDirs(path_revdep_d, pkgs);
   ignorePackages(pkgs, ignores);
 
   if (show_verbose)
