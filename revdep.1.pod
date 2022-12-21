@@ -23,7 +23,7 @@ too.
 
 =over 8
 
-=item B<-L>, B<--ld.so.conf>=I<PATH>
+=item B<-L>, B<--ldsoconf>=I<PATH>
 
 Specify an alternate location for F<ld.so.conf>.
 
@@ -35,7 +35,7 @@ Specify an alternate location for the package database.
 
 Default location is F</var/lib/pkg/db>.
 
-=item B<-R>, B<--revdep.d>=I<PATH>
+=item B<-R>, B<--revdepdir>=I<PATH>
 
 Specify an alternate location for B<revdep> package configuration.
 
@@ -116,7 +116,7 @@ Failed to read package database.
 
 =item C<3>
 
-Failed to read ld conf.
+Failed to read ld.so.conf.
 
 =item C<4>
 

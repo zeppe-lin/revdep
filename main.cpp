@@ -172,9 +172,9 @@ static int workSpecificPackages(const PackageVector &pkgs, int i, int argc, char
 int main(int argc, char **argv)
 {
   static struct option longopts[] = {
-    { "ld.so.conf", required_argument,  NULL,             'L' },
+    { "ldsoconf",   required_argument,  NULL,             'L' },
     { "pkgdb",      required_argument,  NULL,             'D' },
-    { "revdep.d",   required_argument,  NULL,             'R' },
+    { "revdepdir",  required_argument,  NULL,             'R' },
     { "ignore",     required_argument,  NULL,             'I' },
     { "verbose",    no_argument,        &show_verbose,    1   },
     { "erroneous",  no_argument,        &show_erroneous,  1   },
@@ -247,9 +247,9 @@ int main(int argc, char **argv)
 Check for missing libraries of installed packages.
 
 Mandatory arguments to long options are mandatory for short options too.
-  -L, --ld.so.conf=PATH     specify an alternate location for ld.so.conf
+  -L, --ldsoconf=PATH       specify an alternate location for ld.so.conf
   -D, --pkgdb=PATH          specify an alternate location for the packages database
-  -R, --revdep.d=PATH       specify an alternate location for revdep package config
+  -R, --revdepdir=PATH      specify an alternate location for revdep package config
   -I, --ignore=PKGNAME,...  comma-separated list of packages to ignore
   -V, --verbose             formatted listing
   -E, --erroneous           include erroneous files in the output
