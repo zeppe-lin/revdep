@@ -8,7 +8,8 @@ OBJS = $(SRCS:.cpp=.o)
 all: revdep revdep.1
 
 revdep.1: revdep.1.pod
-	pod2man --nourls -r ${VERSION} -c ' ' -n revdep -s 1 $^ > $@
+	sed "s|@SYSCONFDIR@|${SYSCONFDIR}|g" $< | pod2man --nourls \
+		-r ${VERSION} -c ' ' -n revdep -s 1 - > $@
 
 .cpp.o:
 	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} $<
@@ -21,9 +22,9 @@ check:
 	@grep -Eiho "https?://[^\"\\'> ]+" *.* | httpx -silent -fc 200 -sc
 
 install: all
-	mkdir -p ${DESTDIR}${PREFIX}/bin
-	mkdir -p ${DESTDIR}${MANPREFIX}/man1
-	cp -f revdep   ${DESTDIR}${PREFIX}/bin
+	mkdir -p       ${DESTDIR}${PREFIX}/bin
+	mkdir -p       ${DESTDIR}${MANPREFIX}/man1
+	cp -f revdep   ${DESTDIR}${PREFIX}/bin/
 	cp -f revdep.1 ${DESTDIR}${MANPREFIX}/man1/
 
 uninstall:
