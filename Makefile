@@ -1,5 +1,3 @@
-# See COPYING and COPYRIGHT files for corresponding information.
-
 .POSIX:
 
 include config.mk
@@ -23,20 +21,16 @@ check:
 	@grep -Eiho "https?://[^\"\\'> ]+" *.* | httpx -silent -fc 200 -sc
 
 install: all
-	mkdir -p ${DESTDIR}${BINDIR}
-	mkdir -p ${DESTDIR}${MANDIR}/man1
-	mkdir -p ${DESTDIR}${ETCDIR}/revdep.d
-	cp -f revdep   ${DESTDIR}${BINDIR}/
-	cp -f revdep.1 ${DESTDIR}${MANDIR}/man1/
+	mkdir -p ${DESTDIR}${PREFIX}/bin
+	mkdir -p ${DESTDIR}${MANPREFIX}/man1
+	cp -f revdep   ${DESTDIR}${PREFIX}/bin
+	cp -f revdep.1 ${DESTDIR}${MANPREFIX}/man1/
 
 uninstall:
-	rm -f ${DESTDIR}${BINDIR}/revdep
-	rm -f ${DESTDIR}${MANDIR}/man1/revdep.1
+	rm -f ${DESTDIR}${PREFIX}/bin/revdep
+	rm -f ${DESTDIR}${MANPREFIX}/man1/revdep.1
 
 clean:
 	rm -f ${OBJS} revdep revdep.1
 
 .PHONY: all install uninstall clean
-
-# vim:cc=72:tw=70
-# End of file.
