@@ -1,5 +1,7 @@
 # revdep(1) completion
 
+_avail_pkgs=($(pkginfo -i | awk '{printf "%s ", $1}'))
+
 _revdep()
 {
   local cur prev words cword split
@@ -21,12 +23,10 @@ _revdep()
       local realcur prefix
       realcur=${cur##*,}
       prefix=${cur%,*}
-      COMPREPLY=($(compgen -W \
-        "$(pkginfo -i | awk '{ printf "%s ", $1 }')" -P "${prefix}," \
+      COMPREPLY=($(compgen -W '"${_avail_pkgs[@]}"' -P "${prefix}," \
         -- $realcur))
     else
-      COMPREPLY=($(compgen -W \
-        "$(pkginfo -i | awk '{ printf "%s ", $1 }')" -- $cur))
+      COMPREPLY=($(compgen -W '"${_avail_pkgs[@]}"' -- $cur))
     fi
     return 0
     ;;
@@ -37,8 +37,7 @@ _revdep()
     COMPREPLY=($(compgen -W '$(_parse_help "$1")' -- $cur))
     [[ ${COMPREPLY-} == *= ]] && compopt -o nospace
   else
-    COMPREPLY=($(compgen -W \
-      "$(pkginfo -i | awk '{ printf "%s ", $1 }')" -- $cur))
+    COMPREPLY=($(compgen -W '"${_avail_pkgs[@]}"' -- $cur))
   fi
 } &&
   complete -F _revdep revdep
