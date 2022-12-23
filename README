@@ -17,7 +17,6 @@ ABOUT revdep
     1. git://crux.nu/tools/prt-utils.git                        (git)
     2. https://crux.nu/gitweb/?p=tools/prt-utils.git;a=summary  (web)
 
-
 REQUIREMENTS
 
     Built time:
@@ -27,11 +26,8 @@ REQUIREMENTS
     * elfutils
 
     Tests:
-    * podchecker(1pm)
-      check PODs for errors
-    * httpx(1)
-      check URLs for non-200 response code
-
+    * podchecker(1pm) to check PODs for errors
+    * httpx(1) to check URLs for non-200 response code
 
 INSTALL
 
@@ -40,7 +36,6 @@ INSTALL
 
     The shell commands "make && make check" should build and start
     some tests.  See "Makefile" for additional information.
-
 
 LICENSE
 
