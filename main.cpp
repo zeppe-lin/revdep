@@ -15,7 +15,7 @@ using namespace std;
 
 static int do_help, do_version;
 static int show_verbose, show_erroneous, show_precise, show_trace;
-static string path_revdep_d   = SYSCONFDIR"/revdep.d";
+static string path_revdep_d   = "/etc/revdep.d";
 static string path_pkg_db     = "/var/lib/pkg/db";
 static string path_ld_so_conf = "/etc/ld.so.conf";
 
