@@ -10,14 +10,15 @@
 #include "elf-cache.h"
 #include "main.h"
 #include "pkg.h"
+#include "pathnames.h"
 
 using namespace std;
 
 static int do_help, do_version;
 static int show_verbose, show_erroneous, show_precise, show_trace;
-static string path_revdep_d   = "/etc/revdep.d";
-static string path_pkg_db     = "/var/lib/pkg/db";
-static string path_ld_so_conf = "/etc/ld.so.conf";
+static string revdepdir = PATH_REVDEP_D;
+static string pkgdb     = PATH_PKG_DB;
+static string ldsoconf  = PATH_LD_SO_CONF;
 
 static StringVector ignores;
 static PackageVector pkgs;
@@ -192,15 +193,15 @@ int main(int argc, char **argv)
     switch (opt)
     {
       case 'L':
-        path_ld_so_conf = optarg;
+        ldsoconf = optarg;
         break;
 
       case 'D':
-        path_pkg_db = optarg;
+        pkgdb = optarg;
         break;
 
       case 'R':
-        path_revdep_d = optarg;
+        revdepdir = optarg;
         break;
 
       case 'I':
@@ -266,16 +267,16 @@ Mandatory arguments to long options are mandatory for short options too.
     return 0;
   }
 
-  if (!ReadPackages(path_pkg_db, pkgs))
+  if (!ReadPackages(pkgdb, pkgs))
   {
-    cerr << "revdep:" << path_pkg_db
+    cerr << "revdep:" << pkgdb
          << ": failed to read package database" << endl;
     return 2;
   }
 
-  if (!ReadLdConf(path_ld_so_conf, dirs, 10))
+  if (!ReadLdConf(ldsoconf, dirs, 10))
   {
-    cerr << "revdep:" << path_ld_so_conf
+    cerr << "revdep:" << ldsoconf
          << ": failed to read ld configuration" << endl;
     return 3;
   }
@@ -283,7 +284,7 @@ Mandatory arguments to long options are mandatory for short options too.
   dirs.push_back("/lib");
   dirs.push_back("/usr/lib");
 
-  ReadPackageDirs(path_revdep_d, pkgs);
+  ReadPackageDirs(revdepdir, pkgs);
   ignorePackages(pkgs, ignores);
 
   if (show_verbose)
