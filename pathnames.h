@@ -1,3 +1,5 @@
+// See COPYING and COPYRIGHT files for corresponding information.
+
 #pragma once
 
 #define PATH_REVDEP_D     "/etc/revdep.d"
