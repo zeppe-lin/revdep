@@ -1,3 +1,9 @@
-Add support for NODEFLIB?
-Add support for LD_LIBRARY_PATH?
-Add support for hardware capability directories?
+TODO revdep
+
+    [ ] Add support for NODEFLIB?
+    [ ] Add support for LD_LIBRARY_PATH?
+    [ ] Add support for hardware capability directories?
+
+
+vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
+End of file.
