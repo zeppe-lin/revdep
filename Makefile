@@ -28,6 +28,8 @@ install: all
 	mkdir -p       ${DESTDIR}/usr/share/man/man1
 	cp -f revdep   ${DESTDIR}/usr/bin/
 	cp -f revdep.1 ${DESTDIR}/usr/share/man/man1/
+	chmod 0755     ${DESTDIR}/usr/bin/revdep
+	chmod 0644     ${DESTDIR}/usr/share/man/man1/revdep.1
 
 uninstall:
 	rm -f ${DESTDIR}/usr/bin/revdep
