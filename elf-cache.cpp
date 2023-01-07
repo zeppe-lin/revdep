@@ -10,7 +10,7 @@
 
 using namespace std;
 
-typedef pair <const string &, Elf *> ElfPair;
+typedef pair          <const string &, Elf *>   ElfPair;
 typedef unordered_map <string, Elf *>::iterator ElfIter;
 
 static void deleteElement(ElfPair pair)
@@ -156,8 +156,7 @@ const Elf *ElfCache::LookUp(const string &path)
     return NULL;
   }
 
-  ElfPair pair =
-    make_pair <const string &, Elf *&> (path, elf);
+  ElfPair pair = make_pair <const string &, Elf *&> (path, elf);
 
   _data.insert(pair);
 
@@ -190,7 +189,8 @@ bool ElfCache::FindLibrary(const Elf          *elf,
   if (findLibraryByDirs(elf, lib, dirs))
     return true;
 
-  if (pkg.Dirs().size() > 0 && findLibraryByDirs(elf, lib, pkg.Dirs()))
+  if (   pkg.Dirs().size() > 0
+      && findLibraryByDirs(elf, lib, pkg.Dirs()))
     return true;
 
   return false;
