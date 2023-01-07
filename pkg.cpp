@@ -32,10 +32,8 @@ static Package readPackage(istream &in)
   {
     switch (++fields)
     {
-      case 1:                 name = line; break;
-
-      case 2:              version = line; break;
-
+      case 1:                 name = line ; break;
+      case 2:              version = line ; break;
       default: files.push_back("/" + line); break;
     }
   }
