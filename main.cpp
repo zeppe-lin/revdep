@@ -25,11 +25,13 @@ static PackageVector pkgs;
 static StringVector dirs;
 static ElfCache ec;
 
-static void ignorePackages(PackageVector &pkgs, const StringVector &ignores)
+static void ignorePackages(PackageVector      &pkgs,
+                           const StringVector &ignores)
 {
   for (size_t i = 0; i < ignores.size(); ++i)
   {
-    PackageVector::iterator pkg = find(pkgs.begin(), pkgs.end(), ignores[i]);
+    PackageVector::iterator pkg =
+      find(pkgs.begin(), pkgs.end(), ignores[i]);
 
     if (pkg == pkgs.end())
       continue;
@@ -63,7 +65,8 @@ static bool workFile(const Package &pkg, const string &file)
     if (!ec.FindLibrary(elf, pkg, lib, dirs))
     {
       if (show_precise)
-        cout << pkg.Name() << ":" << file << ":" << lib << ": missing library" << endl;
+        cout << pkg.Name() << ":" << file << ":" << lib
+             << ": missing library" << endl;
 
       rv = false;
     }
@@ -128,7 +131,10 @@ static int workAllPackages(const PackageVector &pkgs)
   return rc;
 }
 
-static int workSpecificPackages(const PackageVector &pkgs, int i, int argc, char **argv)
+static int workSpecificPackages(const PackageVector &pkgs,
+                                int                 i,
+                                int                 argc,
+                                char                **argv)
 {
   int rc = 0;
 
@@ -141,7 +147,8 @@ static int workSpecificPackages(const PackageVector &pkgs, int i, int argc, char
   for ( ; i < argc; ++i)
   {
     const string name = argv[i];
-    PackageVector::const_iterator pkg = find(pkgs.begin(), pkgs.end(), name);
+    PackageVector::const_iterator pkg =
+      find(pkgs.begin(), pkgs.end(), name);
 
     if (pkg == pkgs.end())
     {
@@ -188,7 +195,9 @@ int main(int argc, char **argv)
 
   int opt;
 
-  while ((opt = getopt_long(argc, argv, ":hvL:D:R:I:VEPT", longopts, 0)) != -1)
+  while ((opt =
+          getopt_long(argc, argv, ":hvL:D:R:I:VEPT", longopts, 0))
+      != -1)
   {
     switch (opt)
     {
