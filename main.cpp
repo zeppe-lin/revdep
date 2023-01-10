@@ -20,10 +20,10 @@ static string revdepdir = PATH_REVDEP_D;
 static string pkgdb     = PATH_PKG_DB;
 static string ldsoconf  = PATH_LD_SO_CONF;
 
-static StringVector ignores;
+static StringVector  ignores;
 static PackageVector pkgs;
-static StringVector dirs;
-static ElfCache ec;
+static StringVector  dirs;
+static ElfCache      ec;
 
 static void ignorePackages(PackageVector      &pkgs,
                            const StringVector &ignores)
