@@ -22,10 +22,10 @@ Package::Package(const string       &name,
 
 static Package readPackage(istream &in)
 {
-  string line;
-  size_t fields = 0;
-  string name;
-  string version;
+  string       line;
+  size_t       fields = 0;
+  string       name;
+  string       version;
   StringVector files;
 
   while (getline(in, line) && line != "")
