@@ -10,7 +10,8 @@
 
 using namespace std;
 
-__attribute__((constructor)) static void initialize()
+__attribute__((constructor))
+static void initialize()
 {
   if (elf_version(EV_CURRENT) == EV_NONE)
     throw runtime_error("libelf initialization failure");
@@ -29,18 +30,14 @@ static bool isValidElf(Elf *elf, int &machine)
   switch (ehdr.e_type)
   {
     case ET_EXEC: break;
-
     case ET_DYN:  break;
-
     default:      return false;
   }
 
   switch (ehdr.e_ident[EI_OSABI])
   {
     case ELFOSABI_NONE:  break;
-
     case ELFOSABI_LINUX: break;
-
     default:             return false;
   }
 
@@ -50,7 +47,6 @@ static bool isValidElf(Elf *elf, int &machine)
     case EM_386:      break;
 #elif defined(__x86_64__)
     case EM_386:      break;
-
     case EM_X86_64:   break;
 #elif defined(__arm__)
     case EM_ARM:      break;
@@ -67,7 +63,9 @@ static bool isValidElf(Elf *elf, int &machine)
   return true;
 }
 
-static bool getDynamicSection(Elf *elf, GElf_Shdr &shdr, Elf_Scn *&scn)
+static bool getDynamicSection(Elf       *elf,
+                              GElf_Shdr &shdr,
+                              Elf_Scn   *&scn)
 {
   size_t    phdrnum;
   size_t    i;
@@ -105,8 +103,8 @@ static bool readDynamicSection(Elf          *elf,
                                StringVector &runpath)
 {
   GElf_Shdr shdr;
-  Elf_Scn  *scn = NULL;
-  Elf_Data *data;
+  Elf_Scn   *scn = NULL;
+  Elf_Data  *data;
   size_t    size;
   GElf_Dyn  dyn;
 
@@ -128,15 +126,25 @@ static bool readDynamicSection(Elf          *elf,
     switch (dyn.d_tag)
     {
       case DT_NEEDED:
-        needed.push_back(elf_strptr(elf, shdr.sh_link, dyn.d_un.d_val));
+        needed.push_back(
+            elf_strptr(elf, shdr.sh_link, dyn.d_un.d_val)
+            );
         break;
 
       case DT_RPATH:
-        split(elf_strptr(elf, shdr.sh_link, dyn.d_un.d_val), rpath, ':');
+        split(
+            elf_strptr(elf, shdr.sh_link, dyn.d_un.d_val),
+            rpath,
+            ':'
+            );
         break;
 
       case DT_RUNPATH:
-        split(elf_strptr(elf, shdr.sh_link, dyn.d_un.d_val), runpath, ':');
+        split(
+            elf_strptr(elf, shdr.sh_link, dyn.d_un.d_val),
+            runpath,
+            ':'
+            );
         break;
     }
   }
@@ -161,7 +169,7 @@ Elf::Elf(const string &path)
     return;
   }
 
-  if (!isValidElf(elf, _machine)
+  if (   !isValidElf(elf, _machine)
       || !readDynamicSection(elf, _needed, _rpath, _runpath))
   {
     elf_end(elf);
