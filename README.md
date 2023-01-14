@@ -6,6 +6,7 @@ checks for missing libraries of installed packages.
 This *revdep* distribution is a fork of CRUX' *revdep* utility (which
 is part of CRUX' *prt-utils* distribution) as of commit 41dfcb6
 (Thu Oct 15 2020) with the following differences:
+
   * the man page have been rewritten in POD format
   * command-line arguments have been rewritten and adjusted to GNU
     standards
@@ -43,7 +44,6 @@ LICENSE
 later <https://gnu.org/licenses/gpl.html>.
 Read the *COPYING* file for copying conditions.
 Read the *COPYRIGHT* file for copyright notices.
-
 
 <!-- vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
 End of file. -->
