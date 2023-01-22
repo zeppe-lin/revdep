@@ -1,12 +1,11 @@
 ABOUT
 -----
-This directory contains *revdep*, a package management tool that
+This directory contains _revdep_, a package management tool that
 checks for missing libraries of installed packages.
 
-This *revdep* distribution is a fork of CRUX' *revdep* utility (which
-is part of CRUX' *prt-utils* distribution) as of commit 41dfcb6
+This _revdep_ distribution is a fork of CRUX' _revdep_ utility (which
+is part of CRUX' _prt-utils_ distribution) as of commit 41dfcb6
 (Thu Oct 15 2020) with the following differences:
-
   * fixed gcc extensions for portability
   * the man page have been rewritten in POD format
   * added GNU-style options and help message
@@ -14,7 +13,7 @@ is part of CRUX' *prt-utils* distribution) as of commit 41dfcb6
   * added exit codes for ease scripting
   * added bash completion
 
-See git log for further differences.
+See git log for complete/further differences.
 
 The original sources can be downloaded from:
   1. git://crux.nu/tools/prt-utils.git                        (git)
@@ -35,16 +34,16 @@ Tests:
 INSTALL
 -------
 The shell commands `make && make install` should build and install
-this package.  See *config.mk* file for configuration parameters.
+this package.  See _config.mk_ file for configuration parameters.
 
 The shell command `make check` should start some tests.
 
 LICENSE
 -------
-*revdep* is licensed through the GNU General Public License v3 or
+_revdep_ is licensed through the GNU General Public License v3 or
 later <https://gnu.org/licenses/gpl.html>.
-Read the *COPYING* file for copying conditions.
-Read the *COPYRIGHT* file for copyright notices.
+Read the _COPYING_ file for copying conditions.
+Read the _COPYRIGHT_ file for copyright notices.
 
 <!-- vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
 End of file. -->
