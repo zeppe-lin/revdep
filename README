@@ -1,4 +1,4 @@
-ABOUT revdep
+OVERVIEW
 
 	This directory contains revdep, a package management tool that checks
 	for missing libraries of installed packages.
