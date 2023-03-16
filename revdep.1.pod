@@ -13,8 +13,7 @@ B<revdep> [I<OPTION>]... [I<PKGNAME>]
 =head1 DESCRIPTION
 
 B<revdep> checks for missing libraries of installed packages using
-elfutils' libelf and the same algorithm that
-L<ld.so(8)|https://www.mankier.com/8/ld.so> uses.
+elfutils' libelf and the same algorithm that L<ld.so(8)> uses.
 
 =head1 OPTIONS
 
@@ -88,7 +87,7 @@ directory for files named after packages.  If any are found, any
 directories (assumed to be absolute paths and delimited by newlines)
 within the file are added to a list of package specific directories to
 search if a library dependency is not found in one of the many standard
-locations (as specified by L<ld.so(8)|https://www.mankier.com/8/ld.so>).
+locations (as specified by L<ld.so(8)>).
 
 If a package is discovered to have a library dependencies that are in
 a non-standard directory F</usr/lib/firefox> then a file named
