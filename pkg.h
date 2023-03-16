@@ -8,11 +8,11 @@ using namespace std;
 
 class Package {
 private:
-  string       _name;
-  string       _version;
-  StringVector _files;
-  StringVector _dirs;
-  bool         _ignore;
+  string        _name;
+  string        _version;
+  StringVector  _files;
+  StringVector  _dirs;
+  bool          _ignore;
 
 public:
   Package(const string       &name,
