@@ -8,20 +8,18 @@ OBJS = $(SRCS:.cpp=.o)
 all: revdep revdep.1
 
 revdep.1:
-	pod2man --nourls -r "${NAME} ${VERSION}" -c ' ' \
+	pod2man -r "${NAME} ${VERSION}" -c ' ' \
 		-n revdep -s 1 revdep.1.pod > $@
 
 .cpp.o:
 	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} $<
 
 revdep: ${OBJS}
-	${LD} $^ ${LDFLAGS} -o $@
+	${LD} ${OBJS} ${LDFLAGS} -o $@
 
-install-dirs:
-	mkdir -p ${DESTDIR}${PREFIX}/bin
-	mkdir -p ${DESTDIR}${MANPREFIX}/man1
-
-install: all install-dirs
+install: all
+	mkdir -p       ${DESTDIR}${PREFIX}/bin
+	mkdir -p       ${DESTDIR}${MANPREFIX}/man1
 	cp -f revdep   ${DESTDIR}${PREFIX}/bin/
 	cp -f revdep.1 ${DESTDIR}${MANPREFIX}/man1/
 	chmod 0755     ${DESTDIR}${PREFIX}/bin/revdep
