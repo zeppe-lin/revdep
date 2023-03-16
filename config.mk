@@ -1,4 +1,5 @@
-# revdep version
+# project metadata
+NAME = revdep
 VERSION = 2.1
 
 # paths

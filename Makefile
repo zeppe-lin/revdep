@@ -8,7 +8,7 @@ OBJS = $(SRCS:.cpp=.o)
 all: revdep revdep.1
 
 revdep.1:
-	pod2man --nourls -r "revdep ${VERSION}" -c ' ' \
+	pod2man --nourls -r "${NAME} ${VERSION}" -c ' ' \
 		-n revdep -s 1 revdep.1.pod > $@
 
 .cpp.o:
