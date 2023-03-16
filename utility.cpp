@@ -1,4 +1,4 @@
-// See COPYING and COPYRIGHT files for corresponding information.
+/* See COPYING and COPYRIGHT files for corresponding information. */
 
 #include <fstream>
 
@@ -108,5 +108,5 @@ bool IsRegularFile(const string &path)
   return S_ISREG(st.st_mode);
 }
 
-// vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
-// End of file.
+/* vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
+ * End of file. */
