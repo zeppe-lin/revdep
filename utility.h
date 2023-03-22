@@ -7,7 +7,7 @@
 
 using namespace std;
 
-typedef vector <string> StringVector;
+typedef vector<string> StringVector;
 
 void split(const string &in,
            StringVector &out,
