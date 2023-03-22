@@ -33,9 +33,9 @@ static string resolveDirVars(const Elf *elf, const string &path)
   dirname(dir);
 
   struct {
-    const char *name;
+    const char  *name;
     size_t      length;
-    const char *s;
+    const char  *s;
   } vars[] = {
     {        "$LIB",  4,      lib },
     {      "${LIB}",  6,      lib },
