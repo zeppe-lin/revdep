@@ -23,8 +23,9 @@ static string resolveDirVars(const Elf *elf, const string &path)
   static const char *lib = "lib";
 
   static const char *platform =
-    (((char *)getauxval(AT_PLATFORM)) ?
-     ((char *)getauxval(AT_PLATFORM)) : "");
+      reinterpret_cast<char *>(getauxval(AT_PLATFORM))
+    ? reinterpret_cast<char *>(getauxval(AT_PLATFORM))
+    : "";
 
   char dir[PATH_MAX];
 
