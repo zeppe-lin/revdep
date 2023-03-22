@@ -14,6 +14,10 @@
 
 using namespace std;
 
+/*
+ * Globals.
+ */
+
 static int do_help, do_version;
 static int show_verbose, show_erroneous, show_precise, show_trace;
 static string revdepdir = PATH_REVDEP_D;
@@ -24,6 +28,10 @@ static StringVector  ignores;
 static PackageVector pkgs;
 static StringVector  dirs;
 static ElfCache      ec;
+
+/*
+ * Functions implementation.
+ */
 
 static void ignorePackages(PackageVector      &pkgs,
                            const StringVector &ignores)
