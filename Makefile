@@ -32,4 +32,4 @@ uninstall:
 clean:
 	rm -f ${OBJS} revdep revdep.1
 
-.PHONY: all install-dirs install uninstall clean
+.PHONY: all install uninstall clean
