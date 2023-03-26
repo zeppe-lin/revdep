@@ -11,14 +11,13 @@ using namespace std;
 
 Package::Package(const string       &name,
                  const string       &version,
-                 const StringVector &files)
-{
-  _name    = name;
-  _version = version;
-  _files   = files;
-  _dirs    = {};
-  _ignore  = false;
-}
+                 const StringVector &files):
+  _name(name),
+  _version(version),
+  _files(files),
+  _dirs({}),
+  _ignore(false)
+{}
 
 static Package readPackage(istream &in)
 {
