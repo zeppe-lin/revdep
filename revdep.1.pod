@@ -93,7 +93,7 @@ If a package is discovered to have a library dependencies that are in
 a non-standard directory F</usr/lib/firefox> then a file named
 F<firefox> should be created under F</etc/revdep.d> with a
 single line containing F</usr/lib/firefox>.  This will tell B<revdep>
-where to find firefox's F<libxul.so> when looking for its library
+where to find Firefox's F<libxul.so> when looking for its library
 dependencies, reducing one source of false positives.  Ideally, this
 file would be included with the package's own packaging as well.
 
@@ -115,7 +115,7 @@ Failed to read package database.
 
 =item C<3>
 
-Failed to read ld.so.conf.
+Failed to read F<ld.so.conf>.
 
 =item C<4>
 
