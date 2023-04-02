@@ -280,20 +280,20 @@ Mandatory arguments to long options are mandatory for short options too.
   }
   else if (do_version)
   {
-    cout << "revdep " << VERSION << endl;
+    cout << NAME << " " << VERSION << endl;
     return 0;
   }
 
   if (!ReadPackages(pkgdb, pkgs))
   {
-    cerr << "revdep:" << pkgdb
+    cerr << NAME << ":" << pkgdb
          << ": failed to read package database" << endl;
     return 2;
   }
 
   if (!ReadLdConf(ldsoconf, dirs, 10))
   {
-    cerr << "revdep:" << ldsoconf
+    cerr << NAME << ":" << ldsoconf
          << ": failed to read ld configuration" << endl;
     return 3;
   }
