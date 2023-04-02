@@ -20,12 +20,12 @@ using namespace std;
 
 static int do_help, do_version;
 static int show_verbose, show_erroneous, show_precise, show_trace;
-static string revdepdir = PATH_REVDEP_D;
-static string pkgdb     = PATH_PKG_DB;
-static string ldsoconf  = PATH_LD_SO_CONF;
+static string o_revdepdir = PATH_REVDEP_D;
+static string o_pkgdb     = PATH_PKG_DB;
+static string o_ldsoconf  = PATH_LD_SO_CONF;
 
-static StringVector  ignores;
-static PackageVector pkgs;
+static StringVector  ignoredPackages;
+static PackageVector packages;
 static StringVector  dirs;
 static ElfCache      ec;
 
@@ -210,19 +210,19 @@ int main(int argc, char **argv)
     switch (opt)
     {
       case 'L':
-        ldsoconf = optarg;
+        o_ldsoconf = optarg;
         break;
 
       case 'D':
-        pkgdb = optarg;
+        o_pkgdb = optarg;
         break;
 
       case 'R':
-        revdepdir = optarg;
+        o_revdepdir = optarg;
         break;
 
       case 'I':
-        split(optarg, ignores, ',');
+        split(optarg, ignoredPackages, ',');
         break;
 
       case 'V':
@@ -284,16 +284,16 @@ Mandatory arguments to long options are mandatory for short options too.
     return 0;
   }
 
-  if (!ReadPackages(pkgdb, pkgs))
+  if (!ReadPackages(o_pkgdb, packages))
   {
-    cerr << NAME << ":" << pkgdb
+    cerr << NAME << ":" << o_pkgdb
          << ": failed to read package database" << endl;
     return 2;
   }
 
-  if (!ReadLdConf(ldsoconf, dirs, 10))
+  if (!ReadLdConf(o_ldsoconf, dirs, 10))
   {
-    cerr << NAME << ":" << ldsoconf
+    cerr << NAME << ":" << o_ldsoconf
          << ": failed to read ld configuration" << endl;
     return 3;
   }
@@ -301,16 +301,16 @@ Mandatory arguments to long options are mandatory for short options too.
   dirs.push_back("/lib");
   dirs.push_back("/usr/lib");
 
-  ReadPackageDirs(revdepdir, pkgs);
-  ignorePackages(pkgs, ignores);
+  ReadPackageDirs(o_revdepdir, packages);
+  ignorePackages(packages, ignoredPackages);
 
   if (show_verbose)
     cout << "** calculating deps" << endl;
 
   if (optind == argc)
-    return workAllPackages(pkgs);
+    return workAllPackages(packages);
   else
-    return workSpecificPackages(pkgs, optind, argc, argv);
+    return workSpecificPackages(packages, optind, argc, argv);
 }
 
 /* vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
