@@ -94,7 +94,7 @@ static bool getDynamicSection(Elf       *elf,
       break;
   }
 
-  return(i != phdrnum);
+  return (i != phdrnum);
 }
 
 static bool readDynamicSection(Elf          *elf,

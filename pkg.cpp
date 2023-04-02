@@ -65,7 +65,7 @@ bool ReadPackages(const string  &path,
 
   fin.close();
 
-  return(pkgs.size() > 0);
+  return (pkgs.size() > 0);
 }
 
 void ReadPackageDirs(const string  &path,
