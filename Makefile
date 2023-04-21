@@ -31,5 +31,9 @@ uninstall:
 
 clean:
 	rm -f ${OBJS} revdep revdep.1
+	rm -f ${DIST}.tar.gz
 
-.PHONY: all install uninstall clean
+dist: clean
+	git archive --format=tar.gz -o ${DIST}.tar.gz --prefix=${DIST}/ HEAD
+
+.PHONY: all install uninstall clean dist

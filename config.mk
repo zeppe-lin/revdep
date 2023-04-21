@@ -1,6 +1,7 @@
 # project metadata
 NAME = revdep
 VERSION = 2.1
+DIST = ${NAME}-${VERSION}
 
 # paths
 PREFIX = /usr
