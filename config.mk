@@ -1,6 +1,6 @@
 # project metadata
 NAME = revdep
-VERSION = 2.1
+VERSION = 3.0
 DIST = ${NAME}-${VERSION}
 
 # paths
