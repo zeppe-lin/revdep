@@ -22,7 +22,7 @@ The original sources can be downloaded from:
 
 REQUIREMENTS
 ------------
-**Built time**:
+**Build time**:
 - c99 compiler
 - POSIX sh(1p), make(1p) and "mandatory utilities"
 - pod2man(1pm) to build man page
