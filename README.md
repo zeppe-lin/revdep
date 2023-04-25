@@ -1,11 +1,11 @@
 OVERVIEW
 --------
-This directory contains revdep, a package management tool that checks for
-missing libraries of installed packages.
+This directory contains revdep, a package management tool that checks
+for missing libraries of installed packages.
 
-This distribution is a fork of CRUX' revdep utility (which is part of CRUX'
-prt-utils distribution) as of commit 41dfcb6 (Thu Oct 15 2020) with the
-following differences:
+This distribution is a fork of CRUX' revdep utility (which is part of
+CRUX' prt-utils distribution) as of commit 41dfcb6 (Thu Oct 15 2020)
+with the following differences:
 - fixed gcc extensions for portability
 - the man page have been rewritten in POD format
 - added GNU-style options and help message
@@ -31,8 +31,8 @@ REQUIREMENTS
 
 INSTALL
 -------
-The shell commands `make && make install` should build and install this
-package.  See `config.mk` file for configuration parameters.
+The shell commands `make && make install` should build and install
+this package.  See `config.mk` file for configuration parameters.
 
 
 LICENSE
