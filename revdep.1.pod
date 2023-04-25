@@ -26,19 +26,19 @@ too.
 
 Specify an alternate location for F<ld.so.conf>.
 
-Default location is F</etc/ld.so.conf>.
+Default: F</etc/ld.so.conf>.
 
 =item B<-D>, B<--pkgdb>=I<PATH>
 
 Specify an alternate location for the package database.
 
-Default location is F</var/lib/pkg/db>.
+Default: F</var/lib/pkg/db>.
 
 =item B<-R>, B<--revdepdir>=I<PATH>
 
 Specify an alternate location for B<revdep> package configuration.
 
-Default location is F</etc/revdep.d>.
+Default: F</etc/revdep.d>.
 
 =item B<-I>, B<--ignore>=I<PKGNAME>,...
 
@@ -82,11 +82,11 @@ Use this command to rebuild packages on your system:
 
 =head1 ADDITIONAL LIBRARY DIRECTORIES
 
-Upon startup, B<revdep> searches the F</etc/revdep.d>
-directory for files named after packages.  If any are found, any
-directories (assumed to be absolute paths and delimited by newlines)
-within the file are added to a list of package specific directories to
-search if a library dependency is not found in one of the many standard
+Upon startup, B<revdep> searches the F</etc/revdep.d> directory for
+files named after packages.  If any are found, any directories
+(assumed to be absolute paths and delimited by newlines) within the
+file are added to a list of package specific directories to search if
+a library dependency is not found in one of the many standard
 locations (as specified by L<ld.so(8)>).
 
 If a package is discovered to have a library dependencies that are in
@@ -125,14 +125,14 @@ Found at least one missing library.
 
 =head1 NOTES
 
-C++ rewrite inspired by Johannes Winkelmann's L<jw@tks6.net>
+C++ rewrite inspired by Johannes Winkelmann's <L<jw@tks6.net>>
 shell B<revdep>.
 
-Contributed to design Danny Rawlins L<contact@romster.me>.
+Contributed to design Danny Rawlins <L<contact@romster.me>>.
 
 =head1 AUTHOR
 
-James Buren, L<ryuo@freenode>
+James Buren, <L<ryuo@freenode>>
 
 =cut
 
