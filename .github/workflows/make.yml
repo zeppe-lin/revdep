@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install build dependencies: libelf-dev (elfutils)
+    - name: Install dependencies
       run: sudo apt-get install -y libelf-dev
 
     - name: Check PODs for errors
