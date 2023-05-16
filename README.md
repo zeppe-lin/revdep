@@ -32,7 +32,9 @@ REQUIREMENTS
 INSTALL
 -------
 The shell commands `make && make install` should build and install
-this package.  See `config.mk` file for configuration parameters.
+this package.  See `config.mk` file for configuration parameters,
+and `pathnames.h` for absolute filenames that revdep wants for
+various defaults.
 
 
 LICENSE
