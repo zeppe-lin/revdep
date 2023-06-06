@@ -1,4 +1,6 @@
-/* See COPYING and COPYRIGHT files for corresponding information. */
+//! \file  elf-cache.cpp
+//! \brief ElfCache class implementation.
+//!        See COPYING and COPYRIGHT files for corresponding information.
 
 #include <algorithm>
 
@@ -197,5 +199,5 @@ bool ElfCache::FindLibrary(const Elf          *elf,
   return false;
 }
 
-/* vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
- * End of file. */
+// vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
+// End of file.

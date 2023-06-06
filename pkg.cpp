@@ -1,4 +1,6 @@
-/* See COPYING and COPYRIGHT files for corresponding information. */
+//! \file  pkg.cpp
+//! \brief Package class implementation.
+//!        See COPYING and COPYRIGHT files for corresponding information.
 
 #include <algorithm>
 #include <fstream>
@@ -104,5 +106,5 @@ void ReadPackageDirs(const string  &path,
   closedir(dir);
 }
 
-/* vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
- * End of file. */
+// vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
+// End of file.

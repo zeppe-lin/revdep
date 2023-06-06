@@ -1,4 +1,6 @@
-/* See COPYING and COPYRIGHT files for corresponding information. */
+//! \file  elf-cache.h
+//! \brief ElfCache class definition.
+//!        See COPYING and COPYRIGHT files for corresponding information.
 
 #pragma once
 
@@ -32,7 +34,7 @@ public:
                    const Package      &pkg,
                    const string       &lib,
                    const StringVector &dirs);
-};
+}; // class ElfCache
 
-/* vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
- * End of file. */
+// vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
+// End of file.
