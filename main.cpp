@@ -10,7 +10,6 @@
 #include <unistd.h>
 
 #include "elf-cache.h"
-#include "main.h"
 #include "pkg.h"
 #include "pathnames.h"
 
