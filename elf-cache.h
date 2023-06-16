@@ -17,6 +17,7 @@ class ElfCache {
 private:
 
   ElfMap _data;
+
   bool findLibraryByDirs(const Elf          *elf,
                          const string       &lib,
                          const StringVector &dirs);
@@ -34,6 +35,7 @@ public:
                    const Package      &pkg,
                    const string       &lib,
                    const StringVector &dirs);
+
 }; // class ElfCache
 
 // vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
