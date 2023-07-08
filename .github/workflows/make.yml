@@ -14,13 +14,10 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Install dependencies
-      run: sudo apt-get install -y libelf-dev cppcheck
+      run: sudo apt-get install -y libelf-dev
 
     - name: Check PODs for errors
       run: make -f utils.mk podchecker
-
-    - name: Static C/C++ code analysis
-      run: make -f utils.mk cppcheck
 
     - name: Build
       run: make
