@@ -17,7 +17,7 @@ private:
   bool          _initialized;
 
 public:
-  Elf(const std::string &path);
+  explicit Elf(const std::string &path);
 
   int Machine() const
   {
