@@ -19,6 +19,9 @@ jobs:
     - name: Check PODs for errors
       run: make -f utils.mk podchecker
 
+    - name: Static C/C++ code analysis
+      run: make -f utils.mk cppcheck
+
     - name: Build
       run: make
 
