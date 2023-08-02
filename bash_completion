@@ -9,16 +9,16 @@ _revdep()
 
   case $prev in
 
-  --help | --version | -!(-*)[hv])
+  --help|--version|-!(-*)[hv])
     return
     ;;
 
-  --ldsoconf | -L | --pkgdb | -D | --revdepdir | -R)
+  --ldsoconf|-L|--pkgdb|-D|--revdepdir|-R)
     _filedir
     return
     ;;
 
-  --ignore | -I)
+  --ignore|-I)
     if [[ "$cur" == *,* ]]; then
       local realcur prefix
       realcur=${cur##*,}
