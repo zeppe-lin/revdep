@@ -1,4 +1,4 @@
-# revdep(1) completion
+# bash completion for revdep(1)
 
 _avail_pkgs=($(pkginfo -i | awk '{printf "%s ", $1}'))
 
