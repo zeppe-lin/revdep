@@ -2,20 +2,21 @@
 
 include config.mk
 
-SRCS = $(wildcard *.cpp)
-OBJS = $(SRCS:.cpp=.o)
+OBJS = $(subst   .cpp,.o,$(wildcard src/*.cpp))
+MAN1 = $(subst .1.pod,.1,$(wildcard pod/*.1.pod))
 
-all: revdep revdep.1
+all: revdep manpage
+manpage: ${MAN1}
 
-revdep.1:
-	pod2man -r "${NAME} ${VERSION}" -c ' ' \
-		-n revdep -s 1 revdep.1.pod > $@
+%: %.pod
+	pod2man -r "${NAME} ${VERSION}" -c ' ' -n $(basename $@) \
+		-s $(subst .,,$(suffix $@)) $< > $@
 
 .cpp.o:
-	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} $<
+	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} $< -o $@
 
 revdep: ${OBJS}
-	${LD} ${OBJS} ${LDFLAGS} -o $@
+	${LD} $^ ${LDFLAGS} -o $@
 
 install: all
 	mkdir -p       ${DESTDIR}${PREFIX}/bin
@@ -37,7 +38,7 @@ uninstall-bashcomp:
 	rm -f ${DESTDIR}${BASHCOMPDIR}/revdep
 
 clean:
-	rm -f ${OBJS} revdep revdep.1
+	rm -f ${OBJS} revdep ${MAN1}
 	rm -f ${DIST}.tar.gz
 
 dist: clean
