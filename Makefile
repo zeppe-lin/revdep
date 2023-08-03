@@ -25,13 +25,13 @@ install: all
 	chmod 0755     ${DESTDIR}${PREFIX}/bin/revdep
 	chmod 0644     ${DESTDIR}${MANPREFIX}/man1/revdep.1
 
-install-bashcomp:
-	mkdir -p ${DESTDIR}${BASHCOMPDIR}
-	cp -f bash_completion ${DESTDIR}${BASHCOMPDIR}/revdep
-
 uninstall:
 	rm -f ${DESTDIR}${PREFIX}/revdep
 	rm -f ${DESTDIR}${MANPREFIX}/man1/revdep.1
+
+install-bashcomp:
+	mkdir -p ${DESTDIR}${BASHCOMPDIR}
+	cp -f bash_completion ${DESTDIR}${BASHCOMPDIR}/revdep
 
 uninstall-bashcomp:
 	rm -f ${DESTDIR}${BASHCOMPDIR}/revdep
