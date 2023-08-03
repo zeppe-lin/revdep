@@ -22,12 +22,12 @@ install: all
 	mkdir -p       ${DESTDIR}${PREFIX}/bin
 	mkdir -p       ${DESTDIR}${MANPREFIX}/man1
 	cp -f revdep   ${DESTDIR}${PREFIX}/bin/
-	cp -f revdep.1 ${DESTDIR}${MANPREFIX}/man1/
+	cp -f ${MAN1}  ${DESTDIR}${MANPREFIX}/man1/
 	chmod 0755     ${DESTDIR}${PREFIX}/bin/revdep
 	chmod 0644     ${DESTDIR}${MANPREFIX}/man1/revdep.1
 
 uninstall:
-	rm -f ${DESTDIR}${PREFIX}/revdep
+	rm -f ${DESTDIR}${PREFIX}/bin/revdep
 	rm -f ${DESTDIR}${MANPREFIX}/man1/revdep.1
 
 install-bashcomp:
