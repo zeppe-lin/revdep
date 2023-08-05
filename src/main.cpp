@@ -287,14 +287,14 @@ Mandatory arguments to long options are mandatory for short options too.
 
   if (!ReadPackages(o_pkgdb, packages))
   {
-    cerr << NAME << ":" << o_pkgdb
+    cerr << NAME << ": " << o_pkgdb
          << ": failed to read package database" << endl;
     return 2;
   }
 
   if (!ReadLdConf(o_ldsoconf, dirs, 10))
   {
-    cerr << NAME << ":" << o_ldsoconf
+    cerr << NAME << ": " << o_ldsoconf
          << ": failed to read ld configuration" << endl;
     return 3;
   }
