@@ -12,6 +12,7 @@
 #include "elf-cache.h"
 #include "pkg.h"
 #include "pathnames.h"
+#include "../copyright.h"
 
 using namespace std;
 
@@ -262,7 +263,7 @@ int main(int argc, char **argv)
 
   if (do_help)
   {
-    cout << R"END(Usage: revdep [OPTION]... [PKGNAME]...
+    cout << R"(Usage: revdep [OPTION]... [PKGNAME]...
 Check for missing libraries of installed packages.
 
 Mandatory arguments to long options are mandatory for short options too.
@@ -276,25 +277,29 @@ Mandatory arguments to long options are mandatory for short options too.
   -T, --trace               show debug/trace
   -v, --version             print version and exit
   -h, --help                print help and exit
-)END";
+
+Report bugs to: <)"   PROJECT_BUGTRACKER R"(>
+revdep home page: <)" PROJECT_HOMEPAGE   R"(>
+)";
     return 0;
   }
   else if (do_version)
   {
-    cout << NAME << " " << VERSION << endl;
+    cout << PROJECT_NAME << " " << PROJECT_VERSION << endl
+         << COPYRIGHT_MESSAGE;
     return 0;
   }
 
   if (!ReadPackages(o_pkgdb, packages))
   {
-    cerr << NAME << ": " << o_pkgdb
+    cerr << PROJECT_NAME << ": " << o_pkgdb
          << ": failed to read package database" << endl;
     return 2;
   }
 
   if (!ReadLdConf(o_ldsoconf, dirs, 10))
   {
-    cerr << NAME << ": " << o_ldsoconf
+    cerr << PROJECT_NAME << ": " << o_ldsoconf
          << ": failed to read ld configuration" << endl;
     return 3;
   }
