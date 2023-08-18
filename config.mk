@@ -11,7 +11,10 @@ MANPREFIX    = ${PREFIX}/share/man
 BASHCOMPDIR  = ${PREFIX}/share/bash-completion/completions
 
 # flags
-CPPFLAGS     = -DNAME=\"${NAME}\" -DVERSION=\"${VERSION}\"
+CPPFLAGS     = -DPROJECT_NAME=\"${NAME}\" \
+	       -DPROJECT_VERSION=\"${VERSION}\" \
+	       -DPROJECT_HOMEPAGE=\"${HOMEPAGE}\" \
+	       -DPROJECT_BUGTRACKER=\"${BUGTRACKER}\"
 CXXFLAGS     = -std=c++11 -pedantic -Wall -Wextra -Wconversion \
 	       -Wcast-align -Wunused -Wshadow -Wold-style-cast
 LDFLAGS      = -static $(shell pkg-config --libs --static libelf)
