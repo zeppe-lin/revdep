@@ -38,12 +38,12 @@ static ElfCache      ec;
  * Function declarations.
  */
 
-static void ignorePackages(PackageVector &pkgs, const StringVector &ignores);
-static bool workFile(const Package &pkg, const string &file);
-static bool workPackage(const Package &pkg);
-static int workAllPackages(const PackageVector &pkgs);
-static int workSpecificPackages(const PackageVector &pkgs, int i, int argc, char **argv);
-static void ignorePackages(PackageVector &pkgs, const StringVector &ignores);
+static void ignorePackages(PackageVector &, const StringVector &);
+static bool workFile(const Package &, const string &);
+static bool workPackage(const Package &);
+static int workAllPackages(const PackageVector &);
+static int workSpecificPackages(const PackageVector &, int, int, char **);
+static void ignorePackages(PackageVector &, const StringVector &);
 static int print_help();
 static int print_version();
 
