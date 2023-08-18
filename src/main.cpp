@@ -34,6 +34,14 @@ static PackageVector o_packages;
 static StringVector  dirs;
 static ElfCache      ec;
 
+/* used for exit status */
+enum _revdep_errors {
+  E_INVALID_INPUT = 1, /* Failed to parse command-line arguments */
+  E_READ_PKGDB    = 2, /* Failed to read package database */
+  E_READ_LDSOCONF = 3, /* Failed to read ld.so.conf */
+  E_FOUND_MISSING = 4, /* Found at least one missing library */
+};
+
 /*********************************************************************
  * Function declarations.
  */
@@ -128,7 +136,7 @@ workAllPackages(const PackageVector &pkgs)
 
     if (!workPackage(pkg))
     {
-      rc = 4;
+      rc = E_FOUND_MISSING;
 
       if (o_verbose)
         cout << pkg.Name() << ": error" << endl;
@@ -175,7 +183,7 @@ workSpecificPackages(const PackageVector &pkgs,
 
     if (!workPackage(pkg[0]))
     {
-      rc = 4;
+      rc = E_FOUND_MISSING;
 
       if (o_verbose)
         cout << pkg->Name() << ": error" << endl;
@@ -303,24 +311,24 @@ main(int argc, char **argv)
 
       case ':':
         fprintf(stderr, "%c: missing argument\n", optopt);
-        return 1;
+        return E_INVALID_INPUT;
 
       case '?':
         fprintf(stderr, "%c: invalid option\n", optopt);
-        return 1;
+        return E_INVALID_INPUT;
     }
   }
 
   if (!ReadPackages(o_pkgdb, o_packages))
   {
     cerr << "revdep: " << o_pkgdb << ": failed to read package database\n";
-    return 2;
+    return E_READ_PKGDB;
   }
 
   if (!ReadLdConf(o_ldsoconf, dirs, 10))
   {
     cerr << "revdep: " << o_ldsoconf << ": failed to read ld configuration\n";
-    return 3;
+    return E_READ_LDSOCONF;
   }
 
   dirs.push_back("/lib");
