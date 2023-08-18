@@ -16,11 +16,11 @@
 
 using namespace std;
 
-/*
+/*********************************************************************
  * Globals.
  */
 
-/* Command-line options */
+/* command-line options */
 static int           o_verbose   = 0;
 static int           o_erroneous = 0;
 static int           o_precise   = 0;
@@ -34,9 +34,10 @@ static PackageVector o_packages;
 static StringVector  dirs;
 static ElfCache      ec;
 
-/*
+/*********************************************************************
  * Function declarations.
  */
+
 static void ignorePackages(PackageVector &pkgs, const StringVector &ignores);
 static bool workFile(const Package &pkg, const string &file);
 static bool workPackage(const Package &pkg);
@@ -46,11 +47,12 @@ static void ignorePackages(PackageVector &pkgs, const StringVector &ignores);
 static int print_version();
 static int print_help();
 
-/*
+/*********************************************************************
  * Function implementations.
  */
 
-static bool workFile(const Package &pkg, const string &file)
+static bool
+workFile(const Package &pkg, const string &file)
 {
   bool rv = true;
 
@@ -85,7 +87,8 @@ static bool workFile(const Package &pkg, const string &file)
   return rv;
 }
 
-static bool workPackage(const Package &pkg)
+static bool
+workPackage(const Package &pkg)
 {
   bool rv = true;
 
@@ -108,7 +111,8 @@ static bool workPackage(const Package &pkg)
   return rv;
 }
 
-static int workAllPackages(const PackageVector &pkgs)
+static int
+workAllPackages(const PackageVector &pkgs)
 {
   int rc = 0;
 
@@ -141,10 +145,11 @@ static int workAllPackages(const PackageVector &pkgs)
   return rc;
 }
 
-static int workSpecificPackages(const PackageVector &pkgs,
-                                int                 i,
-                                int                 argc,
-                                char                **argv)
+static int
+workSpecificPackages(const PackageVector &pkgs,
+                     int                 i,
+                     int                 argc,
+                     char                **argv)
 {
   int rc = 0;
 
@@ -187,8 +192,8 @@ static int workSpecificPackages(const PackageVector &pkgs,
   return rc;
 }
 
-static void ignorePackages(PackageVector      &pkgs,
-                           const StringVector &ignores)
+static void
+ignorePackages(PackageVector &pkgs, const StringVector &ignores)
 {
   for (size_t i = 0; i < ignores.size(); ++i)
   {
@@ -202,7 +207,8 @@ static void ignorePackages(PackageVector      &pkgs,
   }
 }
 
-static int print_help()
+static int
+print_help()
 {
   cout << R"(Usage: revdep [OPTION]... [PKGNAME]...
 Check for missing libraries of installed packages.
@@ -225,13 +231,15 @@ revdep home page: <)" PROJECT_HOMEPAGE   R"(>
   return 0;
 }
 
-static int print_version()
+static int
+print_version()
 {
   cout << PROJECT_NAME " " PROJECT_VERSION "\n" COPYRIGHT_MESSAGE;
   return 0;
 }
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
   static struct option longopts[] = {
     { "ldsoconf",   required_argument,  NULL,             'L' },
