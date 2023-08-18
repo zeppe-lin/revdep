@@ -18,7 +18,7 @@ copyright.h: ${CURDIR}/COPYRIGHT ${CURDIR}/COPYING.BANNER
 	{ echo "#ifndef COPYRIGHT_H"            ; \
 	  echo "#define COPYRIGHT_H"            ; \
 	  echo "#define COPYRIGHT_MESSAGE \\"   ; \
-	  sed 's/^.*/"&\\n";$$ ! s/$$/ \\/' $^  ; \
+	  sed 's/^.*/"&\\n"/;$$ ! s/$$/ \\/' $^ ; \
 	  echo "#endif"                         ; } > $@
 
 .cpp.o:
