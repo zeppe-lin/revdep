@@ -42,56 +42,13 @@ static bool workFile(const Package &pkg, const string &file);
 static bool workPackage(const Package &pkg);
 static int workAllPackages(const PackageVector &pkgs);
 static int workSpecificPackages(const PackageVector &pkgs, int i, int argc, char **argv);
+static void ignorePackages(PackageVector &pkgs, const StringVector &ignores);
 static int print_version();
 static int print_help();
 
 /*
  * Function implementations.
  */
-
-static int print_version()
-{
-  cout << PROJECT_NAME " " PROJECT_VERSION "\n" COPYRIGHT_MESSAGE;
-  return 0;
-}
-
-static int print_help()
-{
-  cout << R"(Usage: revdep [OPTION]... [PKGNAME]...
-Check for missing libraries of installed packages.
-
-Mandatory arguments to long options are mandatory for short options too.
-  -L, --ldsoconf=PATH       specify an alternate location for ld.so.conf
-  -D, --pkgdb=PATH          specify an alternate location for the packages database
-  -R, --revdepdir=PATH      specify an alternate location for revdep package config
-  -I, --ignore=PKGNAME,...  comma-separated list of packages to ignore
-  -V, --verbose             formatted listing
-  -E, --erroneous           include erroneous files in the output
-  -P, --precise             include precise file errors in the output
-  -T, --trace               show debug/trace
-  -v, --version             print version and exit
-  -h, --help                print help and exit
-
-Report bugs to: <)"   PROJECT_BUGTRACKER R"(>
-revdep home page: <)" PROJECT_HOMEPAGE   R"(>
-)";
-  return 0;
-}
-
-static void ignorePackages(PackageVector      &pkgs,
-                           const StringVector &ignores)
-{
-  for (size_t i = 0; i < ignores.size(); ++i)
-  {
-    PackageVector::iterator pkg =
-      find(pkgs.begin(), pkgs.end(), ignores[i]);
-
-    if (pkg == pkgs.end())
-      continue;
-
-    pkg->Ignore();
-  }
-}
 
 static bool workFile(const Package &pkg, const string &file)
 {
@@ -228,6 +185,50 @@ static int workSpecificPackages(const PackageVector &pkgs,
   }
 
   return rc;
+}
+
+static void ignorePackages(PackageVector      &pkgs,
+                           const StringVector &ignores)
+{
+  for (size_t i = 0; i < ignores.size(); ++i)
+  {
+    PackageVector::iterator pkg =
+      find(pkgs.begin(), pkgs.end(), ignores[i]);
+
+    if (pkg == pkgs.end())
+      continue;
+
+    pkg->Ignore();
+  }
+}
+
+static int print_help()
+{
+  cout << R"(Usage: revdep [OPTION]... [PKGNAME]...
+Check for missing libraries of installed packages.
+
+Mandatory arguments to long options are mandatory for short options too.
+  -L, --ldsoconf=PATH       specify an alternate location for ld.so.conf
+  -D, --pkgdb=PATH          specify an alternate location for the packages database
+  -R, --revdepdir=PATH      specify an alternate location for revdep package config
+  -I, --ignore=PKGNAME,...  comma-separated list of packages to ignore
+  -V, --verbose             formatted listing
+  -E, --erroneous           include erroneous files in the output
+  -P, --precise             include precise file errors in the output
+  -T, --trace               show debug/trace
+  -v, --version             print version and exit
+  -h, --help                print help and exit
+
+Report bugs to: <)"   PROJECT_BUGTRACKER R"(>
+revdep home page: <)" PROJECT_HOMEPAGE   R"(>
+)";
+  return 0;
+}
+
+static int print_version()
+{
+  cout << PROJECT_NAME " " PROJECT_VERSION "\n" COPYRIGHT_MESSAGE;
+  return 0;
 }
 
 int main(int argc, char **argv)
