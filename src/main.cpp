@@ -292,15 +292,13 @@ revdep home page: <)" PROJECT_HOMEPAGE   R"(>
 
   if (!ReadPackages(o_pkgdb, packages))
   {
-    cerr << PROJECT_NAME << ": " << o_pkgdb
-         << ": failed to read package database" << endl;
+    cerr << "revdep: " << o_pkgdb << ": failed to read package database\n";
     return 2;
   }
 
   if (!ReadLdConf(o_ldsoconf, dirs, 10))
   {
-    cerr << PROJECT_NAME << ": " << o_ldsoconf
-         << ": failed to read ld configuration" << endl;
+    cerr << "revdep: " << o_ldsoconf << ": failed to read ld configuration\n";
     return 3;
   }
 
