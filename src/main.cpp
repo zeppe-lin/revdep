@@ -223,14 +223,14 @@ print_help()
 Check for missing libraries of installed packages.
 
 Mandatory arguments to long options are mandatory for short options too.
-  -L, --ldsoconf=PATH   specify an alternative location for ld.so.conf
+  -L, --ldsoconf=PATH   specify an alternate location for ld.so.conf
   -D, --pkgdb=PATH      specify an alternate location for the packages database
   -R, --revdepdir=PATH  specify an alternate location for revdep package config
   -I, --ignore=PKGNAME[,...]  comma-separated list of packages to ignore
-  -V, --verbose         formatted listing
   -E, --erroneous       include erroneous files in the output
   -P, --precise         include precise file errors in the output
   -T, --trace           show debug/trace
+  -V, --verbose         formatted listing
   -v, --version         print version and exit
   -h, --help            print help and exit
 
@@ -255,10 +255,10 @@ main(int argc, char **argv)
     { "pkgdb",      required_argument,  NULL,             'D' },
     { "revdepdir",  required_argument,  NULL,             'R' },
     { "ignore",     required_argument,  NULL,             'I' },
-    { "verbose",    no_argument,        NULL,             'V' },
     { "erroneous",  no_argument,        NULL,             'R' },
     { "precise",    no_argument,        NULL,             'P' },
     { "trace",      no_argument,        NULL,             'T' },
+    { "verbose",    no_argument,        NULL,             'V' },
     { "version",    no_argument,        NULL,             'v' },
     { "help",       no_argument,        NULL,             'h' },
     { 0,            0,                  0,                0   },
