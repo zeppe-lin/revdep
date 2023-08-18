@@ -1,6 +1,8 @@
 # project metadata
 NAME         = revdep
 VERSION      = 3.1
+HOMEPAGE     = https://github.com/zeppe-lin/revdep/
+BUGTRACKER   = https://github.com/zeppe-lin/revdep/issues/
 DIST         = ${NAME}-${VERSION}
 
 # paths
