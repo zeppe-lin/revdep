@@ -44,8 +44,8 @@ static bool workPackage(const Package &pkg);
 static int workAllPackages(const PackageVector &pkgs);
 static int workSpecificPackages(const PackageVector &pkgs, int i, int argc, char **argv);
 static void ignorePackages(PackageVector &pkgs, const StringVector &ignores);
-static int print_version();
 static int print_help();
+static int print_version();
 
 /*********************************************************************
  * Function implementations.
