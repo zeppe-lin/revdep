@@ -20,13 +20,17 @@ using namespace std;
  * Globals.
  */
 
-static int show_verbose, show_erroneous, show_precise, show_trace;
-static string o_revdepdir = PATH_REVDEP_D;
-static string o_pkgdb     = PATH_PKG_DB;
-static string o_ldsoconf  = PATH_LD_SO_CONF;
+/* Command-line options */
+static int           o_verbose   = 0;
+static int           o_erroneous = 0;
+static int           o_precise   = 0;
+static int           o_trace     = 0;
+static string        o_revdepdir = PATH_REVDEP_D;
+static string        o_pkgdb     = PATH_PKG_DB;
+static string        o_ldsoconf  = PATH_LD_SO_CONF;
+static StringVector  o_IgnoredPackages;
+static PackageVector o_packages;
 
-static StringVector  ignoredPackages;
-static PackageVector packages;
 static StringVector  dirs;
 static ElfCache      ec;
 
@@ -88,7 +92,7 @@ static bool workFile(const Package &pkg, const string &file)
 {
   bool rv = true;
 
-  if (show_trace)
+  if (o_trace)
     cout << pkg.Name() << ":" << file << ": checking file" << endl;
 
   if (!IsRegularFile(file))
@@ -99,7 +103,7 @@ static bool workFile(const Package &pkg, const string &file)
   if (elf == NULL)
     return rv;
 
-  if (show_trace)
+  if (o_trace)
     cout << pkg.Name() << ":" << file << ": is ELF" << endl;
 
   for (size_t i = 0; i < elf->Needed().size(); ++i)
@@ -108,7 +112,7 @@ static bool workFile(const Package &pkg, const string &file)
 
     if (!ec.FindLibrary(elf, pkg, lib, dirs))
     {
-      if (show_precise)
+      if (o_precise)
         cout << pkg.Name() << ":" << file << ":" << lib
              << ": missing library" << endl;
 
@@ -132,7 +136,7 @@ static bool workPackage(const Package &pkg)
 
     if (!workFile(pkg, file))
     {
-      if (show_erroneous)
+      if (o_erroneous)
         cout << pkg.Name() << ":" << file << ": error" << endl;
 
       rv = false;
@@ -146,7 +150,7 @@ static int workAllPackages(const PackageVector &pkgs)
 {
   int rc = 0;
 
-  if (show_verbose)
+  if (o_verbose)
   {
     printf("** checking %zu packages\n", pkgs.size());
     printf("** checking linking\n");
@@ -160,14 +164,14 @@ static int workAllPackages(const PackageVector &pkgs)
     {
       rc = 4;
 
-      if (show_verbose)
+      if (o_verbose)
         cout << pkg.Name() << ": error" << endl;
       else
         cout << pkg.Name() << endl;
     }
     else
     {
-      if (show_verbose)
+      if (o_verbose)
         cout << pkg.Name() << ": ok" << endl;
     }
   }
@@ -182,7 +186,7 @@ static int workSpecificPackages(const PackageVector &pkgs,
 {
   int rc = 0;
 
-  if (show_verbose)
+  if (o_verbose)
   {
     printf("** checking %d packages\n", argc - i);
     printf("** checking linking\n");
@@ -196,7 +200,7 @@ static int workSpecificPackages(const PackageVector &pkgs,
 
     if (pkg == pkgs.end())
     {
-      if (show_verbose)
+      if (o_verbose)
         cout << name << ": cannot find package information" << endl;
 
       continue;
@@ -206,14 +210,14 @@ static int workSpecificPackages(const PackageVector &pkgs,
     {
       rc = 4;
 
-      if (show_verbose)
+      if (o_verbose)
         cout << pkg->Name() << ": error" << endl;
       else
         cout << pkg->Name() << endl;
     }
     else
     {
-      if (show_verbose)
+      if (o_verbose)
         cout << pkg->Name() << ": ok" << endl;
     }
   }
@@ -258,23 +262,23 @@ int main(int argc, char **argv)
         break;
 
       case 'I':
-        split(optarg, ignoredPackages, ',');
+        split(optarg, o_IgnoredPackages, ',');
         break;
 
       case 'V':
-        show_verbose = 1;
+        o_verbose = 1;
         break;
 
       case 'E':
-        show_erroneous = 1;
+        o_erroneous = 1;
         break;
 
       case 'P':
-        show_precise = 1;
+        o_precise = 1;
         break;
 
       case 'T':
-        show_trace = 1;
+        o_trace = 1;
         break;
 
       case 'v':
@@ -293,7 +297,7 @@ int main(int argc, char **argv)
     }
   }
 
-  if (!ReadPackages(o_pkgdb, packages))
+  if (!ReadPackages(o_pkgdb, o_packages))
   {
     cerr << "revdep: " << o_pkgdb << ": failed to read package database\n";
     return 2;
@@ -308,16 +312,16 @@ int main(int argc, char **argv)
   dirs.push_back("/lib");
   dirs.push_back("/usr/lib");
 
-  ReadPackageDirs(o_revdepdir, packages);
-  ignorePackages(packages, ignoredPackages);
+  ReadPackageDirs(o_revdepdir, o_packages);
+  ignorePackages(o_packages, o_IgnoredPackages);
 
-  if (show_verbose)
+  if (o_verbose)
     cout << "** calculating deps" << endl;
 
   if (optind == argc)
-    return workAllPackages(packages);
+    return workAllPackages(o_packages);
   else
-    return workSpecificPackages(packages, optind, argc, argv);
+    return workSpecificPackages(o_packages, optind, argc, argv);
 }
 
 // vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
