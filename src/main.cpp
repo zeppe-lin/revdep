@@ -227,9 +227,9 @@ Mandatory arguments to long options are mandatory for short options too.
   -D, --pkgdb=PATH      specify an alternate location for the packages database
   -R, --revdepdir=PATH  specify an alternate location for revdep package config
   -I, --ignore=PKGNAME[,...]  comma-separated list of packages to ignore
-  -E, --erroneous       include erroneous files in the output
-  -P, --precise         include precise file errors in the output
-  -T, --trace           show debug/trace
+  -e, --erroneous       include erroneous files in the output
+  -p, --precise         include precise file errors in the output
+  -t, --trace           show debug/trace
   -v, --verbose         formatted listing
   -V, --version         print version and exit
   -h, --help            print help and exit
@@ -255,9 +255,9 @@ main(int argc, char **argv)
     { "pkgdb",      required_argument,  NULL,             'D' },
     { "revdepdir",  required_argument,  NULL,             'R' },
     { "ignore",     required_argument,  NULL,             'I' },
-    { "erroneous",  no_argument,        NULL,             'R' },
-    { "precise",    no_argument,        NULL,             'P' },
-    { "trace",      no_argument,        NULL,             'T' },
+    { "erroneous",  no_argument,        NULL,             'e' },
+    { "precise",    no_argument,        NULL,             'p' },
+    { "trace",      no_argument,        NULL,             't' },
     { "verbose",    no_argument,        NULL,             'v' },
     { "version",    no_argument,        NULL,             'V' },
     { "help",       no_argument,        NULL,             'h' },
@@ -267,7 +267,7 @@ main(int argc, char **argv)
   int opt;
 
   while ((opt =
-          getopt_long(argc, argv, "L:D:R:I:EPTvVh", longopts, 0))
+          getopt_long(argc, argv, "L:D:R:I:eptvVh", longopts, 0))
       != -1)
   {
     switch (opt)
@@ -292,15 +292,15 @@ main(int argc, char **argv)
         o_verbose = 1;
         break;
 
-      case 'E':
+      case 'e':
         o_erroneous = 1;
         break;
 
-      case 'P':
+      case 'p':
         o_precise = 1;
         break;
 
-      case 'T':
+      case 't':
         o_trace = 1;
         break;
 
