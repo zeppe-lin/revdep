@@ -1,5 +1,3 @@
-.POSIX:
-
 include config.mk
 
 OBJS = $(subst   .cpp,.o,$(wildcard src/*.cpp))
@@ -20,9 +18,6 @@ copyright.h: ${CURDIR}/COPYRIGHT ${CURDIR}/COPYING.BANNER
 	  echo "#define COPYRIGHT_MESSAGE \\"   ; \
 	  sed 's/^.*/"&\\n"/;$$ ! s/$$/ \\/' $^ ; \
 	  echo "#endif"                         ; } > $@
-
-.cpp.o:
-	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} $< -o $@
 
 revdep: ${OBJS}
 	${LD} $^ ${LDFLAGS} -o $@
