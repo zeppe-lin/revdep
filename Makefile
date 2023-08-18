@@ -12,6 +12,15 @@ manpage: ${MAN1}
 	pod2man -r "${NAME} ${VERSION}" -c ' ' -n $(basename $@) \
 		-s $(subst .,,$(suffix $@)) $< > $@
 
+${OBJS}: copyright.h
+
+copyright.h: ${CURDIR}/COPYRIGHT ${CURDIR}/COPYING.BANNER
+	{ echo "#ifndef COPYRIGHT_H"            ; \
+	  echo "#define COPYRIGHT_H"            ; \
+	  echo "#define COPYRIGHT_MESSAGE \\"   ; \
+	  sed 's/^.*/"&\\n";$$ ! s/$$/ \\/' $^  ; \
+	  echo "#endif"                         ; } > $@
+
 .cpp.o:
 	${CXX} -c ${CXXFLAGS} ${CPPFLAGS} $< -o $@
 
@@ -38,7 +47,7 @@ uninstall-bashcomp:
 	rm -f ${DESTDIR}${BASHCOMPDIR}/revdep
 
 clean:
-	rm -f ${OBJS} revdep ${MAN1}
+	rm -f ${OBJS} copyright.h revdep ${MAN1}
 	rm -f ${DIST}.tar.gz
 
 dist: clean
