@@ -20,7 +20,6 @@ using namespace std;
  * Globals.
  */
 
-static int do_help, do_version;
 static int show_verbose, show_erroneous, show_precise, show_trace;
 static string o_revdepdir = PATH_REVDEP_D;
 static string o_pkgdb     = PATH_PKG_DB;
@@ -32,8 +31,43 @@ static StringVector  dirs;
 static ElfCache      ec;
 
 /*
- * Functions implementation.
+ * Function declarations.
  */
+static int print_version();
+static int print_help();
+
+/*
+ * Function implementations.
+ */
+
+static int print_version()
+{
+  cout << PROJECT_NAME " " PROJECT_VERSION "\n" COPYRIGHT_MESSAGE;
+  return 0;
+}
+
+static int print_help()
+{
+  cout << R"(Usage: revdep [OPTION]... [PKGNAME]...
+Check for missing libraries of installed packages.
+
+Mandatory arguments to long options are mandatory for short options too.
+  -L, --ldsoconf=PATH       specify an alternate location for ld.so.conf
+  -D, --pkgdb=PATH          specify an alternate location for the packages database
+  -R, --revdepdir=PATH      specify an alternate location for revdep package config
+  -I, --ignore=PKGNAME,...  comma-separated list of packages to ignore
+  -V, --verbose             formatted listing
+  -E, --erroneous           include erroneous files in the output
+  -P, --precise             include precise file errors in the output
+  -T, --trace               show debug/trace
+  -v, --version             print version and exit
+  -h, --help                print help and exit
+
+Report bugs to: <)"   PROJECT_BUGTRACKER R"(>
+revdep home page: <)" PROJECT_HOMEPAGE   R"(>
+)";
+  return 0;
+}
 
 static void ignorePackages(PackageVector      &pkgs,
                            const StringVector &ignores)
@@ -194,12 +228,12 @@ int main(int argc, char **argv)
     { "pkgdb",      required_argument,  NULL,             'D' },
     { "revdepdir",  required_argument,  NULL,             'R' },
     { "ignore",     required_argument,  NULL,             'I' },
-    { "verbose",    no_argument,        &show_verbose,    1   },
-    { "erroneous",  no_argument,        &show_erroneous,  1   },
-    { "precise",    no_argument,        &show_precise,    1   },
-    { "trace",      no_argument,        &show_trace,      1   },
-    { "version",    no_argument,        &do_version,      1   },
-    { "help",       no_argument,        &do_help,         1   },
+    { "verbose",    no_argument,        NULL,             'V' },
+    { "erroneous",  no_argument,        NULL,             'R' },
+    { "precise",    no_argument,        NULL,             'P' },
+    { "trace",      no_argument,        NULL,             'T' },
+    { "version",    no_argument,        NULL,             'v' },
+    { "help",       no_argument,        NULL,             'h' },
     { 0,            0,                  0,                0   },
   };
 
@@ -244,12 +278,10 @@ int main(int argc, char **argv)
         break;
 
       case 'v':
-        do_version = 1;
-        break;
+        return print_version();
 
       case 'h':
-        do_help = 1;
-        break;
+        return print_help();
 
       case ':':
         fprintf(stderr, "%c: missing argument\n", optopt);
@@ -259,35 +291,6 @@ int main(int argc, char **argv)
         fprintf(stderr, "%c: invalid option\n", optopt);
         return 1;
     }
-  }
-
-  if (do_help)
-  {
-    cout << R"(Usage: revdep [OPTION]... [PKGNAME]...
-Check for missing libraries of installed packages.
-
-Mandatory arguments to long options are mandatory for short options too.
-  -L, --ldsoconf=PATH       specify an alternate location for ld.so.conf
-  -D, --pkgdb=PATH          specify an alternate location for the packages database
-  -R, --revdepdir=PATH      specify an alternate location for revdep package config
-  -I, --ignore=PKGNAME,...  comma-separated list of packages to ignore
-  -V, --verbose             formatted listing
-  -E, --erroneous           include erroneous files in the output
-  -P, --precise             include precise file errors in the output
-  -T, --trace               show debug/trace
-  -v, --version             print version and exit
-  -h, --help                print help and exit
-
-Report bugs to: <)"   PROJECT_BUGTRACKER R"(>
-revdep home page: <)" PROJECT_HOMEPAGE   R"(>
-)";
-    return 0;
-  }
-  else if (do_version)
-  {
-    cout << PROJECT_NAME << " " << PROJECT_VERSION << endl
-         << COPYRIGHT_MESSAGE;
-    return 0;
   }
 
   if (!ReadPackages(o_pkgdb, packages))
