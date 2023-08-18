@@ -23,7 +23,7 @@ The original sources can be downloaded from:
 REQUIREMENTS
 ------------
 **Build time**:
-- c++11 compiler
+- C++11 compiler
 - POSIX sh(1p) and "mandatory utilities"
 - GNU make(1)
 - pod2man(1pm) to build man page
