@@ -214,16 +214,16 @@ print_help()
 Check for missing libraries of installed packages.
 
 Mandatory arguments to long options are mandatory for short options too.
-  -L, --ldsoconf=PATH       specify an alternate location for ld.so.conf
-  -D, --pkgdb=PATH          specify an alternate location for the packages database
-  -R, --revdepdir=PATH      specify an alternate location for revdep package config
-  -I, --ignore=PKGNAME,...  comma-separated list of packages to ignore
-  -V, --verbose             formatted listing
-  -E, --erroneous           include erroneous files in the output
-  -P, --precise             include precise file errors in the output
-  -T, --trace               show debug/trace
-  -v, --version             print version and exit
-  -h, --help                print help and exit
+  -L, --ldsoconf=PATH   specify an alternative location for ld.so.conf
+  -D, --pkgdb=PATH      specify an alternate location for the packages database
+  -R, --revdepdir=PATH  specify an alternate location for revdep package config
+  -I, --ignore=PKGNAME[,...]  comma-separated list of packages to ignore
+  -V, --verbose         formatted listing
+  -E, --erroneous       include erroneous files in the output
+  -P, --precise         include precise file errors in the output
+  -T, --trace           show debug/trace
+  -v, --version         print version and exit
+  -h, --help            print help and exit
 
 Report bugs to: <)"   PROJECT_BUGTRACKER R"(>
 revdep home page: <)" PROJECT_HOMEPAGE   R"(>
