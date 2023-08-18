@@ -44,10 +44,6 @@ Default: F</etc/revdep.d>.
 
 Comma-separated list of packages to ignore.
 
-=item B<-V>, B<--verbose>
-
-Formatted listing.
-
 =item B<-E>, B<--erroneous>
 
 Include erroneous files in the output.
@@ -60,7 +56,11 @@ Include precise file errors in the output.
 
 Show debug/trace.
 
-=item B<-v>, B<--version>
+=item B<-v>, B<--verbose>
+
+Formatted listing.
+
+=item B<-V>, B<--version>
 
 Print version and exit.
 
