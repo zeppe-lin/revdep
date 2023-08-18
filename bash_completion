@@ -8,32 +8,38 @@ _revdep()
 	local cur prev words cword split
 	_init_completion -s || return
 
-	case $prev in
-	--help|--version|-!(-*)[hv])
-		  return
-		  ;;
-	--ldsoconf|-L|--pkgdb|-D|--revdepdir|-R)
-		  _filedir
-		  return
-		  ;;
-	--ignore|-I)
-		if [[ "$cur" == *,* ]]; then
-			local realcur=${cur##*,} prefix=${cur%,*}
-			COMPREPLY=($(compgen -W '"${_avail_pkgs[@]}"' \
-				-P "${prefix}," -- $realcur))
-		else
-			COMPREPLY=($(compgen -W '"${_avail_pkgs[@]}"' \
-				-- $cur))
-		fi
-		return 0
-		;;
-	esac
-
-	if [[ $cur == -* ]]; then
-		COMPREPLY=($(compgen -W '$(_parse_help "$1")' -- $cur))
+	if [[ ${cur} == -* ]]; then
+		COMPREPLY=( $(compgen -W '$(_parse_help "$1")' -- $cur) )
 		[[ ${COMPREPLY-} == *= ]] && compopt -o nospace
 	else
-		COMPREPLY=($(compgen -W '"${_avail_pkgs[@]}"' -- $cur))
+		case $prev in
+		--help|--version|-!(-*)[hV])
+			return
+			;;
+		--ldsoconf|--pkgdb|--revdepdir|-!(-*)[LDR])
+			_filedir
+			return
+			;;
+		--ignore|-I)
+			if [[ "$cur" == *,* ]]; then
+				local realcur prefix
+				realcur=${cur##*,}
+				prefix=${cur%,*}
+				COMPREPLY=( $(compgen            \
+					-W '"${_avail_pkgs[@]}"' \
+					-P "${prefix}," -- $realcur) )
+			else
+				COMPREPLY=( $(compgen            \
+					-W '"${_avail_pkgs[@]}"' \
+					-- $cur) )
+			fi
+			compopt -o nospace
+			;;
+		*)
+			COMPREPLY=( $(compgen \
+				-W '"${_avail_pkgs[@]}"' -- $cur) )
+			;;
+		esac
 	fi
 } && complete -F _revdep revdep
 
