@@ -230,8 +230,8 @@ Mandatory arguments to long options are mandatory for short options too.
   -E, --erroneous       include erroneous files in the output
   -P, --precise         include precise file errors in the output
   -T, --trace           show debug/trace
-  -V, --verbose         formatted listing
-  -v, --version         print version and exit
+  -v, --verbose         formatted listing
+  -V, --version         print version and exit
   -h, --help            print help and exit
 
 Report bugs to: <)"   PROJECT_BUGTRACKER R"(>
@@ -258,8 +258,8 @@ main(int argc, char **argv)
     { "erroneous",  no_argument,        NULL,             'R' },
     { "precise",    no_argument,        NULL,             'P' },
     { "trace",      no_argument,        NULL,             'T' },
-    { "verbose",    no_argument,        NULL,             'V' },
-    { "version",    no_argument,        NULL,             'v' },
+    { "verbose",    no_argument,        NULL,             'v' },
+    { "version",    no_argument,        NULL,             'V' },
     { "help",       no_argument,        NULL,             'h' },
     { 0,            0,                  0,                0   },
   };
@@ -267,7 +267,7 @@ main(int argc, char **argv)
   int opt;
 
   while ((opt =
-          getopt_long(argc, argv, ":hvL:D:R:I:VEPT", longopts, 0))
+          getopt_long(argc, argv, "L:D:R:I:EPTvVh", longopts, 0))
       != -1)
   {
     switch (opt)
@@ -288,7 +288,7 @@ main(int argc, char **argv)
         split(optarg, o_IgnoredPackages, ',');
         break;
 
-      case 'V':
+      case 'v':
         o_verbose = 1;
         break;
 
@@ -304,7 +304,7 @@ main(int argc, char **argv)
         o_trace = 1;
         break;
 
-      case 'v':
+      case 'V':
         return print_version();
 
       case 'h':
