@@ -25,9 +25,10 @@ static int           o_verbose   = 0;
 static int           o_erroneous = 0;
 static int           o_precise   = 0;
 static int           o_trace     = 0;
-static string        o_revdepdir = PATH_REVDEP_D;
-static string        o_pkgdb     = PATH_PKG_DB;
-static string        o_ldsoconf  = PATH_LD_SO_CONF;
+static string        o_revdepdir = _PATH_REVDEPD;
+static string        o_pkgdb     = _PATH_PKGDB;
+static string        o_ldsoconf  = _PATH_LDSOCONF;
+
 static StringVector  o_IgnoredPackages;
 static PackageVector o_packages;
 
