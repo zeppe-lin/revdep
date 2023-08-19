@@ -8,7 +8,7 @@ revdep - check for missing libraries of installed packages
 
 =head1 SYNOPSIS
 
-B<revdep> [I<OPTION>]... [I<PKGNAME>]
+B<revdep> [I<OPTION>]... [I<PKGNAME>]...
 
 =head1 DESCRIPTION
 
