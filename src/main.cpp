@@ -239,7 +239,7 @@ Mandatory arguments to long options are mandatory for short options too.
 static int
 print_version()
 {
-  cout << "revdep " PROJECT_VERSION "\n";
+  cout << "revdep " VERSION "\n";
   return 0;
 }
 
