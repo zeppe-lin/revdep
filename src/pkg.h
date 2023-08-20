@@ -17,9 +17,7 @@ private:
   bool          _ignore;
 
 public:
-  Package(const string       &name,
-          const string       &version,
-          const StringVector &files);
+  Package(const string &name, const string &version, const StringVector &files);
 
   const string& Name() const
   {
@@ -64,11 +62,9 @@ public:
 
 typedef vector <Package> PackageVector;
 
-bool ReadPackages(const string  &path,
-                  PackageVector &pkgs);
+bool ReadPackages(const string &path, PackageVector &pkgs);
 
-void ReadPackageDirs(const string  &path,
-                     PackageVector &pkgs);
+void ReadPackageDirs(const string &path, PackageVector &pkgs);
 
-// vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
+// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
 // End of file.

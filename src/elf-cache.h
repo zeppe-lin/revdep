@@ -18,12 +18,9 @@ private:
 
   ElfMap _data;
 
-  bool findLibraryByDirs(const Elf          *elf,
-                         const string       &lib,
-                         const StringVector &dirs);
+  bool findLibraryByDirs(const Elf *elf, const string &lib, const StringVector &dirs);
 
-  bool findLibraryByPath(const Elf    *elf,
-                         const string &lib);
+  bool findLibraryByPath(const Elf *elf, const string &lib);
 
 public:
 
@@ -31,12 +28,9 @@ public:
 
   const Elf *LookUp(const string &path);
 
-  bool FindLibrary(const Elf          *elf,
-                   const Package      &pkg,
-                   const string       &lib,
-                   const StringVector &dirs);
+  bool FindLibrary(const Elf *elf, const Package &pkg, const string &lib, const StringVector &dirs);
 
 }; // class ElfCache
 
-// vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
+// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
 // End of file.

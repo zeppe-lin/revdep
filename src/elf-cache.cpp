@@ -70,8 +70,7 @@ static string resolveDirVars(const Elf *elf, const string &path)
   return out;
 }
 
-static StringVector resolveRunPaths(const Elf          *elf,
-                                    const StringVector &paths)
+static StringVector resolveRunPaths(const Elf *elf, const StringVector &paths)
 {
   StringVector out;
 
@@ -81,9 +80,7 @@ static StringVector resolveRunPaths(const Elf          *elf,
   return out;
 }
 
-bool ElfCache::findLibraryByDirs(const Elf          *elf,
-                                 const string       &lib,
-                                 const StringVector &dirs)
+bool ElfCache::findLibraryByDirs(const Elf *elf, const string &lib, const StringVector &dirs)
 {
   for (size_t i = 0; i < dirs.size(); ++i)
   {
@@ -107,8 +104,7 @@ bool ElfCache::findLibraryByDirs(const Elf          *elf,
   return false;
 }
 
-bool ElfCache::findLibraryByPath(const Elf    *elf,
-                                 const string &lib)
+bool ElfCache::findLibraryByPath(const Elf *elf, const string &lib)
 {
   string path;
 
@@ -166,10 +162,7 @@ const Elf *ElfCache::LookUp(const string &path)
   return elf;
 }
 
-bool ElfCache::FindLibrary(const Elf          *elf,
-                           const Package      &pkg,
-                           const string       &lib,
-                           const StringVector &dirs)
+bool ElfCache::FindLibrary(const Elf *elf, const Package &pkg, const string &lib, const StringVector &dirs)
 {
   if (lib.find('/') != string::npos)
     return findLibraryByPath(elf, lib);
@@ -199,5 +192,5 @@ bool ElfCache::FindLibrary(const Elf          *elf,
   return false;
 }
 
-// vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
+// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
 // End of file.

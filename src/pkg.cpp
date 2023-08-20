@@ -11,9 +11,7 @@
 
 using namespace std;
 
-Package::Package(const string       &name,
-                 const string       &version,
-                 const StringVector &files):
+Package::Package(const string &name, const string &version, const StringVector &files):
   _name(name),
   _version(version),
   _files(files),
@@ -45,8 +43,7 @@ static Package readPackage(istream &in)
   return Package(name, version, files);
 }
 
-bool ReadPackages(const string  &path,
-                  PackageVector &pkgs)
+bool ReadPackages(const string &path, PackageVector &pkgs)
 {
   ifstream fin;
 
@@ -70,8 +67,7 @@ bool ReadPackages(const string  &path,
   return (pkgs.size() > 0);
 }
 
-void ReadPackageDirs(const string  &path,
-                     PackageVector &pkgs)
+void ReadPackageDirs(const string &path, PackageVector &pkgs)
 {
   DIR *dir;
 
@@ -106,5 +102,5 @@ void ReadPackageDirs(const string  &path,
   closedir(dir);
 }
 
-// vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
+// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
 // End of file.

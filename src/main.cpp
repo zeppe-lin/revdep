@@ -12,7 +12,6 @@
 #include "elf-cache.h"
 #include "pkg.h"
 #include "pathnames.h"
-#include "../copyright.h"
 
 using namespace std;
 
@@ -20,7 +19,7 @@ using namespace std;
  * Globals.
  */
 
-/* command-line options */
+/* Command-line options */
 static int           o_verbose   = 0;
 static int           o_erroneous = 0;
 static int           o_precise   = 0;
@@ -35,7 +34,7 @@ static PackageVector o_packages;
 static StringVector  dirs;
 static ElfCache      ec;
 
-/* used for exit status */
+/* Used for exit status */
 enum _revdep_errors {
   E_INVALID_INPUT = 1, /* Failed to parse command-line arguments */
   E_READ_PKGDB    = 2, /* Failed to read package database */
@@ -233,9 +232,6 @@ Mandatory arguments to long options are mandatory for short options too.
   -v, --verbose         formatted listing
   -V, --version         print version and exit
   -h, --help            print help and exit
-
-Report bugs to: <)"   PROJECT_BUGTRACKER R"(>
-revdep home page: <)" PROJECT_HOMEPAGE   R"(>
 )";
   return 0;
 }
@@ -243,7 +239,7 @@ revdep home page: <)" PROJECT_HOMEPAGE   R"(>
 static int
 print_version()
 {
-  cout << PROJECT_NAME " " PROJECT_VERSION "\n" COPYRIGHT_MESSAGE;
+  cout << "revdep " PROJECT_VERSION "\n";
   return 0;
 }
 
@@ -347,5 +343,5 @@ main(int argc, char **argv)
     return workSpecificPackages(o_packages, optind, argc, argv);
 }
 
-// vim:sw=2:ts=2:sts=2:et:cc=72:tw=70
+// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
 // End of file.
