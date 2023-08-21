@@ -37,6 +37,7 @@ Default: F</var/lib/pkg/db>.
 =item B<-R>, B<--revdepdir>=I<PATH>
 
 Specify an alternate location for B<revdep> package configuration.
+See L</"ADDITIONAL LIBRARY DIRECTORIES"> below for details.
 
 Default: F</etc/revdep.d>.
 
