@@ -6,11 +6,11 @@ for missing libraries of installed packages.
 This distribution is a fork of CRUX' revdep utility (which is part of
 CRUX' prt-utils distribution) as of commit 41dfcb6 (Thu Oct 15 2020)
 with the following differences:
-- Fix GCC extensions for portability
-- Manual page in POD format
-- GNU-style command-line options/help/usage
-- Different exit codes for ease scripting
-- Bash completion
+- fix GCC extensions for portability
+- manual page in POD format
+- command-line options/usage in GNU style
+- different exit codes for ease scripting
+- bash completion
 
 See git log for complete/further differences.
 
