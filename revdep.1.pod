@@ -4,7 +4,7 @@
 
 =head1 NAME
 
-revdep - check for missing libraries of installed packages
+revdep - check for missing or wrong libraries of installed packages
 
 =head1 SYNOPSIS
 
@@ -12,8 +12,8 @@ B<revdep> [I<OPTION>]... [I<PKGNAME>]...
 
 =head1 DESCRIPTION
 
-B<revdep> checks for missing libraries of installed packages using
-elfutils' libelf and the same algorithm that L<ld.so(8)> uses.
+B<revdep> checks for missing or wrong libraries of installed packages
+using elfutils' libelf and the same algorithm that L<ld.so(8)> uses.
 
 =head1 OPTIONS
 
