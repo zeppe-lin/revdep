@@ -22,22 +22,24 @@ too.
 
 =over 8
 
-=item B<-L>, B<--ldsoconf>=I<PATH>
+=item B<-L>, B<--ldsoconf>=I<FILE>
 
-Specify an alternate location for F<ld.so.conf>.
+Specify an alternate location for F<ld.so.conf> file, that contains a
+list of directories, one per line, in which to search for libraries.
 
 Default: F</etc/ld.so.conf>.
 
-=item B<-D>, B<--pkgdb>=I<PATH>
+=item B<-D>, B<--pkgdb>=I<FILE>
 
-Specify an alternate location for the package database.
+Specify an alternate location for the package database file.
 
 Default: F</var/lib/pkg/db>.
 
-=item B<-R>, B<--revdepdir>=I<PATH>
+=item B<-R>, B<--revdepdir>=I<DIR>
 
-Specify an alternate location for B<revdep> package configuration.
-See L</"ADDITIONAL LIBRARY DIRECTORIES"> below for details.
+Specify an alternate location for B<revdep>'s package configuration
+directory.  See L</"ADDITIONAL LIBRARY DIRECTORIES"> below for
+details.
 
 Default: F</etc/revdep.d>.
 
