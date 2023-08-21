@@ -7,7 +7,7 @@ This distribution is a fork of CRUX' revdep utility (which is part of
 CRUX' prt-utils distribution) as of commit 41dfcb6 (Thu Oct 15 2020)
 with the following differences:
 - Fix GCC extensions for portability
-- POD format for manual page
+- Manual page in POD format
 - Follow as much as possible "GNU Coding Standards"
 - Improve command-line options
 - Different exit codes for ease scripting
