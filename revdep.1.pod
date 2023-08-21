@@ -71,7 +71,7 @@ Print help and exit.
 
 =back
 
-=head1 EXAMPLE
+=head1 EXAMPLES
 
 Try this command to list broken packages:
 
