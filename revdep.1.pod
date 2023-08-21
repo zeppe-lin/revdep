@@ -126,16 +126,14 @@ Found at least one missing library.
 
 =back
 
-=head1 NOTES
-
-C++ rewrite inspired by Johannes Winkelmann's <L<jw@tks6.net>>
-shell B<revdep>.
-
-Contributed to design Danny Rawlins <L<contact@romster.me>>.
-
 =head1 AUTHOR
 
-James Buren, <L<ryuo@freenode>>
+The original implementation of B<revdep> was done by Johannes
+Winkelmann <L<jw@tks6.net>> as B<revdep> shell script.  The C++
+rewrite was done by James Buren <L<ryuo@frugalware.org>> with design
+contribution by Danny Rawlins <L<contact@romster.me>>, and later
+re-worked for L<Zeppe-Lin|http://zeppel.ink> by Alexandr Savca
+<L<alexandr.savca89@gmail.com>.
 
 =cut
 
