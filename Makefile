@@ -1,12 +1,11 @@
 include config.mk
 
-OBJS = $(subst   .cpp,.o,$(wildcard src/*.cpp))
+OBJS = $(subst .cpp,.o,$(wildcard *.cpp))
 
 all: revdep revdep.1
 
 revdep.1:
-	pod2man -r "${NAME} ${VERSION}" -c ' ' -n revdep -s 1 \
-		pod/revdep.1.pod > $@
+	pod2man -r "${NAME} ${VERSION}" -c ' ' -n revdep -s 1 revdep.1.pod > $@
 
 revdep: ${OBJS}
 	${LD} $^ ${LDFLAGS} -o $@
