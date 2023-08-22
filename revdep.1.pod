@@ -77,11 +77,11 @@ Print help and exit.
 
 Try this command to list broken packages:
 
-  revdep
+        revdep
 
 Use this command to rebuild packages on your system:
 
-  pkgman update -fr `revdep`
+        pkgman update -fr `revdep`
 
 =head1 ADDITIONAL LIBRARY DIRECTORIES
 
