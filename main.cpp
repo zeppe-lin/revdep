@@ -309,11 +309,13 @@ main(int argc, char **argv)
         return print_help();
 
       case ':':
-        fprintf(stderr, "%c: missing argument\n", optopt);
+        /* missing argument */
+        fprintf(stderr, "Try '%s --help' for more information.\n", argv[0]);
         return E_INVALID_INPUT;
 
       case '?':
-        fprintf(stderr, "%c: invalid option\n", optopt);
+        /* invalid option */
+        fprintf(stderr, "Try '%s --help' for more information.\n", argv[0]);
         return E_INVALID_INPUT;
     }
   }
