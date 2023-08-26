@@ -46,7 +46,7 @@ details.
 
 Default: F</etc/revdep.d>.
 
-=item B<-I>, B<--ignore>=I<PKGNAME>,...
+=item B<-I>, B<--ignore>=I<PKGNAME>[,...]
 
 Comma-separated list of packages to ignore.
 
