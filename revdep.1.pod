@@ -136,7 +136,7 @@ Winkelmann <L<jw@tks6.net>> as B<revdep> shell script.  The C++
 rewrite was done by James Buren <L<ryuo@frugalware.org>> with design
 contribution by Danny Rawlins <L<contact@romster.me>>, and later
 re-worked for L<Zeppe-Lin|http://zeppel.ink> by Alexandr Savca
-<L<alexandr.savca89@gmail.com>.
+<L<alexandr.savca89@gmail.com>>.
 
 =cut
 
