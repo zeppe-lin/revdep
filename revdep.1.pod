@@ -129,7 +129,7 @@ Found at least one missing library.
 
 =back
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 The original implementation of B<revdep> was done by Johannes
 Winkelmann <L<jw@tks6.net>> as B<revdep> shell script.  The C++
