@@ -1,6 +1,5 @@
 # build files and artefacts
 *.o
-*.1
 revdep
 
 # vim undo and swap files
