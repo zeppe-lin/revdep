@@ -7,7 +7,7 @@ This distribution is a fork of CRUX' revdep utility (which is part of
 CRUX' prt-utils distribution) as of commit 41dfcb6 (Thu Oct 15 2020)
 with the following differences:
 - fix GCC extensions for portability
-- manual page in POD format
+- manual page in mdoc(7) format
 - command-line options/usage in GNU style
 - different exit codes for ease scripting
 - bash completion
@@ -25,7 +25,6 @@ REQUIREMENTS
 - C++11 compiler
 - POSIX sh(1p) and "mandatory utilities"
 - GNU make(1)
-- pod2man(1pm) to build man page
 - elfutils
 
 
