@@ -1,0 +1,142 @@
+.\" revdep(1) manual page
+.\" See COPYING and COPYRIGHT files for corresponding information.
+.Dd September 3, 2023
+.Dt REVDEP 1
+.Os revdep @VERSION@
+.Sh NAME
+.Nm revdep
+.Nd check for missing or wrong libraries of installed packages
+.Sh SYNOPSIS
+.Nm revdep
+.Op Fl L Ar ldsoconffile
+.Op Fl D Ar pkgdbfile
+.Op Fl R Ar revdepdir
+.Op Fl I Ar pkgname Ns Op , Ns ...
+.Op Fl e
+.Op Fl p
+.Op Fl t
+.Op Fl v
+.Ar pkgname ...
+.Nm
+.Op Fl V
+.Nm
+.Op Fl h
+.Sh DESCRIPTION
+The
+.Nm
+utility checks for missing or wrong libraries of installed packages
+using elfutils' libelf and the same algorithm that
+.Xr ld.so 8
+uses.
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl L Ar ldsoconffile , Fl -ldsoconf Ns = Ns Ar ldsoconffile
+Specify an alternate location for
+.Pa ld.so.conf
+file instead of the default
+.Pa /etc/ld.so.conf .
+That file contains a list of directories, one per line, in which to
+search for libraries.
+.It Fl D Ar pkgdbfile , Fl -pkgdb Ns = Ns Ar pkgdbfile
+Specify an alternate location for the package database file instead of
+the default
+.Pa /var/lib/pkg/db .
+.It Fl R Ar revdepdir , Fl -revdepdir Ns = Ns Ar revdepdir
+Specify an alternate location for
+.Nm
+package configuration directory instead of the default
+.Pa /etc/revdep.d .
+See
+.Sx "ADDITIONAL LIBRARY DIRECTORIES"
+below for details.
+.It Fl I Ar pkgname Ns Oo , Ns ... Oc , Fl -ignore Ns = Ns Ar pkgname Ns Op , Ns ...
+Comma-separated list of packages to ignore.
+.It Fl e , Fl -erroneous
+Include erroneous files in the output.
+.It Fl p , Fl -precise
+Include precise file errors in the output.
+.It Fl t , Fl -trace
+Show debug/trace.
+.It Fl v , Fl -verbose
+Formatted listing.
+.It Fl V , Fl -version
+Print version and exit.
+.It Fl h , Fl -help
+Print help and exit.
+.El
+.Sh ADDITIONAL LIBRARY DIRECTORIES
+Upon startup,
+.Nm
+searches the
+.Pa /etc/revdep.d
+directory for files named after packages.
+If any are found, any directories (assumed to be absolute paths and
+delimited by newlines) within the file are added to a list of package
+specific directories to search if a library dependency is not found in
+one of the many standard locations
+.Pq as specified by Xr ld.so 8 .
+.Pp
+If a package is discovered to have a library dependencies that are in
+a non-standard directory
+.Pa /usr/lib/firefox
+then a file named
+.Pa firefox
+should be created under
+.Pa /etc/revdep.d
+with a single line containing
+.Pa /usr/lib/firefox .
+This will tell
+.Nm
+where to find Firefox's
+.Pa libxul.so
+when looking for its library dependencies, reducing one source of
+false positives.
+Ideally, this file would be included with the package's own packaging
+as well.
+.Sh EXIT STATUS
+.Bl -tag -width indent
+.It 0
+There are no missing libraries found.
+All is ok.
+.It 1
+Failed to parse command-line arguments.
+.It 2
+Failed to read package database.
+.It 3
+Failed to read
+.Pa ld.so.conf .
+.It 4
+Found at least one missing library.
+.El
+.Sh EXAMPLES
+Try this command to list broken packages:
+.Bd -literal -offset indent
+revdep
+.Ed
+.Pp
+Use this command to rebuild packages on your system:
+.Bd -literal -offset indent
+pkgman update -fr `revdep`
+.Ed
+.Sh AUTHORS
+The original implementation of
+.Nm
+as a shell script was done by
+.An Johannes Winkelmann Aq Mt jw@tks6.net ,
+the member of
+.Lk http://crux.nu CRUX Team ,
+as part of
+.Dq prt-utils
+package.
+The C++ rewrite was done by
+.An James Buren Aq Mt ryuo@frugalware.org
+with design contribution by
+.An Danny Rawlins Aq Mt contact@romster.me .
+.Pp
+This implementation was re-worked for
+.Lk http://zeppel.ink Zeppe-Lin
+by
+.An Alexandr Savca Aq Mt alexandr.savca89@gmail.com .
+.\" vim: cc=72 tw=70
+.\" End of file.
