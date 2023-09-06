@@ -219,7 +219,7 @@ static int
 print_help()
 {
   cout << R"(Usage: revdep [-eptv] [-L ldsoconffile ] [-D pkgdbfile] [-R revdepdir]
-              [-I pkgname[,...]] pkgname ...
+              [-I pkgname[,...]] [pkgname ...]
        revdep [-V]
        revdep [-h]
 Check for missing libraries of installed packages.
