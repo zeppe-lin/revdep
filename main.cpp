@@ -218,22 +218,28 @@ ignorePackages(PackageVector &pkgs, const StringVector &ignores)
 static int
 print_help()
 {
-  cout << R"(Usage: revdep [OPTION]... [PKGNAME]...
+  cout << R"(Usage: revdep [-eptv] [-L ldsoconffile ] [-D pkgdbfile] [-R revdepdir]
+              [-I pkgname[,...]] pkgname ...
+       revdep [-V]
+       revdep [-h]
 Check for missing libraries of installed packages.
 
 Mandatory arguments to long options are mandatory for short options too.
-  -L, --ldsoconf=FILE  specify an alternate location for ld.so.conf file
-  -D, --pkgdb=FILE     specify an alternate location for the packages database
-                       file
-  -R, --revdepdir=DIR  specify an alternate location for revdep's package
-                       configuration directory
-  -I, --ignore=PKGNAME[,...]  comma-separated list of packages to ignore
-  -e, --erroneous      include erroneous files in the output
-  -p, --precise        include precise file errors in the output
-  -t, --trace          show debug/trace
-  -v, --verbose        formatted listing
-  -V, --version        print version and exit
-  -h, --help           print help and exit
+  -L, --ldsoconf=ldsoconffile
+                        specify an alternate location for ld.so.conf file
+  -D, --pkgdb=pkgdbfile specify an alternate location for the packages database
+                        file
+  -R, --revdepdir=revdepdir
+                        specify an alternate location for revdep's package
+                        configuration directory
+  -I, --ignore=pkgname[,...]
+                        comma-separated list of packages to ignore
+  -e, --erroneous       include erroneous files in the output
+  -p, --precise         include precise file errors in the output
+  -t, --trace           show debug/trace
+  -v, --verbose         formatted listing
+  -V, --version         print version and exit
+  -h, --help            print help and exit
 )";
   return 0;
 }
