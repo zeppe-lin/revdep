@@ -3,9 +3,11 @@
 .Dd September 3, 2023
 .Dt REVDEP 1
 .Os revdep @VERSION@
+.\" ==================================================================
 .Sh NAME
 .Nm revdep
 .Nd check for missing or wrong libraries of installed packages
+.\" ==================================================================
 .Sh SYNOPSIS
 .Nm revdep
 .Op Fl eptv
@@ -18,6 +20,7 @@
 .Op Fl V
 .Nm
 .Op Fl h
+.\" ==================================================================
 .Sh DESCRIPTION
 The
 .Nm
@@ -62,6 +65,7 @@ Print version and exit.
 .It Fl h , Fl -help
 Print help and exit.
 .El
+.\" ------------------------------------------------------------------
 .Ss Additional Library Directories
 Upon startup,
 .Nm
@@ -91,6 +95,7 @@ when looking for its library dependencies, reducing one source of
 false positives.
 Ideally, this file would be included with the package's own packaging
 as well.
+.\" ==================================================================
 .Sh EXIT STATUS
 .Bl -tag -width indent
 .It 0
@@ -106,6 +111,7 @@ Failed to read
 .It 4
 Found at least one missing library.
 .El
+.\" ==================================================================
 .Sh EXAMPLES
 Try this command to list broken packages:
 .Bd -literal -offset indent
@@ -116,6 +122,7 @@ Use this command to rebuild packages on your system:
 .Bd -literal -offset indent
 pkgman update -fr `revdep`
 .Ed
+.\" ==================================================================
 .Sh AUTHORS
 The original implementation of
 .Nm
