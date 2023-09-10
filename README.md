@@ -25,6 +25,7 @@ REQUIREMENTS
 - C++11 compiler
 - POSIX sh(1p) and "mandatory utilities"
 - GNU make(1)
+- pkg-config(1)
 - elfutils
 
 
