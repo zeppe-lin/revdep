@@ -1,6 +1,6 @@
 include config.mk
 
-OBJS = $(subst .cpp,.o,$(wildcard *.cpp))
+OBJS = src/elf-cache.o src/elf.o src/main.o src/pkg.o src/utility.o
 
 all: revdep
 
@@ -11,8 +11,7 @@ install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	cp -f revdep ${DESTDIR}${PREFIX}/bin/
-	sed "s/^\.Os/.Os ${NAME} ${VERSION}/" revdep.1 \
-		> ${DESTDIR}${MANPREFIX}/man1/revdep.1
+	cp -f man/revdep.1 ${DESTDIR}${MANPREFIX}/man1/
 	chmod 0755 ${DESTDIR}${PREFIX}/bin/revdep
 	chmod 0644 ${DESTDIR}${MANPREFIX}/man1/revdep.1
 
