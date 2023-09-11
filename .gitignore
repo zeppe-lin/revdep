@@ -1,9 +1,5 @@
 # build files and artefacts
-elf-cache.o
-elf.o
-main.o
-pkg.o
-utility.o
+*.o
 revdep
 
 # vim undo and swap files
