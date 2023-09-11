@@ -11,8 +11,8 @@ install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	cp -f revdep ${DESTDIR}${PREFIX}/bin/
-	sed "s/@VERSION@/${VERSION}/" revdep.1 > \
-		${DESTDIR}${MANPREFIX}/man1/revdep.1
+	sed "s/^\.Os/.Os ${NAME} ${VERSION}/" revdep.1 \
+		> ${DESTDIR}${MANPREFIX}/man1/revdep.1
 	chmod 0755 ${DESTDIR}${PREFIX}/bin/revdep
 	chmod 0644 ${DESTDIR}${MANPREFIX}/man1/revdep.1
 
