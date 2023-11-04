@@ -11,6 +11,7 @@ with the following differences:
 - command-line options/usage in GNU style
 - different exit codes for ease scripting
 - bash completion
+- powerpc{,64} and risc-v elf support
 
 See git log for complete/further differences.
 
