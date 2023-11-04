@@ -58,6 +58,8 @@ static bool isValidElf(Elf *elf, int &machine)
     case EM_PPC:      break;
 #elif defined(__powerpc64__)
     case EM_PPC64:    break;
+#elif defined(__riscv)
+    case RM_RISCV:    break;
 #else
 # error "unsupported architecture"
 #endif
