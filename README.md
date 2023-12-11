@@ -16,8 +16,8 @@ Oct 15 2020) with the following differences:
 See git log for complete/further differences.
 
 The original sources can be downloaded from:
-1. git://crux.nu/tools/prt-utils.git                        (git)
-2. https://crux.nu/gitweb/?p=tools/prt-utils.git;a=summary  (web)
+1. git://crux.nu/tools/prt-utils.git                       (git)
+2. https://crux.nu/gitweb/?p=tools/prt-utils.git;a=summary (web)
 
 
 REQUIREMENTS
