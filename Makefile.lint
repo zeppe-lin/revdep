@@ -30,9 +30,8 @@ spellcheck:
 	@mandoc -T html man/revdep.1 | hunspell -H -l - | sort -u
 
 mancheck:
-	@echo "=======> Check man pages for syntax errors"
-	@find . -not -path '*/.*' -type f -name '*.[1-9]' \
-		-exec mandoc -T lint {} +
+	@echo "=======> Check man page for syntax errors"
+	@mandoc -T lint man/revdep.1 
 
 podchecker:
 	@echo "=======> Check PODs for syntax errors"
