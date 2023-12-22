@@ -11,9 +11,8 @@
 
 using namespace std;
 
-void split(const string &in,
-           StringVector &out,
-           char         delimiter)
+void
+split(const string &in, StringVector &out, char delimiter)
 {
   size_t i = 0;
   size_t j = in.find(delimiter);
@@ -28,8 +27,8 @@ void split(const string &in,
   out.push_back(in.substr(i));
 }
 
-void ReadRdConf(const string &path,
-                StringVector &dirs)
+void
+ReadRdConf(const string &path, StringVector &dirs)
 {
   ifstream fin;
 
@@ -49,9 +48,8 @@ void ReadRdConf(const string &path,
   fin.close();
 }
 
-bool ReadLdConf(const string &path,
-                StringVector &dirs,
-                int          maxDepth)
+bool
+ReadLdConf(const string &path, StringVector &dirs, int maxDepth)
 {
   if (maxDepth <= 0)
     return false;
@@ -100,7 +98,8 @@ bool ReadLdConf(const string &path,
   return true;
 }
 
-bool IsRegularFile(const string &path)
+bool
+IsRegularFile(const string &path)
 {
   struct stat st;
 

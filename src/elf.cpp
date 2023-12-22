@@ -13,13 +13,15 @@
 using namespace std;
 
 __attribute__((constructor))
-static void initialize()
+static void
+initialize()
 {
   if (elf_version(EV_CURRENT) == EV_NONE)
     throw runtime_error("libelf initialization failure");
 }
 
-static bool isValidElf(Elf *elf, int &machine)
+static bool
+isValidElf(Elf *elf, int &machine)
 {
   GElf_Ehdr ehdr;
 
@@ -71,9 +73,8 @@ static bool isValidElf(Elf *elf, int &machine)
   return true;
 }
 
-static bool getDynamicSection(Elf       *elf,
-                              GElf_Shdr &shdr,
-                              Elf_Scn   *&scn)
+static bool
+getDynamicSection(Elf *elf, GElf_Shdr &shdr, Elf_Scn *&scn)
 {
   size_t    phdrnum;
   size_t    i;
@@ -105,10 +106,9 @@ static bool getDynamicSection(Elf       *elf,
   return (i != phdrnum);
 }
 
-static bool readDynamicSection(Elf          *elf,
-                               StringVector &needed,
-                               StringVector &rpath,
-                               StringVector &runpath)
+static bool
+readDynamicSection(Elf *elf, StringVector &needed, StringVector &rpath,
+    StringVector &runpath)
 {
   GElf_Shdr shdr;
   Elf_Scn   *scn = NULL;

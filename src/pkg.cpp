@@ -11,15 +11,17 @@
 
 using namespace std;
 
-Package::Package(const string &name, const string &version, const StringVector &files):
-  _name(name),
-  _version(version),
-  _files(files),
-  _dirs({}),
-  _ignore(false)
+Package::Package(const string &name, const string &version,
+    const StringVector &files)
+  : _name(name),
+    _version(version),
+    _files(files),
+    _dirs({}),
+    _ignore(false)
 {}
 
-static Package readPackage(istream &in)
+static Package
+readPackage(istream &in)
 {
   string       line;
   size_t       fields = 0;
@@ -43,7 +45,8 @@ static Package readPackage(istream &in)
   return Package(name, version, files);
 }
 
-bool ReadPackages(const string &path, PackageVector &pkgs)
+bool
+ReadPackages(const string &path, PackageVector &pkgs)
 {
   ifstream fin;
 
@@ -67,7 +70,8 @@ bool ReadPackages(const string &path, PackageVector &pkgs)
   return (pkgs.size() > 0);
 }
 
-void ReadPackageDirs(const string &path, PackageVector &pkgs)
+void
+ReadPackageDirs(const string &path, PackageVector &pkgs)
 {
   DIR *dir;
 

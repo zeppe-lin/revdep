@@ -17,7 +17,8 @@ private:
   bool          _ignore;
 
 public:
-  Package(const string &name, const string &version, const StringVector &files);
+  Package(const string &name, const string &version,
+      const StringVector &files);
 
   const string& Name() const
   {

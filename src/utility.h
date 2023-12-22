@@ -9,15 +9,32 @@
 
 using namespace std;
 
+//! TODO document
 typedef vector<string> StringVector;
 
-void split(const string &in, StringVector &out, char delimiter);
+//! \brief   Split a string into parts
+//!
+//! \tparam  in         string to split
+//! \tparam  out        vector of strings that will contain the result
+//! \tparam  delimiter  delimiter
+void
+split(const string &in, StringVector &out, char delimiter);
 
-void ReadRdConf(const string &path, StringVector &dirs);
+//! TODO document
+void
+ReadRdConf(const string &path, StringVector &dirs);
 
-bool ReadLdConf(const string &path, StringVector &dirs, int maxDepth);
+//! TODO document
+bool
+ReadLdConf(const string &path, StringVector &dirs, int maxDepth);
 
-bool IsRegularFile(const string &path);
+//! \brief   Test for a regular file
+//!
+//! \tparam  path       file path
+//!
+//! \return  \a true if \a path is a regular file, \a false otherwise
+bool
+IsRegularFile(const string &path);
 
 // vim: sw=2 ts=2 sts=2 et cc=72 tw=70
 // End of file.

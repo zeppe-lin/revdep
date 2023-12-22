@@ -18,7 +18,8 @@ private:
 
   ElfMap _data;
 
-  bool findLibraryByDirs(const Elf *elf, const string &lib, const StringVector &dirs);
+  bool findLibraryByDirs(const Elf *elf, const string &lib,
+      const StringVector &dirs);
 
   bool findLibraryByPath(const Elf *elf, const string &lib);
 
@@ -28,7 +29,8 @@ public:
 
   const Elf *LookUp(const string &path);
 
-  bool FindLibrary(const Elf *elf, const Package &pkg, const string &lib, const StringVector &dirs);
+  bool FindLibrary(const Elf *elf, const Package &pkg,
+      const string &lib, const StringVector &dirs);
 
 }; // class ElfCache
 

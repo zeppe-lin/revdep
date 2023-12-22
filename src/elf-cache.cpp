@@ -15,12 +15,14 @@ using namespace std;
 typedef pair          <const string &, Elf *>   ElfPair;
 typedef unordered_map <string, Elf *>::iterator ElfIter;
 
-static void deleteElement(ElfPair pair)
+static void
+deleteElement(ElfPair pair)
 {
   delete pair.second;
 }
 
-static string resolveDirVars(const Elf *elf, const string &path)
+static string
+resolveDirVars(const Elf *elf, const string &path)
 {
   static const char *lib = "lib";
 
@@ -70,7 +72,8 @@ static string resolveDirVars(const Elf *elf, const string &path)
   return out;
 }
 
-static StringVector resolveRunPaths(const Elf *elf, const StringVector &paths)
+static StringVector
+resolveRunPaths(const Elf *elf, const StringVector &paths)
 {
   StringVector out;
 
@@ -80,7 +83,9 @@ static StringVector resolveRunPaths(const Elf *elf, const StringVector &paths)
   return out;
 }
 
-bool ElfCache::findLibraryByDirs(const Elf *elf, const string &lib, const StringVector &dirs)
+bool
+ElfCache::findLibraryByDirs(const Elf *elf, const string &lib,
+    const StringVector &dirs)
 {
   for (size_t i = 0; i < dirs.size(); ++i)
   {
@@ -104,7 +109,8 @@ bool ElfCache::findLibraryByDirs(const Elf *elf, const string &lib, const String
   return false;
 }
 
-bool ElfCache::findLibraryByPath(const Elf *elf, const string &lib)
+bool
+ElfCache::findLibraryByPath(const Elf *elf, const string &lib)
 {
   string path;
 
@@ -140,7 +146,8 @@ ElfCache::~ElfCache()
   for_each(_data.begin(), _data.end(), deleteElement);
 }
 
-const Elf *ElfCache::LookUp(const string &path)
+const Elf*
+ElfCache::LookUp(const string &path)
 {
   ElfIter value = _data.find(path);
 
@@ -162,7 +169,9 @@ const Elf *ElfCache::LookUp(const string &path)
   return elf;
 }
 
-bool ElfCache::FindLibrary(const Elf *elf, const Package &pkg, const string &lib, const StringVector &dirs)
+bool
+ElfCache::FindLibrary(const Elf *elf, const Package &pkg,
+    const string &lib, const StringVector &dirs)
 {
   if (lib.find('/') != string::npos)
     return findLibraryByPath(elf, lib);
