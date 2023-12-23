@@ -8,7 +8,7 @@ part of CRUX' prt-utils distribution) as of commit 41dfcb6 (Thu
 Oct 15 2020) with the following differences:
 - fix GCC extensions for portability
 - manual page in mdoc(7) format
-- command-line options/usage in GNU style
+- GNU-style options/help/usage
 - different exit codes for ease scripting
 - bash completion
 - powerpc{,64} and risc-v elf support
