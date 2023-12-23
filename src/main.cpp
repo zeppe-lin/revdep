@@ -314,13 +314,8 @@ main(int argc, char **argv)
       case 'h':
         return print_help();
 
-      case ':':
-        /* missing argument */
-        fprintf(stderr, "Try '%s --help' for more information.\n", argv[0]);
-        return E_INVALID_INPUT;
-
-      case '?':
-        /* invalid option */
+      case ':': /* missing argument */
+      case '?': /* invalid options */
         fprintf(stderr, "Try '%s --help' for more information.\n", argv[0]);
         return E_INVALID_INPUT;
     }
