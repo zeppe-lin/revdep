@@ -1,17 +1,19 @@
 # bash completion for revdep(1)
 # See COPYING and COPYRIGHT files for corresponding information.
 
-_avail_pkgs=($(pkginfo -i | awk '{printf "%s ", $1}'))
-
 _revdep()
 {
 	local cur prev words cword split
+	local pkgs
+
 	_init_completion -s || return
 
 	if [[ ${cur} == -* ]]; then
-		COMPREPLY=( $(compgen -W '$(_parse_help "$1")' -- $cur) )
+		COMPREPLY=($(compgen -W '$(_parse_help "$1")' -- $cur))
 		[[ ${COMPREPLY-} == *= ]] && compopt -o nospace
 	else
+		pkgs=($(pkginfo -i | awk '{printf "%s ", $1}'))
+
 		case $prev in
 		--help|--version|-!(-*)[hV])
 			return
@@ -25,19 +27,17 @@ _revdep()
 				local realcur prefix
 				realcur=${cur##*,}
 				prefix=${cur%,*}
-				COMPREPLY=( $(compgen            \
-					-W '"${_avail_pkgs[@]}"' \
-					-P "${prefix}," -- $realcur) )
+				COMPREPLY=($(compgen      \
+					-W '"${pkgs[@]}"' \
+					-P "${prefix}," -- $realcur))
 			else
-				COMPREPLY=( $(compgen            \
-					-W '"${_avail_pkgs[@]}"' \
-					-- $cur) )
+				COMPREPLY=($(compgen \
+					-W '"${pkgs[@]}"' -- $cur))
 			fi
 			compopt -o nospace
 			;;
 		*)
-			COMPREPLY=( $(compgen \
-				-W '"${_avail_pkgs[@]}"' -- $cur) )
+			COMPREPLY=($(compgen -W '"${pkgs[@]}"' -- $cur))
 			;;
 		esac
 	fi
