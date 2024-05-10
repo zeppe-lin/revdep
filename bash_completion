@@ -12,7 +12,7 @@ _revdep()
 		COMPREPLY=($(compgen -W '$(_parse_help "$1")' -- $cur))
 		[[ ${COMPREPLY-} == *= ]] && compopt -o nospace
 	else
-		pkgs=($(pkginfo -i | awk '{printf "%s ", $1}'))
+		pkgs=($(pkginfo -i | cut -d\  -f1))
 
 		case $prev in
 		--help|--version|-!(-*)[hV])
