@@ -218,10 +218,8 @@ ignorePackages(PackageVector &pkgs, const StringVector &ignores)
 static int
 print_help()
 {
-  cout << R"(Usage: revdep [-eptv] [-L ldsoconffile ] [-D pkgdbfile] [-R revdepdir]
+  cout << R"(Usage: revdep [-Vehptv] [-L ldsoconffile ] [-D pkgdbfile] [-R revdepdir]
               [-I pkgname[,...]] [pkgname ...]
-       revdep [-V]
-       revdep [-h]
 Check for missing libraries of installed packages.
 
 Mandatory arguments to long options are mandatory for short options too.
