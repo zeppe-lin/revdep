@@ -325,11 +325,13 @@ main(int argc, char **argv)
     return E_READ_PKGDB;
   }
 
+#ifdef __GLIBC__ /* do not try to read ld.so.conf on non-glibc systems */
   if (!ReadLdConf(o_ldsoconf, dirs, 10))
   {
     cerr << "revdep: " << o_ldsoconf << ": failed to read ld configuration\n";
     return E_READ_LDSOCONF;
   }
+#endif
 
   dirs.push_back("/lib");
   dirs.push_back("/usr/lib");
