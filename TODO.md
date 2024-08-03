@@ -1,5 +1,11 @@
-TODO
-====
+TODO revdep
+===========
+
+
+Next release
+------------
+  - [ ] grep 'XXX\|FIXME\|TODO' --exclude-dir=.git  -R .
+
 
 Long term
 ---------
