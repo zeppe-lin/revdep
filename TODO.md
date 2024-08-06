@@ -9,8 +9,8 @@ Next release
     build the "debug" binary
 
 
-Long term
----------
+No milestone
+------------
   - [ ] Add support for NODEFLIB?
   - [ ] Add support for LD_LIBRARY_PATH?
   - [ ] Add support for hardware capability directories?
