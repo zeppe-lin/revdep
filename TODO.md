@@ -5,8 +5,8 @@ TODO revdep
 Next release
 ------------
   - [ ] grep 'XXX\|FIXME\|TODO' --exclude-dir=.git  -R .
-  - [ ] clean up the mess with "debug" flags and reflect in the man page how to
-    build the "debug" binary
+  - [ ] Clean up the mess with "debug" flags and reflect in the man page how to
+        build the "debug" binary.
 
 
 No milestone
