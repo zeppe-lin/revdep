@@ -36,7 +36,9 @@ INSTALL
 =======
 
 The shell commands `make && make install` should build and install this
-package.  The command `make install_bashcomp` should install bash completion
+package.
+
+The shell command `make install_bashcomp` should install bash completion
 script.
 
 See `config.mk` file for configuration parameters, and `src/pathnames.h` for
