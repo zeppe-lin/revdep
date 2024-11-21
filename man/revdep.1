@@ -19,8 +19,13 @@
 .\" ==================================================================
 .Sh DESCRIPTION
 .Nm
-checks for missing or wrong libraries of installed packages using
-elfutils'
+checks libraries and binaries of installed packages for missing shared
+library dependencies.
+It is useful when an upgraded package breaks other software packages
+that are dependent upon the upgraded package.
+.Pp
+.Nm
+uses elfutils'
 .Xr libelf 3
 and the same algorithm that
 .Xr ld.so 8
@@ -47,6 +52,7 @@ Specify an alternate location for
 .Nm
 package configuration directory instead of the default
 .Pa /etc/revdep.d .
+.Pp
 See
 .Sx "Additional Library Directories"
 below and
