@@ -13,7 +13,7 @@
 .\" ==================================================================
 .Sh DESCRIPTION
 Upon startup,
-.Xr revdep 8
+.Xr revdep 1
 searches the
 .Pa /etc/revdep.d
 directory for files named after packages.
@@ -40,7 +40,7 @@ should be created under
 with a single line containing
 .Pa /usr/lib/firefox .
 This will tell
-.Xr revdep 8
+.Xr revdep 1
 where to find firefox's solibs when looking for its library
 dependencies, reducing one source of false positives.
 .Bd -literal -offset indent
@@ -51,6 +51,6 @@ Ideally, this file would be included with the package's own packaging
 as well.
 .\" ==================================================================
 .Sh SEE ALSO
-.Xr revdep 8
+.Xr revdep 1
 .\" vim: cc=72 tw=70
 .\" End of file.
