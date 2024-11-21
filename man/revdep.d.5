@@ -1,36 +1,54 @@
 .\" revdep.d(5) manual page
 .\" See COPYING and COPYRIGHT files for corresponding information.
-.Dd November 12, 2024
+.Dd November 21, 2024
 .Dt REVDEP.D 5
 .Os
 .\" ==================================================================
 .Sh NAME
 .Nm revdep.d
-.Nd configuration directory for revdep
+.Nd additional library directories for revdep
 .\" ==================================================================
 .Sh SYNOPSIS
 .Nm /etc/revdep.d/\&*
 .\" ==================================================================
 .Sh DESCRIPTION
-TODO
+Upon startup,
+.Xr revdep 8
+searches the
+.Pa /etc/revdep.d
+directory for files named after packages.
+If any are found, any directories (assumed to be absolute paths and
+delimited by newlines) within the file are added to a list of package
+specific directories to search if a library dependency is not found in
+one of the many standard locations
+.Po
+as specified by
+.Xr ld.so 8
+.Pc .
+Empty lines or lines beginning with
+.Ql #
+are ignored.
 .\" ==================================================================
 .Sh EXAMPLES
-TODO
+If a package is discovered to have a library dependencies that are in
+non-standard directory, e.g.
+.Pa /usr/lib/firefox
+then a file named
+.Sy firefox
+should be created under
+.Pa /etc/revdep.d
+with a single line containing
+.Pa /usr/lib/firefox .
+This will tell
+.Xr revdep 8
+where to find firefox's solibs when looking for its library
+dependencies, reducing one source of false positives.
 .Bd -literal -offset indent
-#
-# /etc/revdep.d/apulse: ... configuration
-#
-# See revdep.d(5) for more information.
-#
-
-/usr/lib/apulse
-
-# End of file.
+/usr/lib/firefox
 .Ed
 .Pp
-All lines which begin with the
-.Qo Li # Qc
-character are comments and will not be parsed.
+Ideally, this file would be included with the package's own packaging
+as well.
 .\" ==================================================================
 .Sh SEE ALSO
 .Xr revdep 8
