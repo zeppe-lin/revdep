@@ -49,7 +49,9 @@ package configuration directory instead of the default
 .Pa /etc/revdep.d .
 See
 .Sx "Additional Library Directories"
-below for details.
+below and
+.Xr revdep.d 5
+for more information.
 .It Fl I Ar pkgname Ns Oo , Ns ... Oc , Fl -ignore Ns = Ns Ar pkgname Ns Op , Ns ...
 Comma-separated list of packages to ignore.
 .It Fl e , Fl -erroneous
@@ -72,29 +74,12 @@ Upon startup,
 searches the
 .Pa /etc/revdep.d
 directory for files named after packages.
-If any are found, any directories (assumed to be absolute paths and
-delimited by newlines) within the file are added to a list of package
-specific directories to search if a library dependency is not found in
-one of the many standard locations
-.Pq as specified by Xr ld.so 8 .
+These files contains additional library directories to search if a
+library dependency is not found in one of the many standard locations.
 .Pp
-If a package is discovered to have a library dependencies that are in
-a non-standard directory
-.Pa /usr/lib/firefox
-then a file named
-.Pa firefox
-should be created under
-.Pa /etc/revdep.d
-with a single line containing
-.Pa /usr/lib/firefox .
-This will tell
-.Nm
-where to find Firefox's
-.Pa libxul.so
-when looking for its library dependencies, reducing one source of
-false positives.
-Ideally, this file would be included with the package's own packaging
-as well.
+See
+.Xr revdep.d 5
+for more information.
 .\" ==================================================================
 .Sh EXIT STATUS
 .Bl -tag -width 2n -compact
@@ -121,6 +106,9 @@ Use this command to rebuild broken packages on your system:
 .Bd -literal -offset indent
 pkgman update -fr $(revdep)
 .Ed
+.\" ==================================================================
+.Sh SEE ALSO
+.Xr revdep.d 5
 .\" ==================================================================
 .Sh AUTHORS
 .An -nosplit
