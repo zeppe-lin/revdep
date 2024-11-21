@@ -1,4 +1,7 @@
 include config.mk
+ifeq (${DEBUG},yes)
+include debug.mk
+endif
 
 OBJS = src/elf-cache.o src/elf.o src/main.o src/pkg.o src/utility.o
 
