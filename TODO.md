@@ -5,7 +5,7 @@ TODO revdep
 Next release
 ------------
   - [ ] grep 'XXX\|FIXME\|TODO' --exclude-dir=.git  -R .
-  - [ ] add revdep.d(5) manual page
+  - [x] add revdep.d(5) manual page
   - [ ] Clean up the mess with "debug" flags and reflect in the man page how to
         build the "debug" binary.
 
