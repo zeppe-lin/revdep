@@ -1,12 +1,12 @@
 OVERVIEW
 ========
 
-This directory contains revdep, a package management tool that checks for
-missing libraries of installed packages.
+This directory contains revdep, a package management tool that checks
+for missing libraries of installed packages.
 
-This distribution is a fork of CRUX' revdep utility (which is part of CRUX'
-prt-utils distribution) as of commit 41dfcb6 (Thu Oct 15 2020) with the
-following differences:
+This distribution is a fork of CRUX' revdep utility (which is part of
+CRUX' prt-utils distribution) as of commit 41dfcb6 (Thu Oct 15 2020)
+with the following differences:
   * fix GCC extensions for portability
   * manual page in mdoc(7) format
   * split revdep(1) manual page into revdep(1) and revdep.d(5)
@@ -42,8 +42,8 @@ package.
 The shell command `make install_bashcomp` should install bash completion
 script.
 
-See `config.mk` file for configuration parameters, and `src/pathnames.h` for
-absolute filenames that revdep wants for various defaults.
+See `config.mk` file for configuration parameters, and `src/pathnames.h`
+for absolute filenames that revdep wants for various defaults.
 
 
 LICENSE
