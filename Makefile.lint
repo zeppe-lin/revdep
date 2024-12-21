@@ -26,13 +26,13 @@ deadlinks:
 
 spellcheck:
 	@echo "=======> Check man page for spelling errors"
-	@mandoc -T html man/revdep.1 | hunspell -H -l - | sort -u
+	@mandoc -T html man/*.[1-9] | hunspell -H -l - | sort -u
 	@echo "=======> Check README.md for spelling errors"
 	@hunspell -l README.md | sort -u
 
 mancheck:
 	@echo "=======> Check man page for syntax errors"
-	@mandoc -T lint man/revdep.1 
+	@mandoc -T lint man/*.[1-9]
 
 cppcheck:
 	@echo "=======> Static C/C++ code analysis"
@@ -49,7 +49,7 @@ longlines:
 
 ######################################################################
 
-.PHONY: all greplinks curllinks \
+.PHONY:	all greplinks curllinks \
 	deadlinks spellcheck mancheck cppcheck flawfinder longlines
 
 # vim: cc=72 tw=70
