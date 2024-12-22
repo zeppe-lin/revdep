@@ -1,7 +1,3 @@
-# build files and artefacts
-*.o
-revdep
-
 # vim undo and swap files
 .*.un~
 *.swp
