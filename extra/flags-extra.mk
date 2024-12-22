@@ -4,10 +4,11 @@
 
 # includes and libs
 INCS     =
-LIBS     = $(shell pkg-config --static --libs libelf)
+LIBS     = -lelf
 
 # compiler flags
-CPPFLAGS = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DVERSION=\"$(VERSION)\"
+CPPFLAGS = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 \
+           -DVERSION=\"$(VERSION)\"
 CXXFLAGS = -std=c++0x \
            -pedantic \
            -Wall \
@@ -43,6 +44,4 @@ CXXFLAGS = -std=c++0x \
            -Wuseless-cast \
            -Wcast-align \
            -Wswitch-default
-LDFLAGS  = -static $(LIBS)
-
-# End of file.
+LDFLAGS  = $(LIBS)

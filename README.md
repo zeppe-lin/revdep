@@ -27,9 +27,8 @@ REQUIREMENTS
 Build time
 ----------
   * C++11 compiler
-  * POSIX sh(1p) and "mandatory utilities"
-  * GNU make(1)
-  * pkg-config(1)
+  * POSIX sh(1p), make(1p) and "mandatory utilities"
+  * pkg-config(1) is optional, for static linking
   * elfutils
 
 
@@ -38,6 +37,12 @@ INSTALL
 
 The shell commands `make && make install` should build and install this
 package.
+
+For static linking you need `pkg-config(1)` and run `make` as the
+following:
+```
+make LDFLAGS="-static `pkg-config --static --libs libelf`"
+```
 
 See `config.mk` file for configuration parameters, and `src/pathnames.h`
 for absolute filenames that revdep wants for various defaults.

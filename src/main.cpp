@@ -9,7 +9,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 
-#include "elf-cache.h"
+#include "elf_cache.h"
 #include "pkg.h"
 #include "pathnames.h"
 

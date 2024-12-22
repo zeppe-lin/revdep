@@ -8,7 +8,7 @@
 #include <limits.h>
 #include <sys/auxv.h>
 
-#include "elf-cache.h"
+#include "elf_cache.h"
 
 using namespace std;
 

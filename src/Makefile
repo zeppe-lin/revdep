@@ -1,22 +1,28 @@
-include $(CURDIR)/../config.mk
-#include $(CURDIR)/../extra/asan_ubsan.mk
-#include $(CURDIR)/../extra/extra_warns.mk
+.POSIX:
+.SUFFIXES: .cpp .o
 
-OBJS = elf-cache.o elf.o main.o pkg.o utility.o
+include ../config.mk
+#include ../extra/flags-extra.mk
+#include ../extra/flags-sanitizer.mk
+
+OBJS = elf_cache.o elf.o main.o pkg.o utility.o
 BIN1 = revdep
 
 all: $(BIN1)
 
+.cpp.o:
+	$(CXX) -c $< $(CPPFLAGS) $(CXXFLAGS)
+
 $(BIN1): $(OBJS)
-	$(CXX) $^ $(LDFLAGS) -o $@
+	$(CXX) $(OBJS) $(LDFLAGS) -o $@
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp -f $(BIN1) $(DESTDIR)$(PREFIX)/bin
-	chmod 0755 $(DESTDIR)$(PREFIX)/bin/$(BIN1)
+	cd $(DESTDIR)$(PREFIX)/bin && chmod 0755 $(BIN1)
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/$(BIN1)
+	cd $(DESTDIR)$(PREFIX)/bin && rm -f $(BIN1)
 
 clean:
 	rm -f $(OBJS) $(BIN1)

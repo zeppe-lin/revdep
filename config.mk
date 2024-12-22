@@ -11,4 +11,8 @@ BASHCOMPDIR = $(PREFIX)/share/bash-completion/completions
 CPPFLAGS    = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 \
               -DVERSION=\"$(VERSION)\"
 CXXFLAGS    = -std=c++0x -pedantic -Wall -Wextra
-LDFLAGS     = -static $(shell pkg-config --static --libs libelf)
+LDFLAGS     = -lelf
+
+# compiler and linker
+CXX         = c++
+LD          = $(CXX)
