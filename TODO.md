@@ -4,6 +4,9 @@ TODO revdep
 
 Next release
 ------------
+  - [ ] completion/bash_completion:
+        fix shellcheck warnings, add checking to CI.
+
   - [ ] grep 'XXX\|FIXME\|TODO' --exclude-dir=.git  -R .
   - [x] add revdep.d(5) manual page
   - [?] Clean up the mess with "debug" flags and reflect in the README how to
