@@ -9,8 +9,8 @@ Next release
 
   - [ ] grep 'XXX\|FIXME\|TODO' --exclude-dir=.git  -R .
   - [x] add revdep.d(5) manual page
-  - [?] Clean up the mess with "debug" flags and reflect in the README how to
-        build the "debug" binary.
+  - [?] Clean up the mess with "debug" flags and reflect in the README
+        how to build the "debug" binary.
     - [x] splitted debug and release flags into different files
 
 
