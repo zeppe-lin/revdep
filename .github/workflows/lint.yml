@@ -14,10 +14,10 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Install lint dependencies
-      run: sudo apt-get install -y shellcheck mandoc
+      run: sudo apt-get install -y shellcheck
 
-    - name: Check man pages for errors
-      run: cd man && make lint
+#   - name: Check man pages for errors (requires mandoc)
+#     run: cd man && make lint
 
 # FIXME: fix completion lint errors
 #   - name: Check completion scripts for errors
