@@ -35,17 +35,19 @@ Build time
 INSTALL
 =======
 
-The shell commands `make && make install` should build and install this
-package.
+The shell commands `make && make install` should build and install
+this package.
 
 For static linking you need `pkg-config(1)` and run `make` as the
 following:
+
 ```
 make LDFLAGS="-static `pkg-config --static --libs libelf`"
 ```
 
-See `config.mk` file for configuration parameters, and `src/pathnames.h`
-for absolute filenames that revdep wants for various defaults.
+See `config.mk` file for configuration parameters, and
+`src/pathnames.h` for absolute filenames that revdep wants for various
+defaults.
 
 
 LICENSE
