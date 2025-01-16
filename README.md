@@ -1,7 +1,7 @@
 OVERVIEW
 ========
 
-This directory contains revdep, a package management tool that checks
+This repository contains revdep, a package management tool that checks
 for missing libraries of installed packages.
 
 This distribution is a fork of CRUX' revdep utility (which is part of
