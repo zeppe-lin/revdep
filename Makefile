@@ -8,6 +8,6 @@ all lint install uninstall clean:
 	cd src && $(MAKE) $@
 
 release:
-	git tag -a v$(VERSION) -m v$(VERSION)
+	git tag -a v${VERSION} -m v${VERSION}
 
 .PHONY: all lint install uninstall clean release
