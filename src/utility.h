@@ -9,27 +9,40 @@
 
 using namespace std;
 
-//! TODO document
+//! Alias for readability.
 typedef vector<string> StringVector;
 
-//! \brief   Split a string into parts
+//! \brief   Split a string by delimiter into StringVector.
 //!
-//! \tparam  in         string to split
-//! \tparam  out        vector of strings that will contain the result
-//! \tparam  delimiter  delimiter
-void split(const string &in, StringVector &out, char delimiter);
+//! \tparam  in         The input string to split
+//! \tparam  out        The StringVector to store split parts
+//! \tparam  delimiter  The delimiter character
+void split(const string &in, StringVector &out, char delim);
 
-//! TODO document
+//! \brief Read paths from revdep.d config file.
+//!
+//! Skips comments and empty lines.
+//! Stores valid lines into 'dirs' StringVector.
+//!
+//! \param path  The path to the configuration file
+//! \param dirs  The StringVector to store the read directories
 void ReadRdConf(const string &path, StringVector &dirs);
 
-//! TODO document
-bool ReadLdConf(const string &path, StringVector &dirs, int maxDepth);
+//! \brief Read paths from ld.so.conf config file.
+//!
+//! Handles includes, max depth.
+//! Stores valid lines (and from includes) into 'dirs'.
+//!
+//! \param path      The path to the configuration file
+//! \param dirs      The StringVector to store the read directories
+//! \param maxdepth  Maximum recursion depth for include directives
+bool ReadLdConf(const string &path, StringVector &dirs, int maxdepth);
 
-//! \brief   Test for a regular file
+//! \brief  Check if the given path points to a regular file.
 //!
-//! \tparam  path       file path
+//! \tparam path The path to be checked
 //!
-//! \return  \a true if \a path is a regular file, \a false otherwise
+//! \return \a true if \a path is a regular file, \a false otherwise
 bool IsRegularFile(const string &path);
 
 // vim: sw=2 ts=2 sts=2 et cc=72 tw=70
