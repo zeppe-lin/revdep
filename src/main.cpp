@@ -416,9 +416,11 @@ parseCommandLineOptions(int argc, char **argv)
         program_options.trace_output = 1;
         break;
       case 'V':
-        return printVersion();
+        printVersion();
+        exit(0);
       case 'h':
-        return printHelp();
+        printHelp();
+        exit(0);
       case ':': /* missing argument */
       case '?': /* invalid options */
         fprintf(stderr, "Try '%s --help' for more information.\n", argv[0]);
