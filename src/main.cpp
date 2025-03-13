@@ -64,14 +64,14 @@ static StringVector  search_directories; //!< Global vector of directories for l
 static ElfCache      elf_file_cache;     //!< Global ElfCache object for caching ELF files.
 
 /*!
- * \enum _revdep_errors
+ * \enum ExitCode
  * \brief Exit status codes for revdep utility.
  *
  * This enumeration defines the possible exit status codes
  * for the `revdep` utility, indicating different types of
  * errors or successful execution.
  */
-enum _revdep_errors
+enum ExitCode
 {
   E_INVALID_INPUT = 1, //!< Exit code for invalid command-line input.
   E_READ_PKGDB    = 2, //!< Exit code for failure to read package database.
@@ -504,7 +504,7 @@ initializeSearchDirectories()
  * \param argv   Argument vector from main.
  *
  * \return Exit status code indicating success or failure
- *         (see `_revdep_errors` enum).
+ *         (see `ExitCode` enum).
  */
 static int
 processPackages(int optind, int argc, char **argv)
@@ -536,7 +536,7 @@ processPackages(int optind, int argc, char **argv)
  * \param argv Argument vector from command line.
  *
  * \return Exit status code indicating success (0) or failure
- *         (non-zero, see `_revdep_errors` enum).
+ *         (non-zero, see `ExitCode` enum).
  */
 int
 main(int argc, char **argv)
