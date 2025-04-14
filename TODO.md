@@ -13,6 +13,7 @@ Next release
 No milestone
 ------------
 
+- [ ] Split revdep into librevdep(3) and revdep(1)?
 - [ ] Add support for `NODEFLIB`?
 - [ ] Add support for `LD_LIBRARY_PATH`?
 - [ ] Add support for hardware capability directories?
