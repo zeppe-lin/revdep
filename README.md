@@ -36,7 +36,9 @@ Build time
 INSTALL
 =======
 
-Run: make install
+To build and install this package, run:
+
+    make && make install
 
 For static linking you need pkg-config(1) and run make(1p) as the
 following:
