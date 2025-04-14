@@ -10,8 +10,6 @@ BIN1 = revdep
 
 all: $(BIN1)
 
-lint:
-
 .cpp.o:
 	$(CXX) -c $< $(CPPFLAGS) $(CXXFLAGS)
 
@@ -29,4 +27,4 @@ uninstall:
 clean:
 	rm -f $(OBJS) $(BIN1)
 
-.PHONY: all lint install uninstall clean
+.PHONY: all install uninstall clean
