@@ -5,10 +5,10 @@ TODO revdep
 Next release
 ------------
 
-- [ ] fix compilation warnings with `extra/flags-extra.mk`
+- [ ] Fix compilation warnings with `extra/flags-extra.mk`
 - [ ] `completion/bash_completion`: fix shellcheck warnings, add
   checking to CI.
-- [ ] code clean up: `grep 'XXX\|FIXME\|TODO' --exclude-dir=.git -R .`
+- [ ] Code clean up: `grep 'XXX\|FIXME\|TODO' --exclude-dir=.git -R .`
 
 No milestone
 ------------
@@ -21,7 +21,7 @@ No milestone
 Done
 ----
 
-- [x] add revdep.d(5) manual page
+- [x] Add revdep.d(5) manual page
 - [?] Clean up the mess with "debug" flags and reflect in the README
   how to build the "debug" binary.
-  - [x] splitted debug and release flags into different files
+  - [x] Splitted debug and release flags into different files
