@@ -5,12 +5,12 @@ include ../config.mk
 MAN1 = revdep.1
 MAN5 = revdep.d.5
 
-all:
+all: $(MAN1) $(MAN5)
 
-lint:
-	mandoc -Tlint $(MAN1) $(MAN5)
+$(MAN1) $(MAN5):
+	scdoc < $@.scdoc > $@
 
-install:
+install: all
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man5
 	cp -f $(MAN1) $(DESTDIR)$(MANPREFIX)/man1
@@ -23,5 +23,6 @@ uninstall:
 	cd $(DESTDIR)$(MANPREFIX)/man5 && rm -f $(MAN5)
 
 clean:
+	rm -f $(MAN1) $(MAN5)
 
-.PHONY: all lint install uninstall clean
+.PHONY: all install uninstall clean
