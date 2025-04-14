@@ -8,7 +8,7 @@ This distribution is a fork of CRUX' revdep utility (which is part of
 CRUX' prt-utils distribution) as of commit 41dfcb6 (Thu Oct 15 2020)
 with the following differences:
   * fix GCC extensions for portability
-  * manual page in mdoc(7) format
+  * manual page in scdoc(7) format
   * split revdep(1) manual page into revdep(1) and revdep.d(5)
   * GNU-style options/help/usage
   * different exit codes for ease scripting
@@ -30,6 +30,7 @@ Build time
   * POSIX sh(1p), make(1p) and "mandatory utilities"
   * pkg-config(1) is optional, for static linking
   * elfutils
+  * scdoc to build manual pages
 
 
 INSTALL
