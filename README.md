@@ -56,9 +56,8 @@ DOCUMENTATION
 Online documentation
 --------------------
 
-Manual pages:
-- [revdep.1](https://zeppe-lin.github.io/revdep.1.html)
-- [revdep.d.5](https://zeppe-lin.github.io/revdep.d.5.html)
+Refer to the human-readable manual pages located in the `/man`
+directory.
 
 
 LICENSE
