@@ -30,34 +30,27 @@ Build time
   * POSIX sh(1p), make(1p) and "mandatory utilities"
   * pkg-config(1) is optional, for static linking
   * elfutils
-  * scdoc to build manual pages
+  * scdoc(1) to build manual pages
 
 
 INSTALL
 =======
 
-The shell commands `make && make install` should build and install
-this package.
+Run: make install
 
-For static linking you need `pkg-config(1)` and run `make` as the
+For static linking you need pkg-config(1) and run make(1p) as the
 following:
-```sh
-make LDFLAGS="-static `pkg-config --static --libs libelf`"
-```
 
-See `config.mk` file for configuration parameters, and
-`src/pathnames.h` for absolute filenames that revdep wants for various
-defaults.
+    make LDFLAGS="-static $(pkg-config --static --libs libelf)"
+
+See config.mk file for configuration parameters, and src/pathnames.h
+for absolute filenames that revdep wants for various defaults.
 
 
 DOCUMENTATION
 =============
 
-Online documentation
---------------------
-
-Refer to the human-readable manual pages located in the `/man`
-directory.
+See /man directory for manual pages.
 
 
 LICENSE
