@@ -8,4 +8,6 @@ the revdep sources cloned from the Zeppe-Lin's source code repository.
 Documentation
 -------------
 
-* Check manual pages for misspells: `hunspell -l man/*.scdoc`
+* Check manual pages for misspells:
+
+    hunspell -l man/*.scdoc
