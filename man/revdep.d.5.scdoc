@@ -25,7 +25,7 @@ Empty lines and lines starting with '*#*' are ignored.
 # FILES
 
 _/etc/revdep.d/\*_
-	Default location for revdep(1) configuration files.
+	Default location for *revdep*(1) configuration files.
 
 # EXAMPLES
 
