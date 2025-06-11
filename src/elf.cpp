@@ -88,6 +88,8 @@ isValidElf(Elf *elf, int &machine)
     case EM_ARM:      break;  // ARM architecture
 #elif defined(__aarch64__)
     case EM_AARCH64:  break;  // AArch64 architecture
+#elif defined(__loongarch__)
+    case EM_LOONGARCH: break; // LoongArch
 #elif defined(__powerpc__)
     case EM_PPC:      break;  // PowerPC architecture
 #elif defined(__powerpc64__)
