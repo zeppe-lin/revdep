@@ -90,11 +90,11 @@ isValidElf(Elf *elf, int &machine)
     case EM_AARCH64:    break;  // ARM AARCH64
 #elif defined(__loongarch__)
     case EM_LOONGARCH:  break;  // LoongArch
-#elif defined(__powerpc__)
-    case EM_PPC:        break;  // PowerPC
 #elif defined(__powerpc64__)
     case EM_PPC:        break;  // PowerPC (compat.)
     case EM_PPC64:      break;  // PowerPC 64-bit
+#elif defined(__powerpc__)
+    case EM_PPC:        break;  // PowerPC
 #elif defined(__riscv)
     case EM_RISCV:      break;  // RISC-V
 #else
