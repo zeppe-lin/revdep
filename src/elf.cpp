@@ -93,6 +93,7 @@ isValidElf(Elf *elf, int &machine)
 #elif defined(__powerpc__)
     case EM_PPC:        break;  // PowerPC
 #elif defined(__powerpc64__)
+    case EM_PPC:        break;  // PowerPC (compat.)
     case EM_PPC64:      break;  // PowerPC 64-bit
 #elif defined(__riscv)
     case EM_RISCV:      break;  // RISC-V
