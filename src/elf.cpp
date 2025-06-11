@@ -80,26 +80,26 @@ isValidElf(Elf *elf, int &machine)
   switch (ehdr.e_machine)
   {
 #if   defined(__i386__)
-    case EM_386:      break;  // Intel 80386
+    case EM_386:        break;  // Intel 80386
 #elif defined(__x86_64__)
-    case EM_386:      break;  // Intel 80386 (compat.)
-    case EM_X86_64:   break;  // AMD x86-64 arch.
+    case EM_386:        break;  // Intel 80386 (compat.)
+    case EM_X86_64:     break;  // AMD x86-64
 #elif defined(__arm__)
-    case EM_ARM:      break;  // ARM architecture
+    case EM_ARM:        break;  // ARM
 #elif defined(__aarch64__)
-    case EM_AARCH64:  break;  // AArch64 architecture
+    case EM_AARCH64:    break;  // ARM AARCH64
 #elif defined(__loongarch__)
-    case EM_LOONGARCH: break; // LoongArch
+    case EM_LOONGARCH:  break;  // LoongArch
 #elif defined(__powerpc__)
-    case EM_PPC:      break;  // PowerPC architecture
+    case EM_PPC:        break;  // PowerPC
 #elif defined(__powerpc64__)
-    case EM_PPC64:    break;  // PowerPC64 architecture
+    case EM_PPC64:      break;  // PowerPC 64-bit
 #elif defined(__riscv)
-    case EM_RISCV:    break;  // RISC-V architecture
+    case EM_RISCV:      break;  // RISC-V
 #else
 # error "unsupported architecture"
 #endif
-    default:          return false;  // Unsupported machine
+    default:            return false;  // Unsupported machine
   }
 
   machine = ehdr.e_machine;  // Store machine type
