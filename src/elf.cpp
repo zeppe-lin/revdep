@@ -95,7 +95,7 @@ isValidElf(Elf *elf, int &machine)
 #elif defined(__powerpc64__)
     case EM_PPC64:    break;  // PowerPC64 architecture
 #elif defined(__riscv)
-    case RM_RISCV:    break;  // RISC-V architecture
+    case EM_RISCV:    break;  // RISC-V architecture
 #else
 # error "unsupported architecture"
 #endif
