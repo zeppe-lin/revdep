@@ -1,11 +1,11 @@
 //! \file  elf-cache.cpp
 //! \brief ElfCache class implementation.
 //!
-//! This file implements the `ElfCache` class, which ! manages a cache
-//of parsed ELF files to improve ! performance by avoiding redundant
-//parsing.  It also ! provides functionalities to resolve library
-//paths ! and search for libraries based on different criteria !
-//related to ELF dependencies and runtime paths.
+//! This file implements the `ElfCache` class, which manages a cache
+//! of parsed ELF files to improve performance by avoiding redundant
+//! parsing.  It also provides functionalities to resolve library
+//! paths and search for libraries based on different criteria related
+//! to ELF dependencies and runtime paths.
 //!
 //! See COPYING and COPYRIGHT files for corresponding information.
 
