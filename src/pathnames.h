@@ -1,6 +1,7 @@
 //! \file  pathnames.h
 //! \brief Absolute filenames that revdep wants for various defaults.
-//         See COPYING and COPYRIGHT files for corresponding information.
+//!
+//! See COPYING and COPYRIGHT files for corresponding information.
 
 #pragma once
 
