@@ -6,7 +6,7 @@
 //! shared library dependencies for installed packages.  It parses
 //! command-line options, reads package information from a database,
 //! analyzes ELF files, and reports any missing dependencies.
-//
+//!
 //! See COPYING and COPYRIGHT files for corresponding information.
 
 #include <algorithm>   // For std::find
