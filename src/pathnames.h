@@ -13,5 +13,4 @@
 //!< Default location for dynamic loader configuration.
 #define _PATH_LDSOCONF  "/etc/ld.so.conf"
 
-// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
 // End of file.
