@@ -15,3 +15,5 @@ CXXFLAGS = -std=c++0x -O0 -ggdb3 -fno-omit-frame-pointer \
            -fsanitize=undefined \
            -fsanitize-recover=address
 LDFLAGS  = $(CXXFLAGS) $(LIBS)
+
+# End of file.

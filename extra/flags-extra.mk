@@ -45,3 +45,5 @@ CXXFLAGS = -std=c++0x \
            -Wcast-align \
            -Wswitch-default
 LDFLAGS  = $(LIBS)
+
+# End of file.
