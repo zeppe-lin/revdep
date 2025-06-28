@@ -1,7 +1,7 @@
 //! \file  elf.h
 //! \brief Elf class definition.
 //!
-//! See COPYING and COPYRIGHT files for corresponding information.
+//! \copyright See COPYING and COPYRIGHT files for corresponding information.
 
 #pragma once
 

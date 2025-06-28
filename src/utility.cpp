@@ -1,7 +1,7 @@
 //! \file  utility.cpp
 //! \brief Helper functions implementation.
 //!
-//! See COPYING and COPYRIGHT files for corresponding information.
+//! \copyright See COPYING and COPYRIGHT files for corresponding information.
 
 #include <fstream>
 

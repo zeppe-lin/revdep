@@ -7,7 +7,7 @@
 //! paths and search for libraries based on different criteria related
 //! to ELF dependencies and runtime paths.
 //!
-//! See COPYING and COPYRIGHT files for corresponding information.
+//! \copyright See COPYING and COPYRIGHT files for corresponding information.
 
 #include <algorithm>   // For std::for_each
 

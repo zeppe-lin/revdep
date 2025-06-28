@@ -6,7 +6,7 @@
 //! to search for libraries based on various criteria, including
 //! runtime paths (RUNPATH and RPATH) and package-specific directories.
 //!
-//! See COPYING and COPYRIGHT files for corresponding information.
+//! \copyright See COPYING and COPYRIGHT files for corresponding information.
 
 #pragma once
 
