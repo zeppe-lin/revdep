@@ -13,7 +13,7 @@
 
 #include <libgen.h>    // For dirname()
 #include <limits.h>    // For PATH_MAX
-#include <sys/auxv.h>  // for getauxval(), AT_PLATFORM
+#include <sys/auxv.h>  // For getauxval(), AT_PLATFORM
 
 #include "elf_cache.h"
 
@@ -32,8 +32,7 @@ typedef unordered_map <string, Elf *>::iterator ElfIter;
  * ElfPair.  It is intended to be used with algorithms like
  * std::for_each to clean up a collection of ElfPairs.
  *
- * \param pair The ElfPair containing the Elf object to
- *             be deleted.
+ * \param pair The ElfPair containing the Elf object to be deleted.
  */
 static void
 deleteElement(ElfPair pair)
@@ -55,8 +54,7 @@ deleteElement(ElfPair pair)
  *   file being processed.
  *
  * \param elf  Pointer to the Elf object context.
- * \param path The path string containing variables to
- *             resolve.
+ * \param path The path string containing variables to resolve.
  *
  * \return The path string with variables resolved.
  */
