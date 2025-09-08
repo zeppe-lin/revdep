@@ -1,59 +1,56 @@
 OVERVIEW
 ========
 
-This repository contains `revdep`, a package management tool that
-checks for missing libraries of installed packages.
+`revdep` checks installed packages for missing shared library
+dependencies.
 
-This distribution is a fork of CRUX' `revdep` utility (which is part of
-CRUX' `prt-utils` distribution) as of commit 41dfcb6 (Thu Oct 15 2020)
-with the following differences:
-  * fix GCC extensions for portability
-  * manual page in `scdoc(7)` format
-  * split `revdep(1)` manual page into `revdep(1)` and `revdep.d(5)`
-  * GNU-style options/help/usage
-  * different exit codes for ease scripting
-  * bash completion
-  * powerpc{,64}, loongarch{,64} and risc-v elf support
+It is a fork of CRUX' `revdep` (part of `prt-utils`) at commit
+`41dfcb6` (Thu Oct 15 2020), with the following changes:
+  * Fix GCC extensions for portability
+  * Manual pages converted to `scdoc(7)`
+  * Split into `revdep(1)` and `revdep.d(5)`
+  * GNU-style options, help, and usage output
+  * Distinct exit codes for easier scripting
+  * Bash completion
+  * Support for powerpc{,64}, loongarch{,64} and risc-v ELF
 
-See git log for complete/further differences.
+See git log for the full history.
 
-The original sources can be downloaded from:
-  * https://git.crux.nu/tools/prt-utils.git
+Original sources: https://git.crux.nu/tools/prt-utils.git
 
 
 REQUIREMENTS
 ============
 
-Build time
+Build-time
 ----------
   * C++11 compiler
   * POSIX `sh(1p)`, `make(1p)` and "mandatory utilities"
-  * `pkg-config(1)` is optional, for static linking
   * `elfutils`
-  * `scdoc(1)` to build manual pages
+  * `scdoc(1)` for building manual pages
+  * `pkg-config(1)` (optional, for static linking)
 
 
-INSTALL
-=======
+INSTALLATION
+============
 
 To build and install this package, run:
 
     make && make install
 
-For static linking you need `pkg-config(1)` and run `make(1p)` as the
-following:
+For static linking (requires `pkg-config(1)`):
 
     make LDFLAGS="-static $(pkg-config --static --libs libelf)"
 
-See `config.mk` file for configuration parameters, and
-`src/pathnames.h` for absolute filenames that `revdep` wants for
-various defaults.
+Configuration parameters are in `config.mk`.
+
+Default paths are defined in `src/pathnames.h`.
 
 
 DOCUMENTATION
 =============
 
-See `/man` directory for manual pages.
+Manual pages are in `/man`.
 
 
 LICENSE
@@ -61,5 +58,4 @@ LICENSE
 
 `revdep` is licensed through the GNU General Public License v3 or
 later <https://gnu.org/licenses/gpl.html>.
-Read the COPYING file for copying conditions.
-Read the COPYRIGHT file for copyright notices.
+See `COPYING` for license terms and `COPYRIGHT` for notices.
