@@ -317,26 +317,23 @@ ignorePackages(PackageVector &package_list, const StringVector &ignored_packages
 static int
 printHelp()
 {
-  cout << R"(Usage: revdep [-Vehptv] [-L ldsoconffile ] [-D pkgdbfile] [-R revdepdir]
-              [-I pkgname[,...]] [pkgname ...]
-Check for missing libraries of installed packages.
+  cout << R"(Usage: revdep [-Vehptv] [-L FILE ] [-D FILE] [-R DIR] [-I PKG[,...]] [PKG ...]
+Check installed packages for missing shared libraries.
 
 Mandatory arguments to long options are mandatory for short options too.
-  -L, --ldsoconf=ldsoconffile
-                        specify an alternate location for ld.so.conf file
-  -D, --pkgdb=pkgdbfile specify an alternate location for the packages database
-                        file
-  -R, --revdepdir=revdepdir
-                        specify an alternate location for revdep's package
-                        configuration directory
-  -I, --ignore=pkgname[,...]
-                        comma-separated list of packages to ignore
-  -e, --erroneous       include erroneous files in the output
-  -p, --precise         include precise file errors in the output
-  -t, --trace           show debug/trace
-  -v, --verbose         formatted listing
-  -V, --version         print version and exit
-  -h, --help            print help and exit
+  -L, --ldsoconf=FILE  Use FILE instead of /etc/ld.so.conf, which lists
+                       directories to search for libraries
+  -D, --pkgdb=FILE     Use FILE instead of /var/lib/pkg/db as the package
+                       database
+  -R, --revdepdir=DIR  Use DIR instead of /etc/revdep.d for extra
+                       library directories
+  -I, --ignore=PKG[,...]  Ignore specified packages during the check
+  -e, --erroneous      Include files with errors in the output
+  -p, --precise        Include precise file error details in the output
+  -t, --trace          Show debug/trace output
+  -v, --verbose        Produce a more detailed listing
+  -V, --version        Print version and exit
+  -h, --help           Print help and exit
 )";
   return 0;
 }
