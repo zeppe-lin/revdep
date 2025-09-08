@@ -2,7 +2,7 @@ REVDEP.D(5)
 
 # NAME
 
-revdep.d - additional library directories for revdep
+revdep.d - configuration files for extra library directories
 
 # SYNOPSIS
 
@@ -10,17 +10,10 @@ revdep.d - additional library directories for revdep
 
 # DESCRIPTION
 
-The _/etc/revdep.d_ directory contains configuration files for
-*revdep*(1).  Upon startup, *revdep*(1) searches this directory for
-files named after installed packages.
-
-Each file within _/etc/revdep.d_ can contain a list of additional
-directories, one per line, specified as absolute paths.  These
-directories are used by *revdep*(1) to search for library dependencies
-that are not found in the standard system library paths (as configured
-in *ld.so.conf*(5)).
-
-Empty lines and lines starting with '*#*' are ignored.
+_revdep.d_ contains configuration files for *revdep*(1).  Each file is
+named after a package and lists extra library directories, one per
+line, as absolute paths.  Empty lines and lines starting with '*#*'
+are ignored.
 
 # FILES
 
@@ -29,18 +22,14 @@ _/etc/revdep.d/\*_
 
 # EXAMPLES
 
-If a package named 'firefox' has library dependencies in a
-non-standard location, such as _/usr/lib/firefox_, create a file named
-'firefox' in _/etc/revdep.d_ with the following content:
+Example: package 'firefox' with libraries in _/usr/lib/firefox_.
+
+_/etc/revdep.d/firefox_:
 
 ```
+# Extra library directories for 'firefox'
 /usr/lib/firefox
 ```
-
-This will instruct *revdep*(1) to also search _/usr/lib/firefox_ when
-checking the library dependencies of the 'firefox' package,
-potentially avoiding false positives.  Ideally, such a file would be
-included within the firefox package itself.
 
 # SEE ALSO
 
