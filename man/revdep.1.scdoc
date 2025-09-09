@@ -8,43 +8,45 @@ revdep - check installed packages for missing shared libraries
 
 *revdep* \
 [*-Vehptv*] \
-[*-L* _FILE_] \
-[*-D* _FILE_] \
-[*-R* _DIR_] \
-[*-I* _PKG_[,...]] \
-[_PKG_ ...]
+[*-L* _ldsoconf-file_] \
+[*-D* _pkgdb-file_] \
+[*-R* _revdep-dir_] \
+[*-I* _pkgname-list_] \
+[_pkgname_ ...]
 
 # DESCRIPTION
 
-*revdep* checks installed packages for missing shared library
-dependencies.  It uses elfutils' *libelf*(3) and the same dependency
-resolution algorithm as *ld.so*(8).
-
-This is useful for identifying packages that might be broken after an
-upgrade of a dependency.
+The *revdep* utility inspects installed packages for unresolved shared
+library dependencies.
+It uses elfutils *libelf*(3) together with the dependency resolution
+logic of *ld.so*(8), making it possible to detect packages broken by
+upgrades or missing libraries.
 
 The options are as follows:
 
-*-L* _FILE_, *--ldsoconf*=_FILE_
-	Use _FILE_ instead of _/etc/ld.so.conf_, which lists
-	directories to search for libraries.
+*-L* _ldsoconf-path_, *--ldsoconf*=_ldsoconf-path_
+	Use an alternate library search path configuration file.
 
-	*Note*: This option is ignored on non-glibc systems.
+	Default: _/etc/ld.so.conf_.
 
-*-D* _FILE_, *--pkgdb*=_FILE_
-	Use _FILE_ instead of _/var/lib/pkg/db_ as the package
-	database.
+	Ignored on non-glibc systems.
 
-*-R* _DIR_, *--revdepdir*=_DIR_
-	Use _DIR_ instead of _/etc/revdep.d_ for extra
-	package-specific library directories.  Each file in this
-	directory lists additional absolute paths, one per line, to
-	search for libraries not found in standard locations.
+*-D* _pkgdb-file_, *--pkgdb*=_pkgdb-file_
+	Use an alternate package database file.
+
+	Default: _/var/lib/pkg/db_.
+
+*-R* _revdep-dir_, *--revdepdir*=_revdep-dir_
+	Use an alternate directory for per-package library search
+	lists.
+
+	Default: _/etc/revdep.d_.
 
 	See *revdep.d*(5).
 
-*-I* _PKG_[,...], *--ignore*=_PKG_[,...]
-	Ignore specified packages during the check.
+*-I* _pkgname-list_, *--ignore*=_pkgname-list_
+	Ignore the listed packages.
+	The argument is a comma-separated list of package names.
 
 *-e*, *--erroneous*
 	Include files with errors in the output.
@@ -53,7 +55,7 @@ The options are as follows:
 	Include precise file error details in the output.
 
 *-t*, *--trace*
-	Show debug/trace output.
+	Show trace output.
 
 *-v*, *--verbose*
 	Produce a more detailed listing.
@@ -62,20 +64,34 @@ The options are as follows:
 	Print version and exit.
 
 *-h*, *--help*
-	Print help and exit.
+	Print usage information and exit.
 
 # FILES
 
+_/etc/ld.so.conf_
+	Default library search path configuration.
+
+_/var/lib/pkg/db_
+	Default package database.
+
 _/etc/revdep.d/\*_
-	Default location for *revdep*(1) configuration files.
+	Per-package configuration files with extra library search
+	paths.
 
 # EXIT STATUS
 
-*0*   All dependencies found.++
-*1*   Failed to parse command-line arguments.++
-*2*   Failed to read the package database.++
-*3*   Failed to read ld.so.conf.++
-*4*   At least one missing library was found.
+The *revdep* utility exits with one of the following codes:
+
+*0*
+	All dependencies found.
+*1*
+	Failed to parse command-line arguments.
+*2*
+	Failed to read the package database.
+*3*
+	Failed to read ld.so.conf.
+*4*
+	At least one missing library found.
 
 # EXAMPLES
 
@@ -92,16 +108,16 @@ pkgman update -fr $(revdep)
 # SEE ALSO
 
 *libelf*(3),
-*revdep.d*(5),
-*ld.so*(8)
+*ld.so*(8),
+*revdep.d*(5)
 
-# AUTHORS
+# HISTORY
 
-The original shell script was written by Johannes Winkelmann
-<jw@tks6.net> for the CRUX *prt-utils* (http://crux.nu/).
+Originally written as a shell script by Johannes Winkelmann
+<jw@tks6.net> for CRUX prt-utils (http://crux.nu/).
 
-The C++ rewrite was done by James Buren <ryuo@frugalware.org>, with
-design contributions by Danny Rawlins <contact@romster.me>.
+Rewritten in C++ by James Buren <ryuo@frugalware.org>, with design
+input from Danny Rawlins <contact@romster.me>.
 
 This implementation was reworked for Zeppe-Lin by Alexandr Savca
 <alexandr.savca89@gmail.com>.

@@ -2,7 +2,7 @@ REVDEP.D(5)
 
 # NAME
 
-revdep.d - configuration files for extra library directories
+revdep.d - per-package configuration for extra library directories
 
 # SYNOPSIS
 
@@ -10,21 +10,24 @@ revdep.d - configuration files for extra library directories
 
 # DESCRIPTION
 
-_revdep.d_ contains configuration files for *revdep*(1).  Each file is
-named after a package and lists extra library directories, one per
-line, as absolute paths.  Empty lines and lines starting with '*#*'
-are ignored.
+The directory _revdep.d_ contains configuration files used by
+*revdep*(1) to locate additional library directories.
+
+Each file is named after a package and lists absolute paths, one per
+line, to be searched for libraries.
+Empty lines and lines beginning with '*#*' are ignored.
 
 # FILES
 
 _/etc/revdep.d/\*_
-	Default location for *revdep*(1) configuration files.
+	Per-package configuration files.
+	File names must match package names.
 
 # EXAMPLES
 
-Example: package 'firefox' with libraries in _/usr/lib/firefox_.
-
-_/etc/revdep.d/firefox_:
+A package such as firefox may install libraries in _/usr/lib/firefox_.
+A corresponding configuration file _/etc/revdep.d/firefox_ could
+contain:
 
 ```
 # Extra library directories for 'firefox'
@@ -33,7 +36,7 @@ _/etc/revdep.d/firefox_:
 
 # SEE ALSO
 
-*revdep*(1),
-*ld.so.conf*(5)
+*ld.so.conf*(5),
+*revdep*(1)
 
 ; vim: ft=scdoc cc=72 tw=70
