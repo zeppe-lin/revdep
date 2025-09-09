@@ -36,7 +36,7 @@ contain:
 
 # SEE ALSO
 
-*ld.so.conf*(5),
-*revdep*(1)
+*revdep*(1),
+*ld.so.conf*(5)
 
 ; vim: ft=scdoc cc=72 tw=70

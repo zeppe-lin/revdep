@@ -18,18 +18,17 @@ revdep - check installed packages for missing shared libraries
 
 The *revdep* utility inspects installed packages for unresolved shared
 library dependencies.
-It uses elfutils *libelf*(3) together with the dependency resolution
-logic of *ld.so*(8), making it possible to detect packages broken by
-upgrades or missing libraries.
+
+Uses elfutils *libelf*(3) and the dependency resolution logic of
+*ld.so*(8) to detect packages broken by upgrades or missing libraries.
 
 The options are as follows:
 
 *-L* _ldsoconf-path_, *--ldsoconf*=_ldsoconf-path_
 	Use an alternate library search path configuration file.
+	Ignored on non-glibc systems.
 
 	Default: _/etc/ld.so.conf_.
-
-	Ignored on non-glibc systems.
 
 *-D* _pkgdb-file_, *--pkgdb*=_pkgdb-file_
 	Use an alternate package database file.
@@ -39,10 +38,9 @@ The options are as follows:
 *-R* _revdep-dir_, *--revdepdir*=_revdep-dir_
 	Use an alternate directory for per-package library search
 	lists.
+	See *revdep.d*(5).
 
 	Default: _/etc/revdep.d_.
-
-	See *revdep.d*(5).
 
 *-I* _pkgname-list_, *--ignore*=_pkgname-list_
 	Ignore the listed packages.
@@ -66,13 +64,19 @@ The options are as follows:
 *-h*, *--help*
 	Print usage information and exit.
 
+If one or more _pkgname_ arguments are given, *revdep* checks only the
+specified packages.
+Each _pkgname_ must match an installed package name in the package
+database.
+If omitted, all installed packages are checked.
+
 # FILES
 
 _/etc/ld.so.conf_
-	Default library search path configuration.
+	Library search path configuration.
 
 _/var/lib/pkg/db_
-	Default package database.
+	Package database.
 
 _/etc/revdep.d/\*_
 	Per-package configuration files with extra library search
@@ -85,13 +89,13 @@ The *revdep* utility exits with one of the following codes:
 *0*
 	All dependencies found.
 *1*
-	Failed to parse command-line arguments.
+	Command-line argument error.
 *2*
-	Failed to read the package database.
+	Failed to read package database.
 *3*
 	Failed to read ld.so.conf.
 *4*
-	At least one missing library found.
+	Missing library detected.
 
 # EXAMPLES
 
@@ -108,8 +112,8 @@ pkgman update -fr $(revdep)
 # SEE ALSO
 
 *libelf*(3),
-*ld.so*(8),
-*revdep.d*(5)
+*revdep.d*(5),
+*ld.so*(8)
 
 # HISTORY
 
@@ -119,7 +123,6 @@ Originally written as a shell script by Johannes Winkelmann
 Rewritten in C++ by James Buren <ryuo@frugalware.org>, with design
 input from Danny Rawlins <contact@romster.me>.
 
-This implementation was reworked for Zeppe-Lin by Alexandr Savca
-<alexandr.savca89@gmail.com>.
+Reworked for Zeppe-Lin by Alexandr Savca <alexandr.savca89@gmail.com>.
 
 ; vim: ft=scdoc cc=72 tw=70
