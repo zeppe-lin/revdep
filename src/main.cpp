@@ -317,23 +317,24 @@ ignorePackages(PackageVector &package_list, const StringVector &ignored_packages
 static int
 printHelp()
 {
-  cout << R"(Usage: revdep [-Vehptv] [-L FILE ] [-D FILE] [-R DIR] [-I PKG[,...]] [PKG ...]
+  cout << R"(Usage: revdep [-Vehptv] [-L ldsoconf-file ] [-D pkgdb-file]
+              [-R revdep-dir] [-I pkgname-list] [pkgname ...]
 Check installed packages for missing shared libraries.
 
 Mandatory arguments to long options are mandatory for short options too.
-  -L, --ldsoconf=FILE  Use FILE instead of /etc/ld.so.conf, which lists
-                       directories to search for libraries
-  -D, --pkgdb=FILE     Use FILE instead of /var/lib/pkg/db as the package
-                       database
-  -R, --revdepdir=DIR  Use DIR instead of /etc/revdep.d for extra
-                       library directories
-  -I, --ignore=PKG[,...]  Ignore specified packages during the check
-  -e, --erroneous      Include files with errors in the output
-  -p, --precise        Include precise file error details in the output
-  -t, --trace          Show debug/trace output
-  -v, --verbose        Produce a more detailed listing
-  -V, --version        Print version and exit
-  -h, --help           Print help and exit
+  -L, --ldsoconf=ldsoconf-file   Use an alternate library search path
+                                 configuration file
+  -D, --pkgdb=pkgdb-file         Use an alternate package database file
+  -R, --revdepdir=revdep-dir     Use an alternate directory for per-package
+                                 library search lists
+  -I, --ignore=pkgname-list      Ignore the listed packages
+  -e, --erroneous                Include files with errors in the output
+  -p, --precise                  Include precise file error details in the
+                                 output
+  -t, --trace                    Show trace output
+  -v, --verbose                  Produce a more detailed listing
+  -V, --version                  Print version and exit
+  -h, --help                     Print this message and exit
 )";
   return 0;
 }
