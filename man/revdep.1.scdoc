@@ -115,20 +115,4 @@ pkgman update -fr $(revdep)
 *revdep.d*(5),
 *ld.so*(8)
 
-# HISTORY
-
-The *revdep* utility was originally written as a shell script by
-Johannes Winkelmann <jw@tks6.net> for CRUX prt-utils
-<https://crux.nu>.
-
-It was later rewritten in C++ by James Buren <ryuo@frugalware.org>,
-with design input from Danny Rawlins <contact@romster.me>.
-
-*revdep* was subsequently adapted to prt-utils, maintained for many
-years by CRUX Team <https://crux.nu>.
-
-This implementation was reworked for Zeppe-Lin by Alexandr Savca
-<alexandr.savca89@gmail.com> and is maintained by Zeppe-Lin Team
-<https://zeppe-lin.github.io>.
-
 ; vim: ft=scdoc cc=72 tw=70

@@ -39,12 +39,4 @@ contain:
 *revdep*(1),
 *ld.so.conf*(5)
 
-# HISTORY
-
-The _revdep.d_ manual page first appeared in Zeppe-Lin, documenting
-the per-package library search path format used by *revdep*(1).
-
-Written by Alexandr Savca <alexandr.savca89@gmail.com> and maintained
-by Zeppe-Lin Team <https://zeppe-lin.github.io>.
-
 ; vim: ft=scdoc cc=72 tw=70
