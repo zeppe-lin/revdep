@@ -8,11 +8,11 @@ revdep - check installed packages for missing shared libraries
 
 *revdep* \
 [*-Vehptv*] \
-[*-L* _ldsoconf-file_] \
-[*-D* _pkgdb-file_] \
+[*-L* _ldso-conf-file_] \
+[*-D* _package-db-file_] \
 [*-R* _revdep-dir_] \
-[*-I* _pkgname-list_] \
-[_pkgname_ ...]
+[*-I* _package-list_] \
+[_package-name_ ...]
 
 # DESCRIPTION
 
@@ -24,13 +24,13 @@ Uses elfutils *libelf*(3) and the dependency resolution logic of
 
 The options are as follows:
 
-*-L* _ldsoconf-path_, *--ldsoconf*=_ldsoconf-path_
+*-L* _ldso-conf-file_, *--ldsoconf*=_ldso-conf-file_
 	Use an alternate library search path configuration file.
 	Ignored on non-glibc systems.
 
 	Default: _/etc/ld.so.conf_.
 
-*-D* _pkgdb-file_, *--pkgdb*=_pkgdb-file_
+*-D* _package-db-file_, *--pkgdb*=_package-db-file_
 	Use an alternate package database file.
 
 	Default: _/var/lib/pkg/db_.
@@ -42,7 +42,7 @@ The options are as follows:
 
 	Default: _/etc/revdep.d_.
 
-*-I* _pkgname-list_, *--ignore*=_pkgname-list_
+*-I* _package-list_, *--ignore*=_package-list_
 	Ignore the listed packages.
 	The argument is a comma-separated list of package names.
 
@@ -64,10 +64,10 @@ The options are as follows:
 *-h*, *--help*
 	Print usage information and exit.
 
-If one or more _pkgname_ arguments are given, *revdep* checks only the
-specified packages.
-Each _pkgname_ must match an installed package name in the package
-database.
+If one or more _package-name_ arguments are given, *revdep* checks
+only the specified packages.
+Each _package-name_ must match an installed package name in the
+package database.
 If omitted, all installed packages are checked.
 
 # FILES
@@ -117,12 +117,18 @@ pkgman update -fr $(revdep)
 
 # HISTORY
 
-Originally written as a shell script by Johannes Winkelmann
-<jw@tks6.net> for CRUX prt-utils (http://crux.nu/).
+The *revdep* utility was originally written as a shell script by
+Johannes Winkelmann <jw@tks6.net> for CRUX prt-utils
+<https://crux.nu>.
 
-Rewritten in C++ by James Buren <ryuo@frugalware.org>, with design
-input from Danny Rawlins <contact@romster.me>.
+It was later rewritten in C++ by James Buren <ryuo@frugalware.org>,
+with design input from Danny Rawlins <contact@romster.me>.
 
-Reworked for Zeppe-Lin by Alexandr Savca <alexandr.savca89@gmail.com>.
+*revdep* was subsequently adapted to prt-utils, maintained for many
+years by CRUX Team <https://crux.nu>.
+
+This implementation was reworked for Zeppe-Lin by Alexandr Savca
+<alexandr.savca89@gmail.com> and is maintained by Zeppe-Lin Team
+<https://zeppe-lin.github.io>.
 
 ; vim: ft=scdoc cc=72 tw=70
