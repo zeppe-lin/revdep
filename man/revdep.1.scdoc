@@ -97,6 +97,16 @@ The *revdep* utility exits with one of the following codes:
 *4*
 	Missing library detected.
 
+# NOTES
+
+*revdep*(1) checks only packages recorded in the package database at
+_/var/lib/pkg/db_.
+It does not scan arbitrary directories outside of installed packages.
+Rebuild broken packages and reinstall them to restore missing
+libraries.
+Per-package search paths may be extended with configuration files in
+*revdep.d*(5).
+
 # EXAMPLES
 
 List packages with missing libraries:
