@@ -62,7 +62,7 @@ The options are as follows:
 	Print version and exit.
 
 *-h*, *--help*
-	Print usage information and exit.
+	Print usage and exit.
 
 If one or more _package-name_ arguments are given, *revdep* checks
 only the specified packages.
