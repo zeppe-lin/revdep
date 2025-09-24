@@ -23,14 +23,6 @@ _/etc/revdep.d/\*_
 	Per-package configuration files.
 	File names must match package names.
 
-# NOTES
-
-Files in _revdep.d_ extend the library search path for specific
-packages when checked by *revdep*(1).
-They do not alter the runtime behaviour of *ld.so*(8) itself.
-Ensure that paths listed are absolute and valid, otherwise *revdep*(1)
-may report false positives.
-
 # EXAMPLES
 
 A package such as firefox may install libraries in _/usr/lib/firefox_.
@@ -46,5 +38,13 @@ contain:
 
 *revdep*(1),
 *ld.so.conf*(5)
+
+# CAVEATS
+
+Files in _revdep.d_ extend the library search path for specific
+packages when checked by *revdep*(1).
+They do not alter the runtime behaviour of *ld.so*(8) itself.
+Ensure that paths listed are absolute and valid, otherwise *revdep*(1)
+may report false positives.
 
 ; vim: ft=scdoc cc=72 tw=70
