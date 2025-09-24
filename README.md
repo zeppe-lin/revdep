@@ -1,8 +1,8 @@
 OVERVIEW
 ========
 
-`revdep` checks installed packages for missing shared library
-dependencies.
+The `revdep` utility checks installed packages for missing shared
+library dependencies.
 
 It is a fork of CRUX' `revdep` (part of `prt-utils`) at commit
 `41dfcb6` (Thu Oct 15 2020), with the following changes:
