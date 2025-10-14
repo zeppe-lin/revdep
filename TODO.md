@@ -15,6 +15,9 @@ No milestone
   checking to CI.
 - [ ] Code clean up: `grep 'XXX\|FIXME\|TODO' --exclude-dir=.git -R .`
 - [ ] Split `revdep` into `librevdep(3)` and `revdep(1)`?
+- [ ] Add parallelism?
+  - [ ] Also, djust output (inclusive verbosed one).
+  It should not be mangled.
 - [ ] Add support for `NODEFLIB`?
 - [ ] Add support for `LD_LIBRARY_PATH`?
 - [ ] Add support for hardware capability directories?
