@@ -6,7 +6,7 @@ revdep - check installed packages for missing shared libraries
 
 # SYNOPSIS
 
-*revdep* [*-Vehptv*] [*-L* _ldso-conf-file_] [*-D* _package-db-file_]++
+*revdep* [*-Vehptv*] [*-L* _ldso-conf-file_] [*-D* _package-db-file_]\
        [*-R* _revdep-dir_] [*-I* _package-list_] [_package-name_ ...]
 
 # DESCRIPTION
