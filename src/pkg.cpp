@@ -5,7 +5,7 @@
 //! reading package information from a database and associating
 //! directory configurations with packages.
 //!
-//! \copyright See COPYING and COPYRIGHT files for corresponding information.
+//! \copyright See COPYING for license terms and COPYRIGHT for notices.
 
 #include <algorithm>  // For std::find
 #include <fstream>    // For std::ifstream

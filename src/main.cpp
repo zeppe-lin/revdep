@@ -7,7 +7,7 @@
 //! command-line options, reads package information from a database,
 //! analyzes ELF files, and reports any missing dependencies.
 //!
-//! \copyright See COPYING and COPYRIGHT files for corresponding information.
+//! \copyright See COPYING for license terms and COPYRIGHT for notices.
 
 #include <algorithm>   // For std::find
 #include <iostream>    // For std::cout, std::cerr, std::endl

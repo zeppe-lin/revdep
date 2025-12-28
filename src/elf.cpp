@@ -8,7 +8,7 @@
 //! (NEEDED libraries), RPATH, and RUNPATH from the ELF's dynamic
 //! section.
 //!
-//! \copyright See COPYING and COPYRIGHT files for corresponding information.
+//! \copyright See COPYING for license terms and COPYRIGHT for notices.
 
 #include <stdexcept> // For std::runtime_error
 
