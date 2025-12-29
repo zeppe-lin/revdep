@@ -56,6 +56,7 @@ Manual pages are in `/man`.
 LICENSE
 =======
 
-`revdep` is licensed through the GNU General Public License v3 or
-later <https://gnu.org/licenses/gpl.html>.
-See `COPYING` for terms and `COPYRIGHT` for notices.
+`revdep` is licensed through the
+[GNU General Public License v3 or later](https://gnu.org/licenses/gpl.html).
+
+See `COPYING` for license terms and `COPYRIGHT` for notices.
