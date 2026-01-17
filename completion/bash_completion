@@ -1,5 +1,5 @@
 # bash completion for revdep(1)
-# See COPYING and COPYRIGHT files for corresponding information.
+# See COPYING for license terms and COPYRIGHT for notices.
 
 _revdep()
 {
@@ -27,12 +27,9 @@ _revdep()
 				local realcur prefix
 				realcur=${cur##*,}
 				prefix=${cur%,*}
-				COMPREPLY=($(compgen      \
-					-W '"${pkgs[@]}"' \
-					-P "${prefix}," -- $realcur))
+				COMPREPLY=($(compgen -W '"${pkgs[@]}"' -P "${prefix}," -- $realcur))
 			else
-				COMPREPLY=($(compgen \
-					-W '"${pkgs[@]}"' -- $cur))
+				COMPREPLY=($(compgen -W '"${pkgs[@]}"' -- $cur))
 			fi
 			compopt -o nospace
 			;;
