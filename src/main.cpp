@@ -322,21 +322,19 @@ printHelp()
 Check installed packages for missing shared libraries.
 
 Mandatory arguments to long options are mandatory for short options too.
-  -L, --ldsoconf=ldso-conf-file
-                              Use an alternate library search path
-                              configuration file
-  -D, --pkgdb=package-db-file
-                              Use an alternate package database file
-  -R, --revdepdir=revdep-dir  Use an alternate directory for
-                              per-package library search lists
-  -I, --ignore=package-list   Ignore the listed packages
-  -e, --erroneous             Include files with errors in the output
-  -p, --precise               Include precise file error details in
-                              the output
-  -t, --trace                 Show trace output
-  -v, --verbose               Produce a more detailed listing
-  -V, --version               Print version and exit
-  -h, --help                  Print this help and exit
+  -L, --ldsoconf=ldso-conf-file  Use an alternate library search path
+                                 configuration file
+  -D, --pkgdb=package-db-file    Use an alternate package database file
+  -R, --revdepdir=revdep-dir     Use an alternate directory for
+                                 per-package library search lists
+  -I, --ignore=package-list      Ignore the listed packages
+  -e, --erroneous                Include files with errors in the output
+  -p, --precise                  Include precise file error details in
+                                 the output
+  -t, --trace                    Show trace output
+  -v, --verbose                  Produce a more detailed listing
+  -V, --version                  Print version and exit
+  -h, --help                     Print this help and exit
 )";
   return 0;
 }
