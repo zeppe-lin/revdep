@@ -6,18 +6,18 @@ library dependencies.
 
 It is a fork of CRUX' `revdep` (part of `prt-utils`) at commit
 `41dfcb6` (Thu Oct 15 2020), with the following changes:
-  * Fix GCC extensions for portability
-  * Manual pages in `scdoc(5)` format
+  * Fixed GCC extensions for portability
+  * Added manual pages in `scdoc(5)` format
   * Split into `revdep(1)` and `revdep.d(5)`
   * GNU-style options, help, and usage output
   * Distinct exit codes for easier scripting
-  * Bash completion
-  * Support for powerpc{,64}, loongarch{,64} and risc-v ELF
+  * Bash completion support
+  * Extended ELF support for powerpc{,64}, loongarch{,64} and RISC-V
 
-See git log for full history.
-
+See the git log for full history.  
 Original sources: https://git.crux.nu/tools/prt-utils.git
 
+---
 
 REQUIREMENTS
 ============
@@ -25,38 +25,46 @@ REQUIREMENTS
 Build-time
 ----------
   * C++11 compiler
-  * POSIX `sh(1p)`, `make(1p)` and "mandatory utilities"
+  * POSIX `sh(1p)`, `make(1p)`, and "mandatory utilities"
   * `elfutils`
-  * `scdoc(1)` to build manual pages
+  * `scdoc(1)` to generate manual pages
   * `pkg-config(1)` (optional, for static linking)
 
+---
 
 INSTALLATION
 ============
 
-To build and install this package, run:
+To build and install:
 
-    make && make install
+```sh
+make
+make install   # as root
+```
 
 For static linking (requires `pkg-config(1)`):
 
-    make LDFLAGS="-static $(pkg-config --static --libs libelf)"
+```sh
+make LDFLAGS="-static $(pkg-config --static --libs libelf)"
+```
 
-Configuration parameters are in `config.mk`.
+Configuration parameters are defined in `config.mk`.  
+Default paths are specified in `src/pathnames.h`.
 
-Default paths are defined in `src/pathnames.h`.
-
+---
 
 DOCUMENTATION
 =============
 
-Manual pages are in `/man`.
+Manual pages are provided in `/man` and installed under the system
+manual hierarchy.
 
+---
 
 LICENSE
 =======
 
-`revdep` is licensed through the
+`revdep` is licensed under the
 [GNU General Public License v3 or later](https://gnu.org/licenses/gpl.html).
 
 See `COPYING` for license terms and `COPYRIGHT` for notices.
