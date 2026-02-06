@@ -1,21 +1,23 @@
 OVERVIEW
 ========
 
-The `revdep` utility checks installed packages for missing shared
-library dependencies.
+`revdep` checks installed packages for missing shared library
+dependencies.
 
-It is a fork of CRUX' `revdep` (part of `prt-utils`) at commit
-`41dfcb6` (Thu Oct 15 2020), with the following changes:
+This distribution is a fork of CRUX `revdep` (part of `prt-utils`) at
+commit `41dfcb6` (Thu Oct 15 2020), with the following differences:
   * Fixed GCC extensions for portability
-  * Added manual pages in `scdoc(5)` format
-  * Split into `revdep(1)` and `revdep.d(5)`
+  * Manual pages in `scdoc(5)` format
+    * Split into `revdep(1)` and `revdep.d(5)`
   * GNU-style options, help, and usage output
   * Distinct exit codes for easier scripting
   * Bash completion support
   * Extended ELF support for powerpc{,64}, loongarch{,64} and RISC-V
 
-See the git log for full history.  
-Original sources: https://git.crux.nu/tools/prt-utils.git
+See the git log for full history.
+
+Original sources:
+  * https://git.crux.nu/tools/prt-utils.git
 
 ---
 
