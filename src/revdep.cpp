@@ -16,8 +16,7 @@
 #include <stdarg.h>    // For va_list, va_start, va_end (not directly used but included)
 #include <unistd.h>    // For fprintf, getopt
 
-#include "elf_cache.h"
-#include "pkg.h"
+#include "librevdep.h"
 #include "pathnames.h"
 
 using namespace std;

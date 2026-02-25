@@ -5,16 +5,23 @@ include ../config.mk
 #include ../extra/flags-extra.mk
 #include ../extra/flags-sanitizer.mk
 
-OBJS = elf_cache.o elf.o main.o pkg.o utility.o
+OBJS = revdep.o
 BIN1 = revdep
+
+LIB_DIR = ./librevdep
+LIB_NAME = $(LIB_DIR)/librevdep.a
+LIB_CPPFLAGS = -I$(LIB_DIR)
 
 all: $(BIN1)
 
 .cpp.o:
-	$(CXX) -c $< $(CPPFLAGS) $(CXXFLAGS)
+	$(CXX) -c $< $(LIB_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 
-$(BIN1): $(OBJS)
-	$(CXX) $(OBJS) $(LDFLAGS) -o $@
+$(LIB_NAME):
+	cd $(LIB_DIR) && $(MAKE)
+
+$(BIN1): $(OBJS) $(LIB_NAME)
+	$(CXX) $^ $(LDFLAGS) -o $@
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
@@ -26,5 +33,6 @@ uninstall:
 
 clean:
 	rm -f $(OBJS) $(BIN1)
+	cd $(LIB_DIR) && $(MAKE) clean
 
 .PHONY: all install uninstall clean
