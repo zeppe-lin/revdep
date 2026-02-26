@@ -1,4 +1,4 @@
-//! \file  elf-cache.h
+//! \file  elf_cache.h
 //! \brief ElfCache class definition.
 //!
 //! This file defines the `ElfCache` class, which is responsible for
@@ -10,15 +10,15 @@
 
 #pragma once
 
+#include <memory>
+#include <shared_mutex>
+#include <string>
 #include <unordered_map>  // For std::unordered_map
 
 #include "elf.h"          // Includes Elf class definition
 #include "pkg.h"          // Include Package class definition
 
 using namespace std;
-
-// Define type alias for the Elf cache map
-typedef unordered_map <string, Elf *> ElfMap;
 
 /*!
  * \class ElfCache
@@ -32,7 +32,10 @@ typedef unordered_map <string, Elf *> ElfMap;
  */
 class ElfCache {
 private:
+  using ElfPtr = std::shared_ptr<const Elf>;
+  using ElfMap = std::unordered_map<std::string, ElfPtr>;
 
+  mutable std::shared_mutex _mx;
   ElfMap _data;  //!< Unordered map to cache Elf objects,
                  //!< keyed by file path.
 
@@ -67,13 +70,8 @@ private:
   bool findLibraryByPath(const Elf *elf, const string &lib);
 
 public:
-
-  /*!
-   * \brief Destructor for the ElfCache class.
-   *
-   * Frees the memory allocated for cached Elf objects.
-   */
-  ~ElfCache();
+  ElfCache() = default;
+  ~ElfCache() = default;
 
   /*!
    * \brief Looks up an Elf object in the cache or creates a new one
