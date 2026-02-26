@@ -86,6 +86,20 @@ These files do not affect runtime loader configuration.
 They are intended for package-specific layouts that require extra
 search directories during static auditing.
 
+# NON-ELF INPUTS
+
+Non-ELF files, unsupported ELF types, or ELF objects rejected by the
+validity policy are ignored by the audit engine (treated as
+successful) and produce no findings.
+
+# ELF VALIDITY POLICY
+
+An object is considered analyzable if it is an ELF object (ELF_K_ELF)
+with a readable ELF header, of type ET_EXEC or ET_DYN, with OS ABI
+ELFOSABI_NONE or ELFOSABI_LINUX, and with an architecture (e_machine)
+supported on the build host (including compatibility modes where
+applicable).
+
 # THREADING AND DETERMINISM
 
 *librevdep*(7) is:
