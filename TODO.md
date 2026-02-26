@@ -14,9 +14,6 @@ No milestone
 - [ ] `completion/bash_completion`: fix shellcheck warnings, add
   checking to CI.
 - [ ] Code clean up: `grep 'XXX\|FIXME\|TODO' --exclude-dir=.git -R .`
-- [ ] Split `revdep` into `librevdep(3)` and `revdep(1)`?
-- [ ] Add parallelism?
-  - [ ] Also, djust output (inclusive verbosed one).
   It should not be mangled.
 - [ ] Add support for `NODEFLIB`?
 - [ ] Add support for `LD_LIBRARY_PATH`?
@@ -26,6 +23,9 @@ No milestone
 Done
 ----
 
+- [x] Split `revdep` into `librevdep(3)` and `revdep(1)`
+- [x] Add parallelism?
+  - [x] Also, adjust output (inclusive verbosed one).
 - [x] Add `revdep.d(5)` manual page
 - [?] Clean up the mess with "debug" flags and reflect in the README
   how to build the "debug" binary.
