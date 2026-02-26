@@ -106,7 +106,7 @@ _/etc/ld.so.conf_
 	Dynamic loader configuration file used as an input for global
 	resolver directories (and include directives).
 
-_/etc/ld.so.conf.d/*_
+_/etc/ld.so.conf.d/\*_
 	Included loader configuration fragments.
 
 _/etc/revdep.d/\*_
