@@ -6,9 +6,28 @@ include ../../config.mk
 #include ../../extra/flags-sanitizer.mk
 
 LIB_NAME = librevdep.a
-LIB_SRC = elf_cache.cpp elf.cpp pkg.cpp utility.cpp
-LIB_HDR = elf_cache.h   elf.h   pkg.h   utility.h
-LIB_OBJ = elf_cache.o   elf.o   pkg.o   utility.o
+
+LIB_SRC = \
+	elf_cache.cpp \
+	elf.cpp \
+	pkg.cpp \
+	utility.cpp \
+	revdep_engine.cpp \
+	revdep_parallel.cpp \
+	revdep_format.cpp
+
+LIB_HDR = \
+	elf_cache.h \
+	elf.h \
+	pkg.h \
+	utility.h \
+	revdep_context.h \
+	revdep_engine.h \
+	revdep_parallel.h \
+	revdep_format.h \
+	librevdep.h
+
+LIB_OBJ = $(LIB_SRC:.cpp=.o)
 
 .cpp.o:
 	$(CXX) -c $< $(CPPFLAGS) $(CXXFLAGS)
