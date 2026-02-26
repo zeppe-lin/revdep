@@ -10,7 +10,7 @@ BASHCOMPDIR = $(PREFIX)/share/bash-completion/completions
 # flags
 CPPFLAGS    = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 \
               -DVERSION=\"$(VERSION)\"
-CXXFLAGS    = -std=c++0x -pedantic -Wall -Wextra
+CXXFLAGS    = -std=c++17 -pedantic -Wall -Wextra
 LDFLAGS     = -lelf
 
 # compiler and linker
