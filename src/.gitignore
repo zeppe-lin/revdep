@@ -1,6 +1,2 @@
-elf_cache.o
-elf.o
-main.o
-pkg.o
-utility.o
+revdep.o
 revdep
