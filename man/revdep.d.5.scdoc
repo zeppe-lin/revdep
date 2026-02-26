@@ -2,20 +2,59 @@ REVDEP.D(5)
 
 # NAME
 
-revdep.d - per-package configuration for extra library directories
+revdep.d - per-package additional resolver directories for revdep
 
 # SYNOPSIS
 
-*/etc/revdep.d/\**
+*/etc/revdep.d/<package-name>*
 
 # DESCRIPTION
 
-The directory _revdep.d_ contains configuration files used by
-*revdep*(1) to locate additional library directories.
+Files under _/etc/revdep.d/_ define additional per-package resolver
+directories used by *revdep* when resolving DT_NEEDED dependencies.
 
-Each file is named after a package and lists absolute paths, one per
-line, to be searched for libraries.
-Empty lines and lines beginning with '*#*' are ignored.
+Each regular file name is interpreted as an installed package name.
+If the package exists, the directories listed in that file are added
+to the resolver search path *only when auditing that package*.
+
+These directories are a *revdep-only* extension mechanism.
+They do not alter runtime loader behavior.
+
+The resolution order is documented in *revdep_semantics*(7).
+
+# FILE FORMAT
+
+Each file in _/etc/revdep.d_ is a plain text file.
+
+Rules:
+- One directory per line.
+- Leading and trailing whitespace is ignored.
+- Empty lines are ignored.
+- Lines beginning with '*#*' are comments and are ignored.
+- No quoting rules are applied.
+  A directory is taken verbatim after trimming.
+
+Example:
+
+```
+# Extra resolver directories for this package
+/usr/lib/special
+/usr/local/lib
+```
+
+# CONTRACT AND PITFALLS
+
+The intent of _/etc/revdep.d_ is to model real runtime loader search
+paths.
+
+Using _/etc/revdep.d_ to silence missing dependency reports without
+matching runtime loader configuration is incorrect usage and can cause
+*revdep* to under-report real problems.
+
+Plugin directories (e.g., _/usr/lib/gconv_) typically do not belong
+here when the modules use RPATH/RUNPATH with $ORIGIN.
+*librevdep*(7) expands $ORIGIN for object-local resolution and
+therefore does not require such directories to be globally configured.
 
 # FILES
 
@@ -37,7 +76,9 @@ contain:
 # SEE ALSO
 
 *revdep*(1),
-*ld.so.conf*(5)
+*revdep_semantics*(7),
+*ld.so.conf*(5),
+*ld.so*(8)
 
 # CAVEATS
 

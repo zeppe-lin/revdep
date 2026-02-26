@@ -2,22 +2,24 @@ REVDEP(1)
 
 # NAME
 
-revdep - check installed packages for missing shared libraries
+revdep - reverse dependency checker for installed ELF objects
 
 # SYNOPSIS
 
-*revdep* [*-Vehptv*] [*-L* _ldso-conf-file_] [*-D* _package-db-file_]\
-       [*-R* _revdep-dir_] [*-I* _package-list_] [_package-name_ ...]
+*revdep* [*-Vehptv*] [*-L* _ldso-conf-file_] [*-D* _package-db-file_] \
+       [*-R* _revdep-dir_] [*-I* _package-list_] [*-j*[_N_]] \
+       [*--order*=_mode_] [*--no-serialize-sink*] [_package-name_ ...]
 
 # DESCRIPTION
 
-The *revdep* utility inspects installed packages for unresolved shared
-library dependencies.
+The *revdep* utility audits installed ELF objects and reports missing
+shared-library dependencies (DT_NEEDED entries that cannot be
+resolved).
+*revdep* is implemented as a thin CLI adapter over *librevdep*(7) and
+inherits its resolution semantics.
+See *revdep_semantics*(7) for the normative contract.
 
-Uses elfutils *libelf*(3) and the dependency resolution logic of
-*ld.so*(8) to detect packages broken by upgrades or missing libraries.
-
-The options are as follows:
+# OPTIONS
 
 *-L* _ldso-conf-file_, *--ldsoconf*=_ldso-conf-file_
 	Use an alternate library search path configuration file.
@@ -42,22 +44,55 @@ The options are as follows:
 	The argument is a comma-separated list of package names.
 
 *-e*, *--erroneous*
-	Include files with errors in the output.
+	Include per-file "error" lines for broken packages.
+	This is a compatibility mode intended for scripting against
+	older *revdep*(1) output.
+	Ignored when *-p* is in effect.
 
 *-p*, *--precise*
 	Include precise file error details in the output.
 
 *-t*, *--trace*
-	Show trace output.
+	Trace findings as they are produced.
+	Each missing DT_NEEDED emits one line of the form:
+
+	_package_:_object_: missing _needed_
 
 *-v*, *--verbose*
-	Produce a more detailed listing.
+	Produce a more detailed package summary.
+	Prints per-package status lines (ok/error) and a short banner.
+
+*-j*[_N_], *--jobs*[=_N_]
+	Audit in parallel using _N_ worker threads.
+	If _N_ is omitted, *revdep* uses the system hardware
+	concurrency.
+	If _N_ is 1, execution is serial.
+
+*--order*=_mode_
+	Control emission order of findings under parallel execution.
+	Valid _mode_ values:
+
+	_input_
+		Stable output in the same order as the input work list
+		(deterministic).
+		Default.
+	
+	_unordered_
+		Fastest.
+		Findings are emitted as soon as they are produced.
+		Output ordering is nondeterministic.
+
+*--no-serialize-sink*
+	Do not serialize sink invocation under parallel execution.
+	When set, the output sink must be thread-safe.
 
 *-V*, *--version*
 	Print version and exit.
 
 *-h*, *--help*
 	Print usage and exit.
+
+# ARGUMENTS
 
 If one or more _package-name_ arguments are given, *revdep* checks
 only the specified packages.
@@ -68,21 +103,25 @@ If omitted, all installed packages are checked.
 # FILES
 
 _/etc/ld.so.conf_
-	Library search path configuration.
+	Dynamic loader configuration file used as an input for global
+	resolver directories (and include directives).
+
+_/etc/ld.so.conf.d/*_
+	Included loader configuration fragments.
+
+_/etc/revdep.d/\*_
+	Per-package additional resolver directories for *revdep*(1).
+	See *revdep.d*(5).
 
 _/var/lib/pkg/db_
 	Package database.
-
-_/etc/revdep.d/\*_
-	Per-package configuration files with extra library search
-	paths.
 
 # EXIT STATUS
 
 The *revdep* utility exits with one of the following codes:
 
 *0*
-	All dependencies found.
+	No missing dependencies were detected.
 *1*
 	Command-line argument error.
 *2*
@@ -107,6 +146,8 @@ pkgman update -fr $(revdep)
 # SEE ALSO
 
 *libelf*(3),
+*revdep_semantics*(7),
+*librevdep*(7),
 *revdep.d*(5),
 *ld.so*(8)
 
