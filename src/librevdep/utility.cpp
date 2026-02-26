@@ -45,7 +45,7 @@ ReadRdConf(const string &path, StringVector &dirs)
 
   while (getline(fin, line))
   {
-    if (line[0] != '#' && line.length() > 0)
+    if (!line.empty() && line[0] != '#')
       dirs.push_back(line);
   }
 
@@ -69,7 +69,7 @@ ReadLdConf(const string &path, StringVector &dirs, int maxdepth)
   {
 
     // Skip comment lines
-    if (line[0] == '#')
+    if (line.empty() || line[0] == '#')
       continue;
 
     // Handle "include "
