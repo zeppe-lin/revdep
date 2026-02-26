@@ -1,0 +1,56 @@
+REVDEP_PARALLEL(3)
+
+# NAME
+
+revdep_parallel - parallel audit helpers for librevdep
+
+# SYNOPSIS
+
+```
+#include <librevdep/revdep_parallel.h>
+
+std::vector<revdep::RevdepWorkItem> items = ...;
+
+revdep::RevdepParallelOptions opt;
+opt.thread_count = 0; // auto
+opt.order = revdep::RevdepEmitOrder::InputStable;
+
+revdep::RevdepAuditWorkItemsParallel(items, ctx, opt, sink);
+```
+
+# DESCRIPTION
+
+The parallel runner is an optional helper that schedules many audit
+operations concurrently.
+
+It does not change resolution semantics; it only changes scheduling.
+
+# ORDERING
+
+Two emission orders are supported:
+
+InputStable
+	Findings are emitted in the same order as the input work list.
+	Deterministic and suited for CI logs.
+
+Unordered
+	Findings are emitted as soon as they are produced.
+	Fastest, non-deterministic ordering.
+
+The library default is *Unordered*.
+
+# SINK SERIALIZATION
+
+By default, the runner serializes sink invocation so callers can
+safely use non-thread-safe sinks (printing, pushing into a vector,
+etc.).
+
+Advanced integrations may disable serialization and provide their own
+thread-safe sink.
+
+# SEE ALSO
+
+*revdep_context*(3),
+*revdep_engine*(3)
+
+; vim: ft=scdoc cc=72 tw=70

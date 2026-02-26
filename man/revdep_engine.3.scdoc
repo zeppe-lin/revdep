@@ -1,0 +1,58 @@
+REVDEP_ENGINE(3)
+
+# NAME
+
+revdep_engine - audit entry points for librevdep
+
+# SYNOPSIS
+
+```
+#include <librevdep/revdep_engine.h>
+
+auto sink = [&](const revdep::RevdepFinding& f) {
+	// handle finding
+};
+
+bool ok = revdep::RevdepAuditFile(pkg, "/usr/bin/foo", ctx, sink);
+```
+
+# DESCRIPTION
+
+The engine provides synchronous audit functions that analyze ELF
+objects and emit findings describing missing dependencies and relevant
+errors.
+
+The engine does not print.
+Findings are returned to the caller as structured records or via a
+sink callback (streaming mode).
+
+# FUNCTIONS
+
+Typical entry points include:
+
+- RevdepAuditFile(): audit one filesystem object.
+- RevdepAuditPackage(): audit all relevant objects in a package.
+
+Each function returns a boolean indicating whether the audited scope
+had no missing dependencies.
+
+# STREAMING
+
+Streaming overloads accept a sink callback:
+
+```
+using RevdepFindingSink = std::function<void(const revdep::RevdepFinding&)>;
+```
+
+Findings are delivered on the current thread.
+In streaming mode, callers can print, aggregate, or translate findings
+into their own diagnostic format.
+
+# SEE ALSO
+
+*revdep_context*(3),
+*revdep_parallel*(3),
+*revdep_format*(3),
+*revdep_semantics*(7)
+
+; vim: ft=scdoc cc=72 tw=70
