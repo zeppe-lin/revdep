@@ -1,7 +1,15 @@
-//! \file  elf.h
-//! \brief Elf class definition.
-//!
-//! \copyright See COPYING for license terms and COPYRIGHT for notices.
+/*!
+ * \file elf.h
+ * \brief ELF metadata wrapper (DT_NEEDED, RPATH, RUNPATH, machine).
+ *
+ * \details
+ * Declares Elf, an immutable-ish parsed view of an on-disk ELF
+ * object.
+ * The class extracts the dynamic dependency set and loader search
+ * hints used by revdep resolution logic.
+ *
+ * \copyright See COPYING for license terms and COPYRIGHT for notices.
+ */
 
 #pragma once
 
@@ -10,7 +18,7 @@
 /*!
  * \class Elf
  * \brief Represents an ELF file and provides access to its
- * properties.
+ *        properties.
  *
  * The `Elf` class encapsulates the data and methods for interacting
  * with ELF files.  It allows querying information like machine type,
@@ -116,6 +124,3 @@ public:
     return _machine == elf._machine;
   }
 };
-
-// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
-// End of file.

@@ -1,6 +1,9 @@
 /*!
  * \file revdep_parallel.cpp
- * \brief Implementation of librevdep parallel runner helpers.
+ * \brief Implementation of parallel scheduling helpers.
+ *
+ * \details
+ * Implements the parallel runner declared in revdep_parallel.h.
  *
  * \copyright See COPYING for license terms and COPYRIGHT for notices.
  */

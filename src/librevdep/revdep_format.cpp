@@ -2,6 +2,9 @@
  * \file revdep_format.cpp
  * \brief Implementation of finding formatting helpers.
  *
+ * \details
+ * Implements the formatter declared in revdep_format.h
+ *
  * \copyright See COPYING for license terms and COPYRIGHT for notices.
  */
 

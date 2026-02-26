@@ -1,15 +1,15 @@
 /*!
  * \file revdep_context.h
- * \brief Public configuration and context types for librevdep.
+ * \brief Configuration and shared context for revdep auditing.
  *
- * librevdep is designed to be embedded. All mutable state is explicit
- * and caller-owned.  A revdep::RevdepContext instance binds together
- * configuration and shared analysis state (notably the thread-safe
- * ELF cache).
+ * \details
+ * Defines RevdepConfig and RevdepContext, which bundle
+ * caller-provided configuration (e.g., global search directories)
+ * with shared analysis state (notably the thread-safe ElfCache).
  *
- * There is no hidden process-global state in librevdep.  Re-entrancy
- * and parallel execution are achieved by passing an explicit context
- * object to all auditing functions.
+ * The library is designed for embedding: all mutable state is
+ * explicit and caller-owned; no hidden process-global state is
+ * required.
  *
  * \copyright See COPYING for license terms and COPYRIGHT for notices.
  */

@@ -1,13 +1,15 @@
-//! \file  elf-cache.cpp
-//! \brief ElfCache class implementation.
-//!
-//! This file implements the `ElfCache` class, which manages a cache
-//! of parsed ELF files to improve performance by avoiding redundant
-//! parsing.  It also provides functionalities to resolve library
-//! paths and search for libraries based on different criteria related
-//! to ELF dependencies and runtime paths.
-//!
-//! \copyright See COPYING for license terms and COPYRIGHT for notices.
+/*!
+ * \file elf_cache.cpp
+ * \brief Implementation of ElfCache and resolution helpers.
+ *
+ * \details
+ * Implements the caching and resolution logic declared in
+ * elf_cache.h.  Public semantics live in the header; this file
+ * provides the concrete token expansion and directory search
+ * mechanics.
+ *
+ * \copyright See COPYING for license terms and COPYRIGHT for notices.
+ */
 
 #include <mutex>
 #include <utility>
@@ -45,8 +47,8 @@ dir_name(const std::string& p)
  *
  * Notes:
  * - Expansion is performed until a fixed point (multiple occurrences).
- * - The dynamic loader treats an empty element as the current directory;
- *   we normalize empty to "." for consistent path joining.
+ * - The dynamic loader treats an empty element as the current
+ *   directory; we normalize empty to "." for consistent path joining.
  */
 static std::string
 resolve_dir_vars(const Elf *elf, const std::string &in)
@@ -109,10 +111,11 @@ resolve_dir_vars(const Elf *elf, const std::string &in)
  * It uses a read/write lock to allow parallel lookups and caches
  * immutable ELF objects (shared ownership).
  *
- * Parsing is performed outside the lock to avoid blocking other readers.
+ * Parsing is performed outside the lock to avoid blocking other
+ * readers.
  *
- * \return Pointer to cached ELF on success, or nullptr if the file cannot be
- *         parsed as a valid ELF object.
+ * \return Pointer to cached ELF on success, or nullptr if the file
+ *         cannot be parsed as a valid ELF object.
  */
 const Elf *
 ElfCache::LookUp(const string &path)
@@ -146,10 +149,11 @@ ElfCache::LookUp(const string &path)
 }
 
 /*!
- * \brief Search for \p lib by iterating \p dirs and testing compatibility.
+ * \brief Search for \p lib by iterating \p dirs and testing
+ *        compatibility.
  *
- * Each directory element is expanded via resolve_dir_vars() (supporting
- * $ORIGIN/$LIB/$PLATFORM) and then joined with \p lib.
+ * Each directory element is expanded via resolve_dir_vars()
+ * (supporting $ORIGIN/$LIB/$PLATFORM) and then joined with \p lib.
  *
  * A candidate is accepted only if it exists, parses as ELF, and is
  * ABI-compatible with \p elf (via Elf::Compatible()).
@@ -180,12 +184,14 @@ ElfCache::findLibraryByDirs(const Elf *elf, const string &lib,
 }
 
 /*!
- * \brief Resolve a DT_NEEDED-like entry that names a path (contains '/').
+ * \brief Resolve a DT_NEEDED-like entry that names a path
+ *        (contains '/').
  *
  * If \p lib is absolute, it is used as-is. Otherwise it is treated as
  * relative to the audited object's directory (dir_name(elf->Path())).
  *
- * \return true if the target exists, parses as ELF, and is compatible.
+ * \return true if the target exists, parses as ELF, and is
+ *         compatible.
  */
 bool
 ElfCache::findLibraryByPath(const Elf *elf, const string &lib)
@@ -208,15 +214,16 @@ ElfCache::findLibraryByPath(const Elf *elf, const string &lib)
  * \brief Resolve \p lib for \p elf using loader-like search rules.
  *
  * Search order:
- *  1. If \p lib contains '/', treat it as a path (absolute or relative
- *     to the object's directory) via findLibraryByPath().
+ *  1. If \p lib contains '/', treat it as a path (absolute or
+ *     relative to the object's directory) via findLibraryByPath().
  *  2. Search DT_RUNPATH directories (expanded tokens).
  *  3. Search DT_RPATH directories (expanded tokens).
  *  4. Search global resolver directories passed as \p dirs.
  *  5. Search package-local directories (pkg.Dirs()).
  *
- * This function does not consult ld.so.cache; \p dirs is expected to model
- * global loader-visible directories (e.g., from ld.so.conf and revdep.d).
+ * This function does not consult ld.so.cache; \p dirs is expected to
+ * model global loader-visible directories (e.g., from ld.so.conf and
+ * revdep.d).
  */
 bool
 ElfCache::FindLibrary(const Elf *elf, const Package &pkg,
@@ -235,6 +242,3 @@ ElfCache::FindLibrary(const Elf *elf, const Package &pkg,
 
   return false;     // Library not found in any searched paths
 }
-
-// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
-// End of file.

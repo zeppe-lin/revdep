@@ -1,6 +1,10 @@
 /*!
  * \file revdep_engine.cpp
- * \brief Implementation of librevdep audit engine entry points.
+ * \brief Implementation of the synchronous audit engine.
+ *
+ * \details
+ * Implements the functions declared in revdep_engine.h.  This file
+ * contains no public contracts; see the header for semantics.
  *
  * \copyright See COPYING for license terms and COPYRIGHT for notices.
  */

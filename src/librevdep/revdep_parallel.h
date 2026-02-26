@@ -1,11 +1,13 @@
 /*!
  * \file revdep_parallel.h
- * \brief Optional parallel runner helpers for librevdep.
+ * \brief Optional parallel scheduling helpers for revdep auditing.
  *
- * The parallel runner schedules many audits concurrently.  It does
- * not change dependency resolution semantics; it changes only
- * scheduling and emission.
+ * \details
+ * Declares a parallel runner that schedules many audits concurrently.
+ * It does not change resolution semantics; it only changes scheduling
+ * and (optionally) the emission ordering of findings.
  *
+ * \important
  * Deterministic output is supported via an explicit emission order
  * policy.
  *
@@ -34,7 +36,12 @@ struct RevdepWorkItem {
  * \brief Finding emission order under parallel execution.
  */
 enum class RevdepEmitOrder {
+  //! Emit findings as soon as they are produced (fastest,
+  //! nondeterministic).
   Unordered,
+
+  //! Buffer per work item and emit in the same order as the input
+  //! list.
   InputStable,
 };
 

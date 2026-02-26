@@ -1,14 +1,14 @@
-//! \file  elf.cpp
-//! \brief Elf class implementation.
-//!
-//! This file implements the `Elf` class, which is used to parse and
-//! analyze ELF (Executable and Linkable Format) files.
-//! It provides functionality to check if a file is a valid ELF, and
-//! to extract information such as dynamic dependencies
-//! (NEEDED libraries), RPATH, and RUNPATH from the ELF's dynamic
-//! section.
-//!
-//! \copyright See COPYING for license terms and COPYRIGHT for notices.
+/*!
+ * \file elf.cpp
+ * \brief ELF parsing implementation based on libelf/gelf.
+ *
+ * \details
+ * Implements Elf parsing and validation.  The public surface and
+ * meaning of extracted fields are documented in elf.h; this file
+ * contains the mechanics of reading headers and the dynamic section.
+ *
+ * \copyright See COPYING for license terms and COPYRIGHT for notices.
+ */
 
 #include <stdexcept> // For std::runtime_error
 
@@ -271,6 +271,3 @@ Elf::Elf(const string &path)
   elf_end(elf);  // Finalize elf object
   close(fd);     // Close FD
 }
-
-// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
-// End of file.

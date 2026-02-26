@@ -1,12 +1,20 @@
-//! \file  elf_cache.h
-//! \brief ElfCache class definition.
-//!
-//! This file defines the `ElfCache` class, which is responsible for
-//! managing a cache of parsed ELF files and providing functionalities
-//! to search for libraries based on various criteria, including
-//! runtime paths (RUNPATH and RPATH) and package-specific directories.
-//!
-//! \copyright See COPYING for license terms and COPYRIGHT for notices.
+/*!
+ * \file elf_cache.h
+ * \brief Thread-safe cache of parsed ELF objects and library
+ *        resolution helpers.
+ *
+ * \details
+ * Defines ElfCache, which memoizes parsed Elf instances keyed by path
+ * and provides loader-like lookup of DT_NEEDED libraries using
+ * RUNPATH, RPATH, global search directories, and package-local
+ * directories.
+ *
+ * Threading:
+ *   - Lookups are safe to run concurrently.
+ *   - Cached Elf objects are shared and treated as immutable.
+ *
+ * \copyright See COPYING for license terms and COPYRIGHT for notices.
+ */
 
 #pragma once
 
@@ -22,13 +30,21 @@ using namespace std;
 
 /*!
  * \class ElfCache
- * \brief Manages a cache of Elf objects and provides library
- *        searching functionalities.
+ * \brief Cache of parsed ELF objects and helper routines for library
+ *        lookup.
  *
- * The `ElfCache` class is responsible for caching parsed `Elf`
- * objects to avoid redundant parsing of the same ELF files.  It also
- * provides methods to search for shared libraries based on different
- * paths and rules, considering ELF properties like RPATH and RUNPATH.
+ * ElfCache memoizes parsed ELF metadata to avoid redundant parsing.
+ * Cached Elf objects are treated as immutable and are shared by
+ * pointer.
+ *
+ * Threading:
+ * - LookUp() is thread-safe and may be used concurrently.
+ * - The cache uses a read/write lock to allow parallel lookups.
+ *
+ * Resolution:
+ * - FindLibrary() searches in RUNPATH, RPATH, global directories,
+ *   then package-local directories, applying loader-style token
+ *   expansion for directory elements (e.g. $ORIGIN).
  */
 class ElfCache {
 private:
@@ -49,7 +65,7 @@ private:
    * \param lib  The name of the library to search for.
    * \param dirs The vector of directories to search in.
    *
-   * \return True if a compatible library is found, false otherwise.
+   * \return True if a compatible library is found, False otherwise.
    */
   bool findLibraryByDirs(const Elf *elf, const string &lib,
                          const StringVector &dirs);
@@ -64,8 +80,8 @@ private:
    * \param elf Pointer to the context Elf object.
    * \param lib The path to the library to search for.
    *
-   * \return True if a compatible library is found at the path, false
-   *         otherwise.
+   * \return True if a compatible library is found at the path,
+   *         False otherwise.
    */
   bool findLibraryByPath(const Elf *elf, const string &lib);
 
@@ -84,7 +100,7 @@ public:
    * \param path The path to the ELF file to lookup or create.
    *
    * \return A pointer to the Elf object (cached or newly created), or
-   *         NULL if creation fails.
+   *         nullptr if creation fails.
    */
   const Elf *LookUp(const string &path);
 
@@ -109,6 +125,3 @@ public:
                    const string &lib, const StringVector &dirs);
 
 }; // class ElfCache
-
-// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
-// End of file.

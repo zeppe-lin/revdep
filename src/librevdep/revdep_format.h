@@ -2,8 +2,10 @@
  * \file revdep_format.h
  * \brief Formatting helpers for revdep findings.
  *
- * These helpers provide a stable textual representation suitable for
- * CLI output and logs.  The formatter performs no I/O.
+ * \details
+ * Declares helpers that convert RevdepFinding into stable textual
+ * forms suitable for CLI output and logs.
+ * The formatter performs no I/O.
  *
  * \copyright See COPYING for license terms and COPYRIGHT for notices.
  */

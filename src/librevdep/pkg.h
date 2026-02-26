@@ -1,10 +1,17 @@
-//! \file  pkg.h
-//! \brief Package class definition.
-//!
-//! This file defines the `Package` class and related type definitions
-//! and function declarations for managing package information.
-//!
-//! \copyright See COPYING for license terms and COPYRIGHT for notices.
+/*!
+ * \file pkg.h
+ * \brief Package metadata model used by revdep auditing.
+ *
+ * \details
+ * Defines Package, a lightweight representation of an installed
+ * package (name, version, file list, derived directory list, and
+ * ignore flag).
+ * The revdep engine uses Package to associate findings with the
+ * owning package and to provide package-local search directories
+ * where needed.
+ *
+ * \copyright See COPYING for license terms and COPYRIGHT for notices.
+ */
 
 #pragma once
 

@@ -1,13 +1,16 @@
 /*!
  * \file revdep_engine.h
- * \brief Synchronous audit entry points for librevdep.
+ * \brief Synchronous audit engine entry points.
  *
- * The engine analyzes ELF objects and reports missing shared-library
- * dependencies (DT_NEEDED entries that cannot be resolved) using the
- * resolution semantics documented in revdep_semantics(7).
+ * \details
+ * Declares the core auditing functions that analyze ELF objects and
+ * report missing DT_NEEDED dependencies using loader-like resolution.
  *
- * The engine never prints.  Results are returned as structured
- * findings or streamed to a sink callback.
+ * The engine performs no I/O.  Findings are returned/streamed as
+ * structured diagnostics via a sink callback.
+ *
+ * \note
+ * Resolution semantics are documented in revdep_semantics(7).
  *
  * \copyright See COPYING for license terms and COPYRIGHT for notices.
  */
@@ -54,7 +57,8 @@ bool RevdepAuditFile(const Package& pkg,
 
 /*!
  * \brief Audit all relevant objects belonging to a package.
- * \return true if no missing dependencies were detected for this package.
+ * \return true if no missing dependencies were detected for this
+ *         package.
  *
  * \warning
  * Skips ignored packages.
