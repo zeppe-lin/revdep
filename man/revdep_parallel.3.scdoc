@@ -29,15 +29,17 @@ It does not change resolution semantics; it only changes scheduling.
 
 Two emission orders are supported:
 
-InputStable
-	Findings are emitted in the same order as the input work list.
-	Deterministic and suited for CI logs.
+_InputStable_
+	The runner collects findings per work item and invokes the
+	sink after joining worker threads, preserving deterministic
+	order.
 
-Unordered
-	Findings are emitted as soon as they are produced.
-	Fastest, non-deterministic ordering.
+_Unordered_
+	The runner may invoke the sink from worker threads; when sink
+	serialization is enabled, sink calls are mutually exclusive.
 
-The library default is *Unordered*.
+The library default emission order is _Unordered_ unless configured
+otherwise.
 
 # SINK SERIALIZATION
 

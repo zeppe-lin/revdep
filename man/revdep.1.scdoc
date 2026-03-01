@@ -53,10 +53,14 @@ See *revdep_semantics*(7) for the normative contract.
 	Include precise file error details in the output.
 
 *-t*, *--trace*
-	Trace findings as they are produced.
+	Print each finding when it is emitted.
 	Each missing DT_NEEDED emits one line of the form:
 
 	_package_:_object_: missing _needed_
+
+	With *--order*=input, findings are buffered and emitted after
+	the worker threads finish to preserve deterministic order;
+	trace output is therefore not streamed.
 
 *-v*, *--verbose*
 	Produce a more detailed package summary.
@@ -73,18 +77,25 @@ See *revdep_semantics*(7) for the normative contract.
 	Valid _mode_ values:
 
 	_input_
-		Stable output in the same order as the input work list
-		(deterministic).
+		Deterministic.
+		In parallel mode, output is buffered and emitted after
+		worker threads finish.
 		Default.
 	
 	_unordered_
-		Fastest.
-		Findings are emitted as soon as they are produced.
-		Output ordering is nondeterministic.
+		Nondeterministic.
+		Under parallel execution, findings may be emitted from
+		worker threads.
+		Output may be interleaved unless sink invocation is
+		serialized.
 
 *--no-serialize-sink*
 	Do not serialize sink invocation under parallel execution.
 	When set, the output sink must be thread-safe.
+
+	Only matters with *--order*=unordered.
+	When used with *--trace* or *--precise*, output may
+	interleave.
 
 *-V*, *--version*
 	Print version and exit.
