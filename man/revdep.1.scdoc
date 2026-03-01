@@ -15,9 +15,12 @@ revdep - reverse dependency checker for installed ELF objects
 The *revdep* utility audits installed ELF objects and reports missing
 shared-library dependencies (DT_NEEDED entries that cannot be
 resolved).
-*revdep* is implemented as a thin CLI adapter over *librevdep*(7) and
-inherits its resolution semantics.
+*revdep* is a thin CLI adapter over *librevdep*(7) and inherits its
+resolution semantics.
 See *revdep_semantics*(7) for the normative contract.
+
+Emission order under parallel execution is configurable
+(see *--order*).
 
 # OPTIONS
 
@@ -53,7 +56,7 @@ See *revdep_semantics*(7) for the normative contract.
 	Include precise file error details in the output.
 
 *-t*, *--trace*
-	Print each finding when it is emitted.
+	Print each finding at emission time.
 	Each missing DT_NEEDED emits one line of the form:
 
 	_package_:_object_: missing _needed_
@@ -72,26 +75,34 @@ See *revdep_semantics*(7) for the normative contract.
 	concurrency.
 	If _N_ is 1, execution is serial.
 
+	Parallel execution affects scheduling and emission timing
+	only.
+	It does not change dependency resolution semantics or
+	the set of findings.
+
+	The interaction with emission order is described under
+	*--order*.
+
 *--order*=_mode_
 	Control emission order of findings under parallel execution.
 	Valid _mode_ values:
 
 	_input_
-		Deterministic.
+		Deterministic with respect to input work list order.
 		In parallel mode, output is buffered and emitted after
 		worker threads finish.
 		Default.
-	
+
 	_unordered_
 		Nondeterministic.
 		Under parallel execution, findings may be emitted from
 		worker threads.
-		Output may be interleaved unless sink invocation is
-		serialized.
+		Output may interleave unless emission is serialized
+		(see *--no-serialize-sink*).
 
 *--no-serialize-sink*
-	Do not serialize sink invocation under parallel execution.
-	When set, the output sink must be thread-safe.
+	Do not serialize output emission under parallel execution.
+	When set, the output handler must be thread-safe.
 
 	Only matters with *--order*=unordered.
 	When used with *--trace* or *--precise*, output may
@@ -171,5 +182,9 @@ Rebuild broken packages and reinstall them to restore missing
 libraries.
 Per-package search paths may be extended with configuration files in
 *revdep.d*(5).
+
+When running with parallel jobs and unordered emission,
+output ordering is not guaranteed.
+For deterministic logs, use *--order*=input.
 
 ; vim: ft=scdoc cc=72 tw=70
