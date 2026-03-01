@@ -11,6 +11,8 @@ purpose of static analysis.
 It does not execute code and does not rely on environment state.
 Resolution rules are explicit and deterministic.
 
+These semantics are independent of execution mode (serial or parallel).
+
 # RESOLUTION ORDER
 
 When resolving DT_NEEDED entries for an ELF object, *librevdep*(7)

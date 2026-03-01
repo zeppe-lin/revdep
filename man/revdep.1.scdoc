@@ -151,7 +151,7 @@ The *revdep* utility exits with one of the following codes:
 *3*
 	Failed to read ld.so.conf.
 *4*
-	Missing library detected.
+	One or more missing libraries were detected.
 
 # EXAMPLES
 
