@@ -27,9 +27,11 @@ install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp -f $(BIN1) $(DESTDIR)$(PREFIX)/bin
 	cd $(DESTDIR)$(PREFIX)/bin && chmod 0755 $(BIN1)
+	cd $(LIB_DIR) && $(MAKE) $@
 
 uninstall:
 	cd $(DESTDIR)$(PREFIX)/bin && rm -f $(BIN1)
+	cd $(LIB_DIR) && $(MAKE) $@
 
 clean:
 	rm -f $(OBJS) $(BIN1)

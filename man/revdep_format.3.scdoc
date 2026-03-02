@@ -1,0 +1,33 @@
+REVDEP_FORMAT(3)
+
+# NAME
+
+revdep_format - formatting helpers for librevdep findings
+
+# SYNOPSIS
+
+```
+#include <librevdep/revdep_format.h>
+
+std::string s = revdep::RevdepFormatFinding(f);
+```
+
+# DESCRIPTION
+
+Formatting helpers provide a stable, non-opinionated representation of
+*revdep::RevdepFinding* records suitable for CLI output or logs.
+
+These helpers do not perform I/O.
+
+# FUNCTIONS
+
+RevdepFormatFinding(finding)
+	Return a single-line, revdep-like textual representation of a
+	finding.
+
+# SEE ALSO
+
+*revdep_engine*(3),
+*revdep*(1)
+
+; vim: ft=scdoc cc=72 tw=70

@@ -1,11 +1,14 @@
-//! \file  pkg.cpp
-//! \brief Package class implementation.
-//!
-//! This file implements the `Package` class and related functions for
-//! reading package information from a database and associating
-//! directory configurations with packages.
-//!
-//! \copyright See COPYING for license terms and COPYRIGHT for notices.
+/*!
+ * \file pkg.cpp
+ * \brief Package metadata parsing and helpers.
+ *
+ * \details
+ * Implements Package construction and parsing helpers.  Public
+ * contracts belong in pkg.h; this file focuses on parsing/derivation
+ * details.
+ *
+ * \copyright See COPYING for license terms and COPYRIGHT for notices.
+ */
 
 #include <algorithm>  // For std::find
 #include <fstream>    // For std::ifstream

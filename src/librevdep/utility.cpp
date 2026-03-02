@@ -1,7 +1,13 @@
-//! \file  utility.cpp
-//! \brief Helper functions implementation.
-//!
-//! \copyright See COPYING for license terms and COPYRIGHT for notices.
+/*!
+ * \file utility.cpp
+ * \brief Implementation of small utility helpers.
+ *
+ * \details
+ * Implements the helpers declared in utility.h.  This file contains
+ * no public API; see utility.h for contracts and expected behavior.
+ *
+ * \copyright See COPYING for license terms and COPYRIGHT for notices.
+ */
 
 #include <fstream>
 
@@ -39,7 +45,7 @@ ReadRdConf(const string &path, StringVector &dirs)
 
   while (getline(fin, line))
   {
-    if (line[0] != '#' && line.length() > 0)
+    if (!line.empty() && line[0] != '#')
       dirs.push_back(line);
   }
 
@@ -63,7 +69,7 @@ ReadLdConf(const string &path, StringVector &dirs, int maxdepth)
   {
 
     // Skip comment lines
-    if (line[0] == '#')
+    if (line.empty() || line[0] == '#')
       continue;
 
     // Handle "include "
@@ -71,7 +77,7 @@ ReadLdConf(const string &path, StringVector &dirs, int maxdepth)
     {
       glob_t g; // Glob struct for file expansion
       string includePath = line.substr(8); // Path after "include "
-                                           //
+
       if (glob(includePath.c_str(), 0, NULL, &g) == 0) // Expand path
       {
         // Iterate paths
@@ -111,6 +117,3 @@ IsRegularFile(const string &file_path)
 
   return S_ISREG(file_stat.st_mode); // Check if a regular file
 }
-
-// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
-// End of file.

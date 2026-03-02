@@ -1,342 +1,244 @@
-//! \file  elf-cache.cpp
-//! \brief ElfCache class implementation.
-//!
-//! This file implements the `ElfCache` class, which manages a cache
-//! of parsed ELF files to improve performance by avoiding redundant
-//! parsing.  It also provides functionalities to resolve library
-//! paths and search for libraries based on different criteria related
-//! to ELF dependencies and runtime paths.
-//!
-//! \copyright See COPYING for license terms and COPYRIGHT for notices.
+/*!
+ * \file elf_cache.cpp
+ * \brief Implementation of ElfCache and resolution helpers.
+ *
+ * \details
+ * Implements the caching and resolution logic declared in
+ * elf_cache.h.  Public semantics live in the header; this file
+ * provides the concrete token expansion and directory search
+ * mechanics.
+ *
+ * \copyright See COPYING for license terms and COPYRIGHT for notices.
+ */
 
-#include <algorithm>   // For std::for_each
+#include <mutex>
+#include <utility>
 
-#include <libgen.h>    // For dirname()
-#include <limits.h>    // For PATH_MAX
 #include <sys/auxv.h>  // For getauxval(), AT_PLATFORM
 
 #include "elf_cache.h"
-
-using namespace std;
-
-// Define type alias for pair of string and Elf pointer
-typedef pair          <const string &, Elf *>   ElfPair;
-
-// Define type alias for iterator of unordered_map
-typedef unordered_map <string, Elf *>::iterator ElfIter;
+#include "utility.h"
 
 /*!
- * \brief Deletes an Elf object from an ElfPair.
- *
- * This is a helper function used to delete the Elf* part of an
- * ElfPair.  It is intended to be used with algorithms like
- * std::for_each to clean up a collection of ElfPairs.
- *
- * \param pair The ElfPair containing the Elf object to be deleted.
+ * \brief Return parent directory of \p p (like dirname(3), but
+ *        without mutation).
  */
-static void
-deleteElement(ElfPair pair)
+static std::string
+dir_name(const std::string& p)
 {
-  delete pair.second;  // Delete the Elf object (pointer)
+  auto pos = p.rfind('/');
+  if (pos == std::string::npos)
+    return ".";
+  if (pos == 0)
+    return "/";
+  return p.substr(0, pos);
 }
 
 /*!
- * \brief Resolves directory variables within a given path string.
+ * \brief Expand ld.so-style tokens inside a single directory element.
  *
- * This function replaces special variables like $LIB, ${LIB},
- * $PLATFORM, ${PLATFORM}, $ORIGIN, and ${ORIGIN} in a given path
- * string with their corresponding values.
+ * This expands tokens used in DT_RPATH / DT_RUNPATH entries.
+ * The element is assumed to be already split on ':' by the ELF parser.
  *
- * - $LIB and ${LIB} are replaced with "lib".
- * - $PLATFORM and ${PLATFORM} are replaced with the platform string
- *   obtained from getauxval(AT_PLATFORM).
- * - $ORIGIN and ${ORIGIN} are replaced with the directory of the ELF
- *   file being processed.
+ * Supported tokens (kept aligned with the historical revdep behavior):
+ * - $ORIGIN, ${ORIGIN}     -> directory containing \p elf (elf->Path()).
+ * - $LIB, ${LIB}           -> "lib".
+ * - $PLATFORM, ${PLATFORM} -> AT_PLATFORM from the aux vector (or "").
  *
- * \param elf  Pointer to the Elf object context.
- * \param path The path string containing variables to resolve.
- *
- * \return The path string with variables resolved.
+ * Notes:
+ * - Expansion is performed until a fixed point (multiple occurrences).
+ * - The dynamic loader treats an empty element as the current
+ *   directory; we normalize empty to "." for consistent path joining.
  */
-static string
-resolveDirVars(const Elf *elf, const string &path)
+static std::string
+resolve_dir_vars(const Elf *elf, const std::string &in)
 {
-  static const char *lib = "lib";  // Replacement for $LIB
+  static const char *kLib = "lib";
 
   // Get platform string from aux vector, default to "" if not found
-  static const char *platform =
-      reinterpret_cast<char *>(getauxval(AT_PLATFORM))
-    ? reinterpret_cast<char *>(getauxval(AT_PLATFORM))
-    : "";
+  const char *plat = reinterpret_cast<const char *>(getauxval(AT_PLATFORM));
+  if (!plat)
+    plat = "";
 
-  // Buffer to store directory name
-  char dir[PATH_MAX];
-
-  snprintf(dir, sizeof(dir), "%s", elf->Path().c_str());
-  dirname(dir);  // Get directory name from ELF path
+  // Get directory name from ELF path
+  const std::string origin = dir_name(elf->Path());
 
   // Structure to define variables and their replacements
-  struct {
-    const char  *name;   // Variable name (e.g., "$LIB")
-    size_t      length;  // Length of variable name
-    const char  *s;      // Replacement string
+  struct Var {
+    const char *name;    // Variable name (e.g., "$LIB")
+    const char *value;   // Replacement string
   } vars[] = {
-    {        "$LIB",  4,      lib },
-    {      "${LIB}",  6,      lib },
-    {   "$PLATFORM",  9, platform },
-    { "${PLATFORM}", 11, platform },
-    {     "$ORIGIN",  7,      dir },
-    {   "${ORIGIN}",  9,      dir },
-    {          NULL,  0,     NULL }  // NULL terminator for array
+    {"$LIB",        kLib},
+    {"${LIB}",      kLib},
+    {"$PLATFORM",   plat},
+    {"${PLATFORM}", plat},
+    {"$ORIGIN",     origin.c_str()},
+    {"${ORIGIN}",   origin.c_str()},
+    {nullptr,       nullptr},
   };
 
-  size_t replaces;    // Flag to track if any replacements were made
-  string out = path;  // Output path, initially input path
+  std::string out = in;
 
+  // Replace until fixed point (handles multiple occurrences).
+  bool changed;
   do
   {
-    replaces = 0;  // Reset replacements flag for each iteration
-
-    // Iterate through variable definitions
-    for (size_t i = 0; vars[i].name != NULL; ++i)
+    changed = false;
+    for (size_t i = 0; vars[i].name; ++i)
     {
-      size_t j = out.find(vars[i].name);  // Find variable name
-
-      if (j != string::npos)
+      const std::string needle(vars[i].name);
+      const std::string repl(vars[i].value ? vars[i].value : "");
+      size_t pos = out.find(needle);
+      if (pos != std::string::npos)
       {
-        out.replace(j, vars[i].length, vars[i].s);  // Replace
-        ++replaces;  // Increment replacements counter
+        out.replace(pos, needle.size(), repl);
+        changed = true;
       }
     }
-  } while (replaces > 0);  // Continue until no more replacements
+  } while (changed);
 
-  return out;  // Return path with variables resolved
+  // Loader treats empty elements as current directory.
+  if (out.empty())
+    out = ".";
+
+  return out;
 }
 
 /*!
- * \brief Resolves directory variables in a vector of paths.
+ * \brief Lookup and cache a parsed ELF file by path.
  *
- * This function applies the resolveDirVars function to each path in
- * the input vector of paths.
+ * This function is thread-safe and may be called concurrently.
+ * It uses a read/write lock to allow parallel lookups and caches
+ * immutable ELF objects (shared ownership).
  *
- * \param elf   Pointer to the Elf object context.
- * \param paths The vector of paths containing variables to resolve.
+ * Parsing is performed outside the lock to avoid blocking other
+ * readers.
  *
- * \return A new StringVector with directory variables resolved in
- *         each path.
+ * \return Pointer to cached ELF on success, or nullptr if the file
+ *         cannot be parsed as a valid ELF object.
  */
-static StringVector
-resolveRunPaths(const Elf *elf, const StringVector &paths)
+const Elf *
+ElfCache::LookUp(const string &path)
 {
-  StringVector out;  // Output vector for resolved paths
+  {
+    std::shared_lock<std::shared_mutex> lk(_mx);
+    auto it = _data.find(path);
+    if (it != _data.end())
+      return it->second.get();
+  }
 
-  // Resolve variables for each path in the input vector
-  for (size_t i = 0; i < paths.size(); ++i)
-    out.push_back(resolveDirVars(elf, paths[i]));
+  // Parse outside lock.
+  std::shared_ptr<const Elf> parsed;
+  try
+  {
+    parsed = std::make_shared<Elf>(path);
+  }
+  catch (...)
+  {
+    return nullptr;
+  }
 
-  return out;  // Return vector of resolved paths
+  if (!parsed || !parsed->Valid())
+    return nullptr;
+
+  std::unique_lock<std::shared_mutex> lk(_mx);
+  auto [it, inserted] = _data.emplace(path, parsed);
+  if (!inserted)
+    return it->second.get();
+  return parsed.get();
 }
 
 /*!
- * \brief Searches for a library by name within specified directories.
+ * \brief Search for \p lib by iterating \p dirs and testing
+ *        compatibility.
  *
- * This function iterates through the provided directories and
- * attempts to find a library file with the given name.  For each
- * directory, it constructs the full path to the library, resolves it
- * using realpath, looks it up in the ElfCache, and checks for
- * compatibility with the context ELF object.
+ * Each directory element is expanded via resolve_dir_vars()
+ * (supporting $ORIGIN/$LIB/$PLATFORM) and then joined with \p lib.
  *
- * \param elf  Pointer to the Elf object context.
- * \param lib  The name of the library to search for.
- * \param dirs The vector of directories to search in.
+ * A candidate is accepted only if it exists, parses as ELF, and is
+ * ABI-compatible with \p elf (via Elf::Compatible()).
  *
- * \return True if a compatible library is found, false otherwise.
+ * \return true if a compatible library was found, false otherwise.
  */
 bool
 ElfCache::findLibraryByDirs(const Elf *elf, const string &lib,
-    const StringVector &dirs)
+                            const StringVector &dirs)
 {
-  // Iterate through each directory in the provided list
-  for (size_t i = 0; i < dirs.size(); ++i)
+  for (const auto &dir : dirs)
   {
-    string path = dirs[i] + "/" + lib;  // Construct library path
-    char realPath[PATH_MAX];            // Buffer for real path
+    const std::string resolved = resolve_dir_vars(elf, dir);
+    string path = resolved;
+    if (!path.empty() && path.back() != '/')
+      path += '/';
+    path += lib;
 
-    // Resolve path to canonical real path, skip if fails
-    if (realpath(path.c_str(), realPath) == NULL)
+    const Elf *elf2 = LookUp(path);
+    if (!elf2)
       continue;
 
-    const Elf *elf2 = LookUp(realPath);  // Lookup ELF in cache
-
-    if (elf2 == NULL)
-      continue;  // Skip if ELF lookup failed
-
-    if (!elf->Compatible(elf2[0]))
-      continue;  // Skip if ELFs are not compatible
-
-    return true;  // Compatible library found
+    if (elf->Compatible(*elf2))
+      return true;
   }
 
-  return false;  // Library not found in any of the dirs
+  return false;
 }
 
 /*!
- * \brief Searches for a library by its full path or relative path to
- *        the ELF's directory.
+ * \brief Resolve a DT_NEEDED-like entry that names a path
+ *        (contains '/').
  *
- * If the library path starts with '/', it's treated as an absolute
- * path.  Otherwise, it's considered relative to the directory of the
- * context ELF file.  The function resolves the path using realpath,
- * looks up the ELF in the cache, and checks for compatibility.
+ * If \p lib is absolute, it is used as-is. Otherwise it is treated as
+ * relative to the audited object's directory (dir_name(elf->Path())).
  *
- * \param elf Pointer to the Elf object context.
- * \param lib The path to the library to search for.
- *
- * \return True if a compatible library is found at the path, false
- *         otherwise.
+ * \return true if the target exists, parses as ELF, and is
+ *         compatible.
  */
 bool
 ElfCache::findLibraryByPath(const Elf *elf, const string &lib)
 {
-  string path;  // Constructed path to library
+  string path;
 
-  if (lib[0] == '/')
-  {
-    path = lib;  // Library path is absolute
-  }
+  if (!lib.empty() && lib[0] == '/')
+    path = lib;
   else
-  {
-    char dir[PATH_MAX];  // Buffer for directory of ELF
+    path = dir_name(elf->Path()) + "/" + lib;
 
-    snprintf(dir, sizeof(dir), "%s", elf->Path().c_str());
-    dirname(dir);  // Get directory of the ELF file
+  const Elf *elf2 = LookUp(path);
+  if (!elf2)
+    return false;
 
-    path = dir + ("/" + lib);  // Construct relative path
-  }
-
-  char realPath[PATH_MAX];  // Buffer for real path
-
-  if (realpath(path.c_str(), realPath) == NULL)
-    return false;  // Resolve path to canonical real path
-
-  const Elf *elf2 = LookUp(realPath);  // Lookup ELF in cache
-
-  if (elf2 == NULL)
-    return false;  // Skip if ELF lookup failed
-
-  return elf->Compatible(elf2[0]);  // Check for compatibility
+  return elf->Compatible(*elf2);
 }
 
 /*!
- * \brief Destructor for the ElfCache class.
+ * \brief Resolve \p lib for \p elf using loader-like search rules.
  *
- * Iterates through the cached Elf objects and deletes each one to
- * free allocated memory.
- */
-ElfCache::~ElfCache()
-{
-  // Iterate through the cache and delete each Elf object
-  for_each(_data.begin(), _data.end(), deleteElement);
-}
-
-/*!
- * \brief Looks up an Elf object in the cache by path.
+ * Search order:
+ *  1. If \p lib contains '/', treat it as a path (absolute or
+ *     relative to the object's directory) via findLibraryByPath().
+ *  2. Search DT_RUNPATH directories (expanded tokens).
+ *  3. Search DT_RPATH directories (expanded tokens).
+ *  4. Search global resolver directories passed as \p dirs.
+ *  5. Search package-local directories (pkg.Dirs()).
  *
- * If an Elf object for the given path already exists in the cache, it
- * returns the cached object.  Otherwise, it creates a new Elf object
- * by parsing the file at the given path, adds it to the cache, and
- * returns the new object.
- *
- * \param path The path to the ELF file to lookup or create.
- *
- * \return Pointer to the Elf object from the cache or a newly created
- *         one, or NULL if ELF creation fails.
- */
-const Elf*
-ElfCache::LookUp(const string &path)
-{
-  ElfIter value = _data.find(path);  // Find path in cache
-
-  if (value != _data.end())
-    return value->second;  // Return cached Elf object if found
-
-  Elf *elf = new Elf(path);  // Create a new Elf object
-
-  if (!elf->Valid())
-  {
-    delete elf;   // Delete newly created Elf object if invalid
-    return NULL;  // Return NULL if ELF creation failed
-  }
-
-  ElfPair pair = make_pair <const string &, Elf *&> (path, elf);
-
-  _data.insert(pair);  // Insert new Elf object into cache
-
-  return elf;  // Return the newly created (and cached) Elf
-}
-
-/*!
- * \brief Finds a library for a given ELF object, package, library
- *        name, and search directories.
- *
- * This is the main function for finding a library.  It checks for the
- * library in the following order:
- *
- * 1. If the library name contains '/', try to find it by absolute or
- *    relative path using findLibraryByPath.
- * 2. Resolve RUNPATH entries of the ELF and search in those
- *    directories using findLibraryByDirs.
- * 3. If RUNPATH is not present or library not found, resolve RPATH
- *    entries and search in those directories.
- * 4. If RPATH is also not present or library not found, search in the
- *    provided 'dirs' using findLibraryByDirs.
- * 5. Finally, if still not found, search in the package directories
- *   (pkg.Dirs()) using findLibraryByDirs.
- *
- * \param elf  Pointer to the Elf object context.
- * \param pkg  The Package object (used for package-specific
- *             directory search).
- * \param lib  The name of the library to find.
- * \param dirs Additional directories to search in.
- *
- * \return True if the library is found, false otherwise.
+ * This function does not consult ld.so.cache; \p dirs is expected to
+ * model global loader-visible directories (e.g., from ld.so.conf and
+ * revdep.d).
  */
 bool
 ElfCache::FindLibrary(const Elf *elf, const Package &pkg,
-    const string &lib, const StringVector &dirs)
+                      const string &lib, const StringVector &dirs)
 {
-  // If library path is absolute or relative, use path search
   if (lib.find('/') != string::npos)
-    return findLibraryByPath(elf, lib);
-
-  StringVector paths;  // Vector to store search paths
-
-  // Search in RUNPATH directories if available
-  if (elf->RunPath().size() > 0)
   {
-    paths = resolveRunPaths(elf, elf->RunPath());
-    if (findLibraryByDirs(elf, lib, paths))
-      return true;  // Library found in RUNPATH
-  }
-  // Else, search in RPATH directories if available
-  else if (elf->RPath().size() > 0)
-  {
-    paths = resolveRunPaths(elf, elf->RPath());
-    if (findLibraryByDirs(elf, lib, paths))
-      return true;  // Library found in RPATH
+    if (findLibraryByPath(elf, lib))
+      return true;
   }
 
-  // Search in provided 'dirs' directories
-  if (findLibraryByDirs(elf, lib, dirs))
-    return true;    // Library found in 'dirs'
-
-  // Search in package directories if available
-  if (   pkg.Dirs().size() > 0
-      && findLibraryByDirs(elf, lib, pkg.Dirs()))
-    return true;    // Library found in package dirs
+  if (findLibraryByDirs(elf, lib, elf->RunPath())) return true;
+  if (findLibraryByDirs(elf, lib, elf->RPath()))   return true;
+  if (findLibraryByDirs(elf, lib, dirs))           return true;
+  if (findLibraryByDirs(elf, lib, pkg.Dirs()))     return true;
 
   return false;     // Library not found in any searched paths
 }
-
-// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
-// End of file.

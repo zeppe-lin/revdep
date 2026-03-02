@@ -1,0 +1,37 @@
+LIBREVDEP(3)
+
+# NAME
+
+librevdep.h - umbrella header for librevdep public API
+
+# SYNOPSIS
+
+```
+#include <librevdep/librevdep.h>
+```
+
+# DESCRIPTION
+
+Including *librevdep.h* pulls in all public interfaces of
+*librevdep*(7):
+
+- Configuration and context (RevdepConfig, RevdepContext)
+- Audit engine entry points
+- Parallel runner helpers
+- Finding formatting helpers
+
+Consumers may include more specific headers if desired.
+
+# NOTES
+
+The API is C++17 and later.
+
+# SEE ALSO
+
+*revdep_context*(3),
+*revdep_engine*(3),
+*revdep_parallel*(3),
+*revdep_format*(3),
+*librevdep*(7)
+
+; vim: ft=scdoc cc=72 tw=70

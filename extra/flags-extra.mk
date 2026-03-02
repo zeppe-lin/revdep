@@ -9,7 +9,7 @@ LIBS     = -lelf
 # flags
 CPPFLAGS = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 \
            -DVERSION=\"$(VERSION)\"
-CXXFLAGS = -std=c++0x \
+CXXFLAGS = -std=c++17 \
            -pedantic \
            -Wall \
            -Warray-bounds=2 \

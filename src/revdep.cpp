@@ -1,66 +1,90 @@
-//! \file  main.cpp
-//! \brief Command-line utility of \a revdep.
-//!
-//! This file implements the main function for the `revdep`
-//! command-line utility.  `revdep` is designed to check for missing
-//! shared library dependencies for installed packages.  It parses
-//! command-line options, reads package information from a database,
-//! analyzes ELF files, and reports any missing dependencies.
-//!
-//! \copyright See COPYING for license terms and COPYRIGHT for notices.
+/*!
+ * \file  revdep.cpp
+ * \brief revdep(1) command line interface, implemented as an adapter
+ *        over librevdep.
+ *
+ * This file intentionally contains **no dependency-resolution logic**.
+ * Its job is orchestration.
+ *
+ * - Parse CLI options and map them to librevdep knobs.
+ * - Load the installed package database.
+ * - Load global resolver directories from ld.so.conf.
+ * - Build a stable work list (package order, then file order).
+ * - Delegate auditing and scheduling to librevdep:
+ *   - Serial path: revdep::RevdepAuditFile()
+ *   - Parallel path: revdep::RevdepAuditWorkItemsParallel()
+ *
+ * Keeping the CLI thin prevents accidental global state and ensures
+ * that parallel execution remains correct.  Deterministic output
+ * under parallel execution is controlled via --order.
+ *
+ * \copyright See COPYING for license terms and COPYRIGHT for notices.
+ */
 
-#include <algorithm>   // For std::find
-#include <iostream>    // For std::cout, std::cerr, std::endl
-
-#include <getopt.h>    // For getopt_long
-#include <stdarg.h>    // For va_list, va_start, va_end (not directly used but included)
-#include <unistd.h>    // For fprintf, getopt
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <getopt.h>
+#include <iostream>
+#include <mutex>
+#include <string>
+#include <thread>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 #include "librevdep.h"
 #include "pathnames.h"
 
 using namespace std;
-
-/*********************************************************************
- * Globals.
- */
+using std::string;
 
 /*!
  * \brief Structure to hold command-line options.
  */
 struct Options
 {
-  int          verbose_output;   //!< Flag for verbose output mode.
-  int          erroneous_output; //!< Flag to include erroneous files in output.
-  int          precise_output;   //!< Flag for precise error output mode.
-  int          trace_output;     //!< Flag for debug/trace output mode.
-  string       revdep_directory; //!< Path to the revdep configuration directory.
-  string       package_database; //!< Path to the package database file.
-  string       ldso_config;      //!< Path to the ld.so.conf file.
-  StringVector ignored_packages; //!< Vector of package names to ignore.
+  // Flag for verbose output mode.  Default: 0.
+  int verbose_output{0};
 
-  /*!
-   * \brief Default constructor for Options.
-   *
-   * Initializes options with default values, including paths from
-   * pathnames.h.
-   */
-  Options() :
-    verbose_output(0),
-    erroneous_output(0),
-    precise_output(0),
-    trace_output(0),
-    revdep_directory(_PATH_REVDEPD),
-    package_database(_PATH_PKGDB),
-    ldso_config(_PATH_LDSOCONF),
-    ignored_packages()
-  {}
+  // Flag to include erroneous files in output.  Default: 0.
+  int erroneous_output{0};
+
+  // Flag for precise error output mode.  Default: 0.
+  int precise_output{0};
+
+  // Flag for debug/trace output mode.  Default: 0.
+  int trace_output{0};
+
+  // Number of jobs for parallel execution.  Default: 1.
+  size_t jobs{1};
+
+  // Serialize sink invocation under parallel execution.
+  // Default: true.
+  bool serialize_sink{true};
+
+  // Control emission order of findings under parallel execution.
+  // Default: input - stable output in the same order as the input
+  // work list - deterministic.
+  revdep::RevdepEmitOrder order{revdep::RevdepEmitOrder::InputStable};
+
+  // Path to the revdep configuration directory.
+  string revdep_directory{_PATH_REVDEPD};
+
+  // Path to the package database file.
+  string package_database{_PATH_PKGDB};
+
+  // Path to the ld.so.conf file.
+  string ldso_config{_PATH_LDSOCONF};
+
+  // Vector of package names to ignore.
+  StringVector ignored_packages;
 };
 
 static Options       program_options;    //!< Global options structure.
 static PackageVector package_list;       //!< Global vector of Package objects.
 static StringVector  search_directories; //!< Global vector of directories for library search.
-static ElfCache      elf_file_cache;     //!< Global ElfCache object for caching ELF files.
 
 /*!
  * \enum ExitCode
@@ -78,230 +102,25 @@ enum ExitCode
   E_FOUND_MISSING = 4, //!< Exit code indicating missing shared libraries were found.
 };
 
-/*********************************************************************
- * Function declarations.
- */
-
-static void ignorePackages(PackageVector &package_list, const StringVector &ignored_packages);
-static bool workFile(const Package &package, const string &file_path);
-static bool workPackage(const Package &package);
-static int workAllPackages(const PackageVector &package_list);
-static int workSpecificPackages(const PackageVector &package_list, int start_arg_index, int argc, char **argv);
-static int parseCommandLineOptions(int argc, char **argv);
-static int loadPackageDatabase();
-static int loadLdConfig();
-static int initializeSearchDirectories();
-static int processPackages(int optind, int argc, char **argv);
-static int printHelp();
-static int printVersion();
-
-/*********************************************************************
- * Function implementations.
- */
-
-/*!
- * \brief Checks dependencies for a single file within a package.
- *
- * This function checks if a given file, belonging to a package, has
- * all its shared library dependencies satisfied.  It uses the
- * ElfCache to lookup ELF files and find required libraries.
- *
- * \param package   The Package object to which the file belongs.
- * \param file_path The path to the file to be checked.
- *
- * \return True if all dependencies are satisfied or the file
- *         is not a regular ELF file, false if any dependency
- *         is missing.
- */
-
-static bool
-workFile(const Package &package, const string &file_path)
-{
-  bool return_value = true;
-
-  if (program_options.trace_output)
-    cout << package.Name() << ":" << file_path << ": checking file" << endl;
-
-  if (!IsRegularFile(file_path))
-    return return_value;  // Skip if not a regular file
-
-  const Elf *elf_file = elf_file_cache.LookUp(file_path); // Lookup ELF in cache
-  if (!elf_file)
-    return return_value; // Skip if not an ELF file
-
-  if (program_options.trace_output)
-    cout << package.Name() << ":" << file_path << ": is ELF" << endl;
-
-  // Check each needed library
-  for (const auto& library_name : elf_file->Needed())
-  {
-    if (!elf_file_cache.FindLibrary(elf_file, package, library_name, search_directories))
-    {
-      if (program_options.precise_output)
-      {
-        cout << package.Name() << ":" << file_path << ":" << library_name
-             << ": missing library" << endl;
-      }
-      return_value = false;  // Dependency missing
-    }
-  }
-
-  return return_value;  // Return result of dependency check
-}
-
-/*!
- * \brief Checks dependencies for all files within a package.
- *
- * Iterates through all files belonging to a package and calls
- * `workFile` for each file to check its dependencies.
- *
- * \param package The Package object to be checked.
- *
- * \return True if all files in the package have satisfied
- *         dependencies, false if any file has missing dependencies.
- */
-static bool
-workPackage(const Package &package)
-{
-  if (package.Ignore()) // Skip ignored packages
-    return true;
-
-  // Check each file in the package
-  bool return_value = true;
-  for (const auto& file_path : package.Files())
-  {
-    if (!workFile(package, file_path))
-    {
-      if (program_options.erroneous_output)
-        cout << package.Name() << ":" << file_path << ": error" << endl;
-
-      return_value = false; // Error found in a file
-    }
-  }
-
-  return return_value;
-}
-
-/*!
- * \brief Checks dependencies for all packages in the database.
- *
- * Iterates through all packages in the `package_list` and calls
- * `workPackage` for each package to perform the dependency check.
- *
- * \param package_list The PackageVector containing all packages to check.
- *
- * \return 0 if all packages are ok, E_FOUND_MISSING if any package
- *           has missing dependencies.
- */
-static int
-workAllPackages(const PackageVector &package_list)
-{
-  int return_value = 0;
-
-  if (program_options.verbose_output)
-  {
-    printf("** checking %zu packages\n", package_list.size());
-    printf("** checking linking\n");
-  }
-
-  // Check each package
-  for (const auto& package : package_list)
-  {
-    if (!workPackage(package))
-    {
-      return_value = E_FOUND_MISSING;
-
-      if (program_options.verbose_output)
-        cout << package.Name() << ": error" << endl;
-      else
-        cout << package.Name() << endl;
-
-    }
-    else if (program_options.verbose_output)
-      cout << package.Name() << ": ok" << endl;
-  }
-
-  return return_value;
-}
-
-/*!
- * \brief Checks dependencies for specific packages provided as
- *        command-line arguments.
- *
- * Iterates through the provided package names from command-line,
- * finds corresponding Package objects in `package_list`, and calls
- * `workPackage` for each to check dependencies.
- *
- * \param package_list    The PackageVector containing all packages.
- * \param start_arg_index Starting index in argv for package names.
- * \param argc            Argument count from main.
- * \param argv            Argument vector from main.
- *
- * \return 0 if all specified packages are ok, E_FOUND_MISSING
- *         if any of the specified packages has missing dependencies.
- */
-static int
-workSpecificPackages(const PackageVector &package_list,
-    int start_arg_index, int argc, char **argv)
-{
-  int return_value = 0;
-
-  if (program_options.verbose_output)
-  {
-    printf("** checking %d packages\n", argc - start_arg_index);
-    printf("** checking linking\n");
-  }
-
-  // Check each specified package name
-  for (int i = start_arg_index; i < argc; ++i)
-  {
-    const string package_name = argv[i];
-
-    // Find package by name
-    auto package_iterator = find(package_list.begin(), package_list.end(), package_name);
-    if (package_iterator == package_list.end())
-    {
-      if (program_options.verbose_output)
-        cout << package_name << ": cannot find package information" << endl;
-
-      continue;  // Skip if package info not found
-    }
-
-    if (!workPackage(*package_iterator))
-    {
-      return_value = E_FOUND_MISSING;  // Set error code if missing deps
-
-      if (program_options.verbose_output)
-        cout << package_iterator->Name() << ": error" << endl;
-      else
-        cout << package_iterator->Name() << endl;
-    }
-    else if (program_options.verbose_output)
-        cout << package_iterator->Name() << ": ok" << endl;
-  }
-
-  return return_value;
-}
-
 /*!
  * \brief Marks specified packages as ignored.
  *
  * Iterates through the list of package names to ignore and marks the
- * corresponding Package objects in the `package_list` as ignored.
+ * corresponding Package objects in the `pkgs` as ignored.
  *
- * \param package_list     The PackageVector to modify.
- * \param ignored_packages The StringVector of package names to ignore.
+ * \param pkgs     The PackageVector to modify.
+ * \param ignored  The StringVector of package names to ignore.
  */
 static void
-ignorePackages(PackageVector &package_list, const StringVector &ignored_packages)
+ignorePackages(PackageVector &pkgs, const StringVector &ignored)
 {
-  // Iterate through packages to ignore
-  for (const auto& ignored_package_name : ignored_packages)
+  for (const auto& n : ignored)
   {
-    // Find package by name
-    auto package_iterator = find(package_list.begin(), package_list.end(), ignored_package_name);
-    if (package_iterator != package_list.end())
-      package_iterator->Ignore();  // Mark package as ignored
+    for (auto& p : pkgs)
+    {
+      if (p == n)
+        p.Ignore();
+    }
   }
 }
 
@@ -317,7 +136,9 @@ static int
 printHelp()
 {
   cout << R"(Usage: revdep [-Vehptv] [-L ldso-conf-file] [-D package-db-file]
-              [-R revdep-dir] [-I package-list] [package-name ...]
+              [-R revdep-dir] [-I package-list]
+              [-j jobs] [--order mode] [no-serialize-sink]
+              [package-name ...]
 Check installed packages for missing shared libraries.
 
 Mandatory arguments to long options are mandatory for short options too.
@@ -332,6 +153,11 @@ Mandatory arguments to long options are mandatory for short options too.
                                  the output
   -t, --trace                    Show trace output
   -v, --verbose                  Produce a more detailed listing
+  -j, --jobs=N                   Work in parallel using N threads
+      --order=mode               Control emission order under parallel
+                                 execution
+      --no-serialize-sink        Do not serialize sink invocation
+                                 under parallel execution
   -V, --version                  Print version and exit
   -h, --help                     Print this help and exit
 )";
@@ -353,6 +179,43 @@ printVersion()
 }
 
 /*!
+ * \brief Parse the jobs argument into a numeric value.
+ *
+ * Converts the string argument from the command line into a positive
+ * integer representing the number of concurrent jobs.
+ *
+ * - If \p optarg is null or empty, the number of jobs defaults to the
+ *   hardware concurrency reported by
+ *   std::thread::hardware_concurrency(), or 1 if unavailable.
+ * - If \t optarg contains a valid non-zero integer, that value is
+ *   stored in \p out.
+ * - If parsing fails (non-numeric characters, zero value), the
+ *   function returns false.
+ *
+ * \param optarg   The command-line argument string to parse.
+ * \param[out] out Reference to store the resulting job count.
+ *
+ * \return True if parsing succeeded and \p out was set;
+ *         False if the argument was invalid.
+ */
+static bool
+parseJobsArg(const char* optarg, size_t& out)
+{
+  if (!optarg || *optarg == '\0')
+  {
+    unsigned hc = std::thread::hardware_concurrency();
+    out = hc ? static_cast<size_t>(hc) : 1u;
+    return true;
+  }
+  char* end = nullptr;
+  unsigned long v = std::strtoul(optarg, &end, 10);
+  if (!end || *end != '\0' || v == 0)
+    return false;
+  out = static_cast<size_t>(v);
+  return true;
+}
+
+/*!
  * \brief Parses command line options using getopt_long.
  *
  * This function parses the command-line arguments using
@@ -368,6 +231,11 @@ printVersion()
 static int
 parseCommandLineOptions(int argc, char **argv)
 {
+  enum {
+    OPT_ORDER = 1000,
+    OPT_NO_SERIALIZE_SINK,
+  };
+
   static struct option long_options[] =
   {
     { "ldsoconf",    required_argument,  nullptr,  'L' },
@@ -378,13 +246,17 @@ parseCommandLineOptions(int argc, char **argv)
     { "precise",     no_argument,        nullptr,  'p' },
     { "trace",       no_argument,        nullptr,  't' },
     { "verbose",     no_argument,        nullptr,  'v' },
+    { "jobs",        optional_argument,  nullptr,  'j' },
+    { "order",       required_argument,  nullptr,  OPT_ORDER },
+    { "no-serialize-sink", no_argument,  nullptr,  OPT_NO_SERIALIZE_SINK },
     { "version",     no_argument,        nullptr,  'V' },
     { "help",        no_argument,        nullptr,  'h' },
     { nullptr,       0,                  nullptr,   0  } // Sentinel
   };
 
+  // "j::" => optional arg for -j.
   int option_char;
-  while ((option_char = getopt_long(argc, argv, "L:D:R:I:eptvVh", long_options, nullptr)) != -1)
+  while ((option_char = getopt_long(argc, argv, "L:D:R:I:eptvj::Vh", long_options, nullptr)) != -1)
   {
     switch (option_char)
     {
@@ -418,13 +290,40 @@ parseCommandLineOptions(int argc, char **argv)
       case 'h':
         printHelp();
         exit(0);
+      case 'j':
+        if (!parseJobsArg(optarg, program_options.jobs))
+        {
+          fprintf(stderr, "revdep: invalid -j/--jobs value\n");
+          return E_INVALID_INPUT;
+        }
+        break;
+      case OPT_ORDER:
+        if (std::strcmp(optarg, "input") == 0)
+        {
+          program_options.order = revdep::RevdepEmitOrder::InputStable;
+        }
+        else if (std::strcmp(optarg, "unordered") == 0)
+        {
+          program_options.order = revdep::RevdepEmitOrder::Unordered;
+        }
+        else
+        {
+          cerr << "revdep: invalid --order mode (use: input|unordered)\n";
+          return E_INVALID_INPUT;
+        }
+        break;
+      case OPT_NO_SERIALIZE_SINK:
+        program_options.serialize_sink = false;
+        break;
       case ':': /* missing argument */
       case '?': /* invalid options */
+      default:
         fprintf(stderr, "Try '%s --help' for more information.\n", argv[0]);
         return E_INVALID_INPUT;
     }
   }
-
+  if (program_options.jobs == 0)
+    program_options.jobs = 1;
   return 0; // Command line options parsed successfully
 }
 
@@ -445,7 +344,6 @@ loadPackageDatabase()
     cerr << "revdep: " << program_options.package_database << ": failed to read package database\n";
     return E_READ_PKGDB;  // Indicate package database read error
   }
-
   return 0;
 }
 
@@ -492,35 +390,152 @@ initializeSearchDirectories()
   return 0;
 }
 
-/*!
- * \brief Processes packages based on command line arguments.
- *
- * Checks dependencies for all packages or specific packages based on
- * whether package names are provided as command-line arguments.
- *
- * \param optind Index of the first package argument in argv.
- * \param argc   Argument count from main.
- * \param argv   Argument vector from main.
- *
- * \return Exit status code indicating success or failure
- *         (see `ExitCode` enum).
- */
-static int
-processPackages(int optind, int argc, char **argv)
+static vector<const Package*>
+selectPackages(int optind, int argc, char** argv)
 {
-  if (program_options.verbose_output)
-    cout << "** calculating deps" << endl;
-
+  vector<const Package*> out;
   if (optind == argc)
   {
-    // Check all packages if no names provided
-    return workAllPackages(package_list);
+    out.reserve(package_list.size());
+    for (const auto& p : package_list)
+      out.push_back(&p);
+    return out;
+  }
+
+  // Preserve argv order.
+  for (int i = optind; i < argc; ++i)
+  {
+    string name = argv[i];
+    auto it = std::find_if(package_list.begin(), package_list.end(),
+        [&](const Package& p){ return p == name; });
+    if (it != package_list.end())
+      out.push_back(&*it);
+    else
+      cerr << "revdep: " << name << ": package not found\n";
+  }
+  return out;
+}
+
+static int runAudit(const vector<const Package*>& pkgs)
+{
+  if (program_options.verbose_output)
+  {
+    printf("** checking %zu packages\n", pkgs.size());
+    printf("** checking linking\n");
+  }
+
+  revdep::RevdepConfig cfg;
+  cfg.global_search_dirs.assign(search_directories.begin(), search_directories.end());
+  revdep::RevdepContext ctx(std::move(cfg));
+
+  // Build work list in deterministic order (pkg order, file order).
+  vector<revdep::RevdepWorkItem> items;
+  for (const Package* p : pkgs)
+  {
+    if (!p || p->Ignore())
+      continue;
+    for (const auto& f : p->Files())
+      items.push_back({p, f});
+  }
+
+  // Per-package status tracking.
+  unordered_map<string, bool> pkg_bad;
+  unordered_set<string> file_bad; // key: pkg\npath
+  mutex track_mx;
+
+  auto sink = [&](const revdep::RevdepFinding& f) {
+    if (program_options.trace_output)
+    {
+      // Trace is serialized by parallel runner (serialize_sink=true).
+      cout << f.package << ":" << f.object_path << ": missing " << f.needed << "\n";
+    }
+
+    {
+      lock_guard<mutex> lk(track_mx);
+      pkg_bad[f.package] = true;
+      file_bad.insert(f.package + "\n" + f.object_path);
+    }
+
+    if (program_options.precise_output)
+    {
+      cout << revdep::RevdepFormatFinding(f) << "\n";
+    }
+  };
+
+  revdep::RevdepParallelOptions opt;
+  opt.thread_count = program_options.jobs;
+  opt.order = program_options.order;
+  opt.serialize_sink = program_options.serialize_sink;
+
+  bool ok = true;
+  if (program_options.jobs <= 1)
+  {
+    // Serial execution through library engine.
+    for (const Package* p : pkgs)
+    {
+      if (!p || p->Ignore())
+        continue;
+      if (!revdep::RevdepAuditPackage(*p, ctx, sink))
+        ok = false;
+    }
   }
   else
   {
-    // Check specific packages
-    return workSpecificPackages(package_list, optind, argc, argv);
+    ok = revdep::RevdepAuditWorkItemsParallel(items, ctx, opt, sink);
   }
+
+  int ret = ok ? 0 : E_FOUND_MISSING;
+
+  // Summary output matches historical behavior.
+  for (const Package* p : pkgs)
+  {
+    if (!p || p->Ignore())
+      continue;
+
+    bool bad = false;
+    {
+      lock_guard<mutex> lk(track_mx);
+      auto it = pkg_bad.find(p->Name());
+      bad = (it != pkg_bad.end() && it->second);
+    }
+
+    if (bad)
+    {
+      if (program_options.erroneous_output &&
+          !program_options.precise_output)
+      {
+        // In old CLI, -e printed per-file "error" lines.
+        for (const auto& f : p->Files())
+        {
+          bool fb = false;
+          {
+            lock_guard<mutex> lk(track_mx);
+            fb = file_bad.count(p->Name() + "\n" + f) != 0;
+          }
+          if (fb)
+          {
+            cout << p->Name() << ":" << f << ": error\n";
+          }
+        }
+      }
+
+      if (program_options.verbose_output)
+      {
+        cout << p->Name() << ": error\n";
+      }
+      else if (!program_options.precise_output &&
+          !program_options.erroneous_output)
+      {
+        cout << p->Name() << "\n";
+      }
+    }
+    else if (program_options.verbose_output)
+    {
+      cout << p->Name() << ": ok\n";
+    }
+  }
+
+  return ret;
 }
 
 /*!
@@ -545,8 +560,6 @@ main(int argc, char **argv)
   if (int error_code = loadLdConfig()) return error_code;
   if (int error_code = initializeSearchDirectories()) return error_code;
 
-  return processPackages(optind, argc, argv);
+  auto pkgs = selectPackages(optind, argc, argv);
+  return runAudit(pkgs);
 }
-
-// vim: sw=2 ts=2 sts=2 et cc=72 tw=70
-// End of file.

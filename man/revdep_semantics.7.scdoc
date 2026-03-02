@@ -1,0 +1,126 @@
+REVDEP_SEMANTICS(7)
+
+# NAME
+
+revdep_semantics - dependency resolution semantics of librevdep
+
+# DESCRIPTION
+
+*librevdep*(7) models dynamic loader dependency resolution for the
+purpose of static analysis.
+It does not execute code and does not rely on environment state.
+Resolution rules are explicit and deterministic.
+
+These semantics are independent of execution mode (serial or parallel).
+
+# RESOLUTION ORDER
+
+When resolving DT_NEEDED entries for an ELF object, *librevdep*(7)
+applies the following search order:
+
+1. Object-local paths
+
+	DT_RUNPATH is honored if present.
+	Otherwise DT_RPATH is used.
+
+2. Token expansion
+
+	Each RUNPATH/RPATH element is expanded prior to search.
+	Supported tokens:
+
+	$ORIGIN, ${ORIGIN}
+		Directory containing the object.
+
+	$LIB, ${LIB}
+		"lib".
+
+	$PLATFORM, ${PLATFORM}
+		AT_PLATFORM value if available.
+
+	Expansion is performed per element before resolution.
+
+3. Global resolver directories
+
+	Directories derived from:
+	- ld.so.conf (and included files)
+	- RevdepConfig::global_search_dirs
+
+	These represent loader-visible global search paths.
+
+4. Package-local directories
+
+	When auditing within a package context, package directories
+	may be considered according to policy.
+
+	A dependency is reported missing only if all applicable paths
+	fail.
+
+# PLUGIN DIRECTORIES
+
+Directories such as:
+
+- _/usr/lib/gconv_
+- _/usr/lib/security_
+- _/usr/lib/pam_
+- _/usr/lib/audit_
+
+often contain modules that depend on sibling libraries.
+These modules typically use:
+
+```
+RPATH=$ORIGIN
+```
+
+*librevdep*(7) expands $ORIGIN and therefore does not require such
+directories to be globally configured.
+
+If a module relies on sibling libraries without RUNPATH/RPATH, the
+issue is considered a packaging or loader configuration problem.
+
+# /ETC/REVDEP.D CONTRACT
+
+Files under _/etc/revdep.d_ define additional *per-package* resolver
+directories.
+Each regular file name is interpreted as a package name; the listed
+directories are added only when auditing that package.
+
+These files do not affect runtime loader configuration.
+They are intended for package-specific layouts that require extra
+search directories during static auditing.
+
+# NON-ELF INPUTS
+
+Non-ELF files, unsupported ELF types, or ELF objects rejected by the
+validity policy are ignored by the audit engine (treated as
+successful) and produce no findings.
+
+# ELF VALIDITY POLICY
+
+An object is considered analyzable if it is an ELF object (ELF_K_ELF)
+with a readable ELF header, of type ET_EXEC or ET_DYN, with OS ABI
+ELFOSABI_NONE or ELFOSABI_LINUX, and with an architecture (e_machine)
+supported on the build host (including compatibility modes where
+applicable).
+
+# THREADING AND DETERMINISM
+
+*librevdep*(7) is:
+
+- Re-entrant
+- Thread-safe
+- Deterministic under InputStable emission policy
+
+Parallel execution affects scheduling only, not resolution semantics.
+
+# NON-GOALS
+
+The following are not currently modeled:
+
+- LD_LIBRARY_PATH (process-specific state)
+- DF_1_NODEFLIB
+- glibc hardware capability directories
+- full ld.so.cache binary parsing
+
+These may be added in future revisions.
+
+; vim: ft=scdoc cc=72 tw=70

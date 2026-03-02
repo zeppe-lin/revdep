@@ -22,6 +22,9 @@ _revdep()
 			_filedir
 			return
 			;;
+		--order)
+			COMPREPLY=($(compgen -W 'input unordered' -- $cur))
+			;;
 		--ignore|-I)
 			if [[ "$cur" == *,* ]]; then
 				local realcur prefix
