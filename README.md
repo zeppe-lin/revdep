@@ -2,41 +2,50 @@ OVERVIEW
 ========
 
 `revdep` audits installed packages for missing shared library
-dependencies.
+dependencies of ELF-based systems.
 
-The project now consists of:
+It is a command-line frontend built on top of `librevdep`, a reusable
+C++17 audit library extracted from the older coupled implementation.
+
+This repository contains:
 - `revdep(1)` - command-line interface
-- `librevdep` - reusable C++17 library implementing the audit engine
-- Manual pages documenting CLI, configuration, semantics, and API
+- Manual pages documenting CLI behavior and configuration.
 
-The resolver models the dynamic loader search semantics (DT_NEEDED,
-RUNPATH, RPATH, and configurable search directories) and reports
-unresolved dependencies per file and per package.
+The audit engine itself now lives in a separate repository:
 
-The engine can be used synchronously or via an optional parallel
-scheduler.
+https://github.com/zeppe-lin/librevdep
 
-This distribution originated as a fork of CRUX `revdep`
+`revdep` models static shared-library dependency resolution using
+loader-like search rules (`DT_NEEDED`, `RUNPATH`, `RPATH`, and
+configured search directories) and reports unresolved dependencies per
+file and per package.
+
+The CLI is responsible for:
+- option parsing
+- package database interpretation (*FIXME: not yet*)
+- configuration loading
+- output formatting and reporting policy
+  (*FIXME: semantics leaked into library*)
+
+The underlying engine is responsible for ELF parsing and dependency
+resolution.
+
+This distribution originated as fork of CRUX `revdep`
 (part of `prt-utils`) at commit `41dfcb6` (Thu Oct 15 2020), and has
 since been substantially refactored.
 
-Major differences from the original CRUX version include:
-- Rewritten as a C++17 library (`librevdep`)
-- Clear separation of engine, context, formatting, and parallel
-  scheduler
-- Parallel audit support
+Major differences from the historical CRUX version include:
+- extracted reusable code into library (`librevdep`)
+- clearer separation between CLI policy and audit engine
+- optional parallel audit support through the library backend
 - GNU-style CLI and consistent exit codes
 - Extended ELF support (powerpc{,64}, loongarch{,64}, RISC-V)
-- Manual pages in `scdoc(5)` format:
-  - `revdep(1)`
-  - `revdep.d(5)`
-  - `revdep_semantics(7)`
-  - `librevdep(3)` and related 3-section pages
-  - `librevdep(7)`
+- Manual pages in `scdoc(5)` format: `revdep(1)`, `revdep.d(5)`
 
 See the git history for detailed changes.
 
-Original sources:  
+Original sources:
+
 https://git.crux.nu/tools/prt-utils.git
 
 ---
@@ -44,34 +53,21 @@ https://git.crux.nu/tools/prt-utils.git
 ARCHITECTURE
 ============
 
-The system is layered:
+The system is split into frontend and engine:
 
 CLI (`revdep(1)`)  
-Parses options, reads package database, invokes engine.
+Parses options, reads configuration, interprets package database state
+(*FIXME: not yet*), invokes the audit engine, and renders output.
 
-Engine (`revdep_engine`)  
-Audits ELF objects and emits structured findings.
-
-Context (`revdep_context`)  
-Holds configuration and shared state (including ELF cache).
-
-ELF layer (`elf`, `elf_cache`)  
-Parses ELF objects and performs loader-like resolution.
-
-Formatting (`revdep_format`)  
-Converts findings into stable textual representations.
-
-Parallel scheduler (`revdep_parallel`)  
-Optional concurrency layer for large audits.
-
-The CLI is a thin frontend over `librevdep`.
+Engine (`librevdep`)  
+Resolves ELF dependencies and emits structured findings.
 
 ---
 
 NON-GOALS
 =========
 
-`revdep` is not a dynamic loader implementation.
+`revdep` is not a dynamic loader.
 
 Specifically:
 
@@ -82,64 +78,11 @@ Specifically:
 - It does not validate symbol-level resolution.
 - It does not perform ABI compatibility analysis.
 
-The tool focuses strictly on static DT_NEEDED dependency resolution
-using documented search rules (see `revdep_semantics(7)`).
+The tool focuses strictly on static `DT_NEEDED` dependency resolution
+using documented search rules.
 
----
-
-EMBEDDING librevdep
-===================
-
-`librevdep` provides a C++ API for programmatic audits.
-
-Minimal example:
-
-```cpp
-#include <librevdep/librevdep.h>
-#include <iostream>
-
-int main() {
-    RevdepConfig cfg;
-    cfg.searchDirs = {"/lib", "/usr/lib"};
-
-    RevdepContext ctx(cfg);
-
-    auto sink = [](const RevdepFinding& f) {
-        std::cout << RevdepFormatFinding(f) << "\n";
-    };
-
-    Package pkg;
-    pkg.name = "example";
-    pkg.files = {"/usr/bin/example"};
-
-    RevdepAuditPackage(pkg, ctx, sink);
-}
-```
-
-The engine is sink-based: findings are delivered incrementally
-via a callback.  No I/O is performed by the library.
-
-Parallel scheduling is available via `RevdepAuditWorkItemsParallel()`
-(see `revdep_parallel(3)`).
-
----
-
-ABI AND API STABILITY
-=====================
-
-The `librevdep` API is considered source-stable within a major
-version.
-
-ABI stability is **not** guaranteed across major releases.
-
-Consumers are encouraged to:
-
-- Link dynamically when possible.
-- Rebuild against new releases.
-- Consult `librevdep(3)` for authoritative API documentation.
-
-The CLI interface (`revdep(1)`) is considered stable across minor
-releases unless otherwise noted in the changelog.
+See `revdep_semantics(7)` of `librevdep` project for the normative
+resolution contract.
 
 ---
 
@@ -150,37 +93,71 @@ Build-time
 ----------
 
 - C++17 compiler
-- POSIX `sh(1p)`, `make(1p)`, and "mandatory utilities"
+- Meson
+- Ninja
 - `elfutils` (`libelf`)
-- `scdoc(1)` to generate manual pages
-- `pkg-config(1)` (optional, for static linking)
+- `librevdep`
+- `scdoc(1)` to generate manual pages (if manpage build is enabled)
+- `pkg-config(1)` for dependency discovery
 
 Runtime
 -------
 
 - ELF-based system
-- Package database in expected format (see `revdep(1)`)
+- Package database in expected format
+- `librevdep` shared library (when dynamically linked)
 
 ---
 
 INSTALLATION
 ============
 
-To build and install:
+Configure and build with Meson:
 
 ```sh
-make
-make install   # as root
+meson setup build \
+    --buildtype=plain \
+    --wrap-mode=nodownload \
+
+ninja -C build
 ```
 
-For static linking (requires `pkg-config(1)`):
+Install:
 
 ```sh
-make LDFLAGS="-static $(pkg-config --static --libs libelf)"
+DESTDIR="$PKG" ninja -C build install
 ```
 
-Configuration parameters are defined in `config.mk`.  
-Default filesystem paths are specified in `src/pathnames.h`.
+Common options:
+
+```sh
+meson setup build \
+    --prefix=/usr \
+    -D build_man=true \
+    -D b_lto=false \
+```
+
+Use `meson configure build` to inspect available options.
+
+---
+
+CONFIGURATION
+=============
+
+`revdep` reads package-specific (*FIXME: not yet*) and local
+configuration from `revdep.d(5)` inputs.
+
+The exact semantics of configuration and dependency search are
+documented in:
+- `revdep.d(5)`
+- `revdep_semantics(7)` (part of `librevdep` project)
+
+Some compiled-in defaults may also be provided at build time for:
+- package database location
+- dynamic loader configuration location
+- configuration directory location
+
+These are defaults, not hard laws.
 
 ---
 
@@ -191,19 +168,18 @@ Manual pages are provided in `/man` and installed under the system
 manual hierarchy.
 
 Key entry points:
-
-- `revdep(1)` - CLI usage
+- `revdep(1)` - command-line usage
 - `revdep.d(5)` - configuration directory
-- `revdep_semantics(7)` - resolver rules
-- `librevdep(3)` - public C++ API
-- `librevdep(7)` - library overview
+
+For the underlying engine and embedding API, see the separate
+`librevdep` project and its manual pages.
 
 ---
 
 LICENSE
 =======
 
-`revdep` and `librevdep` are licensed under the
+`revdep` is licensed under the
 [GNU General Public License v3 or later](https://gnu.org/licenses/gpl.html).
 
 See `COPYING` for license terms and `COPYRIGHT` for notices.
