@@ -35,7 +35,7 @@
 #include <vector>
 
 #include "librevdep.h"
-#include "pathnames.h"
+#include "revdep-config.h"
 
 using namespace std;
 using std::string;
@@ -70,13 +70,13 @@ struct Options
   revdep::RevdepEmitOrder order{revdep::RevdepEmitOrder::InputStable};
 
   // Path to the revdep configuration directory.
-  string revdep_directory{_PATH_REVDEPD};
+  string revdep_directory{PATH_REVDEPD};
 
   // Path to the package database file.
-  string package_database{_PATH_PKGDB};
+  string package_database{PATH_PKGDB};
 
   // Path to the ld.so.conf file.
-  string ldso_config{_PATH_LDSOCONF};
+  string ldso_config{PATH_LDSOCONF};
 
   // Vector of package names to ignore.
   StringVector ignored_packages;
@@ -174,7 +174,7 @@ Mandatory arguments to long options are mandatory for short options too.
 static int
 printVersion()
 {
-  cout << "revdep " VERSION "\n";
+  cout << PACKAGE_NAME << " " << PACKAGE_VERSION << endl;
   return 0;
 }
 
