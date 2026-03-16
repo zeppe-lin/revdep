@@ -34,7 +34,8 @@
 #include <unordered_set>
 #include <vector>
 
-#include "librevdep.h"
+#include <librevdep/librevdep.h>
+
 #include "revdep-config.h"
 
 using namespace std;
