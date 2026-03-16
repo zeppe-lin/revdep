@@ -1,0 +1,25 @@
+option('link_mode',
+  type: 'combo',
+  choices: ['shared', 'static'],
+  value: 'shared',
+  description: 'How revdep links against librevdep')
+
+option('build_man',
+  type: 'boolean',
+  value: true,
+  description: 'Build and install manual pages')
+
+option('revdepd_dir',
+  type : 'string',
+  value : '',
+  description : 'Directory for revdep package configuration (default: <sysconfdir>/revdep.d)')
+
+option('pkgdb_path',
+  type : 'string',
+  value : '',
+  description : 'Path to package database file (default: <localstatedir>/lib/pkg/db)')
+
+option('ldsoconf_path',
+  type : 'string',
+  value : '/etc/ld.so.conf',
+  description : 'Path to dynamic loader configuration file')
