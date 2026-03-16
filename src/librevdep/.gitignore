@@ -1,8 +1,0 @@
-elf_cache.o
-elf.o
-pkg.o
-revdep_engine.o
-revdep_format.o
-revdep_parallel.o
-utility.o
-librevdep.a
