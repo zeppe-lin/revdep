@@ -19,12 +19,12 @@ librevdep_dep = dependency(
   static: librevdep_static,
 )
 
-revdepd_dir_opt = get_option('revdepd_dir')
-pkgdb_path_opt = get_option('pkgdb_path')
-ldsoconf_path = get_option('ldsoconf_path')
+sysconfdir = get_option('sysconfdir')
+localstatedir = get_option('localstatedir')
 
-revdepd_dir = revdepd_dir_opt != '' ? revdepd_dir_opt : join_paths(get_option('sysconfdir'), 'revdep.d')
-pkgdb_path = pkgdb_path_opt != '' ? pkgdb_path_opt : join_paths(get_option('localstatedir'), 'lib', 'pkg', 'db')
+revdepd_dir = get_option('revdepd_dir') == '' ? sysconfdir / 'revdep.d' : get_option('revdepd_dir')
+pkgdb_path = get_option('pkgdb_path')  == '' ? localstatedir / 'lib/pkg/db' : get_option('pkgdb_path')
+ldsoconf_path = get_option('ldsoconf_path')
 
 config_inc = include_directories('.')
 
