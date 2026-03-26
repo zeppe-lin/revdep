@@ -36,7 +36,7 @@ jobs:
             install: |
               apk add --no-cache \
                 build-base meson ninja pkgconf g++ \
-                scdoc elfutils-dev zlib-dev zstd-dev
+                scdoc elfutils-dev zlib-static zstd-static
 
         cfg:
           - name: shared
