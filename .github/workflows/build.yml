@@ -44,6 +44,9 @@ jobs:
           - name: static
             link_mode: static
 
+    name: ${{ matrix.env.name }} / ${{ matrix.cfg.name }}
+    container: ${{ matrix.env.container != '' && matrix.env.container || null }}
+
     steps:
       - uses: actions/checkout@v4
 
