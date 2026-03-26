@@ -4,48 +4,91 @@ on:
   push:
     branches: [ "master" ]
     paths: &paths
-      - ".github/**"
+      - "meson.build"
+      - "meson.options"
+      - "meson_options.txt"
       - "src/**"
-      - "config.mk"
-      - "Makefile"
+      - "man/**"
+      - "completion/**"
+      - "vim/**"
+      - ".github/**"
 
   pull_request:
     branches: [ "master" ]
     paths: *paths
 
 jobs:
-  build-man:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        env:
+          - name: glibc
+            container: ""
+            install: |
+              sudo apt-get update
+              sudo apt-get install -y \
+                meson ninja-build pkg-config g++ \
+                scdoc libelf-dev
+          - name: musl
+            container: "alpine:latest"
+            install: |
+              apk add --no-cache \
+                build-base meson ninja pkgconf g++ \
+                scdoc libelf-dev
+
+        cfg:
+          - name: shared
+            link_mode: shared
+          - name: static
+            link_mode: static
+
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Install scdoc
-        run: sudo apt-get install -y scdoc
-
-      - name: Generate man pages
-        run: make -C man
-
-  build-glibc:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+      - name: Checkout librevdep
+        uses: actions/checkout@v4
+        with:
+          repository: zeppe-lin/librevdep
+          path: librevdep
 
       - name: Install build dependencies
-        run: sudo apt-get install -y libelf-dev
+        run: ${{ matrix.env.install }}
 
-      - name: Build (glibc)
-        run: make -C src
+      - name: Configure librevdep
+        run: |
+          meson setup build-librevdep librevdep \
+            --buildtype=plain \
+            --wrap-mode=nodownload \
+            --prefix=/usr \
+            -D b_lto=false \
+            -D b_pie=true
 
-  build-musl:
-    runs-on: ubuntu-latest
-    container: alpine:latest
+      - name: Build librevdep
+        run: meson compile -C build-librevdep -v
 
-    steps:
-      - uses: actions/checkout@v3
+      - name: Configure revdep
+        env:
+          PKG_CONFIG_PATH: ${{ github.workspace }}/build-librevdep/meson-uninstalled
+        run: |
+          pkg-config --modversion librevdep
+          meson setup build \
+            --buildtype=plain \
+            --wrap-mode=nodownload \
+            --prefix=/usr \
+            --sysconfdir=/etc \
+            --localstatedir=/var \
+            -D b_lto=false \
+            -D b_pie=true \
+            -D link_mode=${{ matrix.cfg.link_mode }}
 
-      - name: Install build dependencies
-        run: apk add build-base g++ make elfutils-dev
+      - name: Build revdep
+        env:
+          PKG_CONFIG_PATH: ${{ github.workspace }}/build-librevdep/meson-uninstalled
+        run: meson compile -C build -v
 
-      - name: Build (musl)
-        run: make -C src
-
+      - name: Install revdep to staging
+        env:
+          PKG_CONFIG_PATH: ${{ github.workspace }}/build-librevdep/meson-uninstalled
+        run: DESTDIR="$PWD/stage" meson install -C build
