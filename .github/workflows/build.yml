@@ -54,44 +54,27 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: zeppe-lin/librevdep
-          path: librevdep
+          path: subprojects/librevdep
 
       - name: Install build dependencies
         run: ${{ matrix.env.install }}
 
-      - name: Configure librevdep
-        run: |
-          meson setup build-librevdep librevdep \
-            --buildtype=plain \
-            --wrap-mode=nodownload \
-            --prefix=/usr \
-            -D b_lto=false \
-            -D b_pie=true
-
-      - name: Build librevdep
-        run: meson compile -C build-librevdep -v
-
       - name: Configure revdep
-        env:
-          PKG_CONFIG_PATH: ${{ github.workspace }}/build-librevdep/meson-uninstalled
         run: |
-          pkg-config --modversion librevdep
           meson setup build \
             --buildtype=plain \
             --wrap-mode=nodownload \
+            --force-fallback-for=librevdep \
             --prefix=/usr \
             --sysconfdir=/etc \
             --localstatedir=/var \
             -D b_lto=false \
             -D b_pie=true \
+            -D librevdep:prefer_static_deps=${{ matrix.cfg.link_mode == 'static' && 'true' || 'false' }} \
             -D link_mode=${{ matrix.cfg.link_mode }}
 
       - name: Build revdep
-        env:
-          PKG_CONFIG_PATH: ${{ github.workspace }}/build-librevdep/meson-uninstalled
         run: meson compile -C build -v
 
       - name: Install revdep to staging
-        env:
-          PKG_CONFIG_PATH: ${{ github.workspace }}/build-librevdep/meson-uninstalled
         run: DESTDIR="$PWD/stage" meson install -C build
