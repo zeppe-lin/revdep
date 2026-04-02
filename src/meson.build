@@ -1,5 +1,5 @@
 common_deps = [librevdep_dep]
-common_includes = [config_inc]
+common_incs = [config_inc]
 common_link_args = []
 
 if want_static
@@ -8,7 +8,7 @@ endif
 
 exe_kwargs = {
   'dependencies': common_deps,
-  'include_directories': [common_includes],
+  'include_directories': [common_incs],
   'link_args': common_link_args,
   'install': true,
 }
