@@ -1,8 +1,8 @@
 common_deps = [librevdep_dep]
 common_includes = [config_inc]
-
 common_link_args = []
-if get_option('link_mode') == 'static'
+
+if want_static
   common_link_args += ['-static']
 endif
 
@@ -13,4 +13,9 @@ exe_kwargs = {
   'install': true,
 }
 
-executable('revdep', 'revdep.cpp', kwargs: exe_kwargs, install_dir: get_option('bindir'))
+executable(
+  'revdep',
+  'revdep.cpp',
+  kwargs: exe_kwargs,
+  install_dir: get_option('bindir')
+)

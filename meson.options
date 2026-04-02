@@ -11,13 +11,13 @@ option('build_man',
 
 option('revdepd_dir',
   type : 'string',
-  value : '',
-  description : 'Directory for revdep package configuration (default: <sysconfdir>/revdep.d)')
+  value : '/etc/revdep.d',
+  description : 'Directory for revdep package configuration')
 
 option('pkgdb_path',
   type : 'string',
-  value : '',
-  description : 'Path to package database file (default: <localstatedir>/lib/pkg/db)')
+  value : '/var/lib/pkg/db',
+  description : 'Path to package database file')
 
 option('ldsoconf_path',
   type : 'string',

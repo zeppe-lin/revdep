@@ -20,16 +20,20 @@ librevdep_dep = dependency(
   fallback: ['librevdep', 'librevdep_dep'],
 )
 
-sysconfdir = get_option('sysconfdir')
-localstatedir = get_option('localstatedir')
+conf = configuration_data()
+conf.set_quoted('PACKAGE_NAME', meson.project_name())
+conf.set_quoted('PACKAGE_VERSION', meson.project_version())
+conf.set_quoted('PATH_REVDEPD', get_option('revdepd_dir'))
+conf.set_quoted('PATH_PKGDB', get_option('pkgdb_path'))
+conf.set_quoted('PATH_LDSOCONF', get_option('ldsoconf_path'))
 
-revdepd_dir = get_option('revdepd_dir') == '' ? sysconfdir / 'revdep.d' : get_option('revdepd_dir')
-pkgdb_path = get_option('pkgdb_path')  == '' ? localstatedir / 'lib/pkg/db' : get_option('pkgdb_path')
-ldsoconf_path = get_option('ldsoconf_path')
+configure_file(
+  output: 'revdep-config.h',
+  configuration: conf,
+)
 
 config_inc = include_directories('.')
 
-subdir('internal')
 subdir('src')
 subdir('man')
 subdir('completion')
