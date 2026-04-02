@@ -11,12 +11,13 @@ project(
   ],
 )
 
-librevdep_static = get_option('link_mode') == 'static'
+want_static = get_option('link_mode') == 'static'
 
 librevdep_dep = dependency(
   'librevdep',
   required: true,
-  static: librevdep_static,
+  static: want_static,
+  fallback: ['librevdep', 'librevdep_dep'],
 )
 
 sysconfdir = get_option('sysconfdir')
