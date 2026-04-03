@@ -10,16 +10,16 @@ option('build_man',
   description: 'Build and install manual pages')
 
 option('revdepd_dir',
-  type : 'string',
-  value : '/etc/revdep.d',
-  description : 'Directory for revdep package configuration')
+  type: 'string',
+  value: '/etc/revdep.d',
+  description: 'Directory for revdep package configuration')
 
 option('pkgdb_path',
-  type : 'string',
-  value : '/var/lib/pkg/db',
-  description : 'Path to package database file')
+  type: 'string',
+  value: '/var/lib/pkg/db',
+  description: 'Path to package database file')
 
 option('ldsoconf_path',
-  type : 'string',
-  value : '/etc/ld.so.conf',
-  description : 'Path to dynamic loader configuration file')
+  type: 'string',
+  value: '/etc/ld.so.conf',
+  description: 'Path to dynamic loader configuration file')
