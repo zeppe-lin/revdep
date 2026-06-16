@@ -95,9 +95,10 @@ Build-time
 - C++17 compiler
 - Meson
 - Ninja
+- `scdoc(1)` to generate manual pages
+  (enabled by default via the `manpages` option)
 - `elfutils` (`libelf`)
 - `librevdep`
-- `scdoc(1)` to generate manual pages (if manpage build is enabled)
 - `pkg-config(1)` for dependency discovery
 
 Runtime
@@ -133,8 +134,9 @@ Common options:
 ```sh
 meson setup build \
     --prefix=/usr \
-    -D build_man=true \
     -D b_lto=false \
+    -D manpages=true \
+    -D bashcomp=true \
 ```
 
 Use `meson configure build` to inspect available options.
