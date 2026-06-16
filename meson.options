@@ -4,7 +4,7 @@ option('link_mode',
   value: 'shared',
   description: 'How revdep links against librevdep')
 
-option('build_man',
+option('manpages',
   type: 'boolean',
   value: true,
   description: 'Build and install manual pages')
