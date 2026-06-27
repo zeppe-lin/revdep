@@ -1,7 +1,7 @@
 project(
   'revdep',
   'cpp',
-  version: '6.3',
+  version: '5.0',
   meson_version: '>=1.2.0',
   default_options: [
     'cpp_std=c++17',
