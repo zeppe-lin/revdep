@@ -21,15 +21,15 @@ option('bashcompdir',
 
 option('revdepd_dir',
   type: 'string',
-  value: '/etc/revdep.d',
+  value: '',
   description: 'Directory for revdep package configuration')
 
 option('pkgdb_path',
   type: 'string',
-  value: '/var/lib/pkg/db',
+  value: '',
   description: 'Path to package database file')
 
 option('ldsoconf_path',
   type: 'string',
-  value: '/etc/ld.so.conf',
+  value: '',
   description: 'Path to dynamic loader configuration file')
