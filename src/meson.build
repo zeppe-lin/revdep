@@ -8,7 +8,7 @@ endif
 
 exe_kwargs = {
   'dependencies': common_deps,
-  'include_directories': [common_incs],
+  'include_directories': common_incs,
   'link_args': common_link_args,
   'install': true,
 }
